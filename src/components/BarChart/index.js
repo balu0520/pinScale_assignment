@@ -9,7 +9,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-// import groupedBarChartPlugin from 'grouped-bar-chart-plugin'
+
 
 
 ChartJS.register(
@@ -38,11 +38,10 @@ const processData = (data) => {
         const type = item.type;
         groupedData[dayOfWeek][type] += item.sum;
       });
-          console.log(groupedData)
+        //   console.log(groupedData)
           const daysOfWeek = Object.keys(groupedData);
           const debitData = daysOfWeek.map((day) => groupedData[day].debit);
           const creditData = daysOfWeek.map((day) => groupedData[day].credit);
-          console.log(daysOfWeek,debitData,creditData)
           return { daysOfWeek, debitData, creditData };    
     }
 
@@ -94,7 +93,7 @@ const BarChart = props => {
     
     const { daysOfWeek, debitData, creditData } = processData(total7);
     const chartData = {
-        labels: daysOfWeek,
+        labels: labels,
         datasets: [
             {
                 label: 'Debit',
@@ -117,7 +116,7 @@ const BarChart = props => {
         ],
     };
     return (
-        <div>
+        <div style={{width:"100%"}}>
             <Bar options={options} data={chartData} />
         </div>
     )

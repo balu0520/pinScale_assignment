@@ -3,12 +3,27 @@
     flex-direction: row;
     height: 100vh;
     width: 100vw;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
-
+@media screen and (max-width:991px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+    }
+}
 .dashboard-container {
     width: 80%;
     overflow-y: scroll;
+}
+@media screen and (max-width:991px) {
+    .dashboard-container {
+        width: 100%;
+    }
+}
+@media screen and (max-width:400px) {
+    .dashboard-container{
+        width: 120%;
+    }
 }
 
 .header-container {
@@ -33,12 +48,28 @@
     /* height: 100%; */
     padding: 20px;
 }
+@media screen and (max-width:400px) {
+    .dashboard-sub-container{
+        width: 100%;
+    }
+}
 
 .type-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     padding: 20px;
+}
+@media screen and (max-width:767px) {
+    .type-container{
+        flex-direction: column;
+    }
+}
+@media screen and (max-width:400px) {
+    .type-container{
+        align-items: flex-start;
+        width: 70%;
+    }   
 }
 
 .credit-heading {
@@ -68,6 +99,11 @@
     width: 45%;
     margin: 10px;
     padding: 10px;
+}
+@media screen and (max-width:767px) {
+    .credit-debit-container{
+        width: 90%;
+    }
 }
 
 .debit-heading {
@@ -205,6 +241,17 @@
     justify-content: space-around;
     width: 20%;
 }
+@media screen and (max-width:500px) {
+    .overview-sub-container{
+        flex-direction: column;
+    }
+    .overview-sub-container-1{
+        width: 40%;
+    }
+    
+}
+
+
 
 .overview-heading {
     color: #718EBF;

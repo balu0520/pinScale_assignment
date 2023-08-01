@@ -68,6 +68,16 @@
     line-height: normal;
     padding-left:10px ;
 }
+@media screen and (max-width:576px) {
+    .update-input-label{
+        width: 320px;
+    }
+}
+@media screen and (max-width:400px) {
+    .update-input-label{
+        width: 280px;
+    }
+}
 .update-add-transaction-btn {
     display: flex;
     width: 418px;

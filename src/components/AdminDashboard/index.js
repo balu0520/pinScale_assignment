@@ -253,7 +253,7 @@ const AdminDashboard = () => {
     return (
         <>
             {load && (
-                <div className='container'>
+                <div className='admin-container'>
                     <SideBar activeId={0} />
                     <div className='admin-dashboard-container'>
                         <div className='admin-header-container'>

@@ -259,7 +259,9 @@ const UserDashboard = () => {
     }
 
     return (
-        <div className='container'>
+        <>
+        {load && (
+            <div className='container'>
             <Sidebar activeId={0} />
             <div className='dashboard-container'>
                 <div className='header-container'>
@@ -305,6 +307,8 @@ const UserDashboard = () => {
                 </div>
             </div>
         </div>
+        )}
+        </>
     )
 }
 

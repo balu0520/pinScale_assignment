@@ -1,7 +1,26 @@
+.admin-transaction-main-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+    /* overflow: hidden; */
+}
+
 .admin-transaction-container{
     width: 80%;
     overflow-y: scroll;
 }
+@media screen and (max-width:991px) {
+    .admin-transaction-main-container {
+        display: flex;
+        flex-direction: column;
+    }
+    .admin-transaction-container {
+        width: 100%;
+    }
+}
+
+
 .admin-all-transaction-header-container {
     display: flex;
     justify-content: space-between;
@@ -41,6 +60,11 @@
     background-color: #F5F7FA;
     padding: 20px;
 }
+@media screen and (max-width:400px) {
+    .admin-all-transactions-container{
+        width: 200%;
+    }
+}
 .admin-all-transactions-sub-container{
     background-color: #ffffff;
     border-radius: 20px;
@@ -48,6 +72,12 @@
     padding: 5px;
     margin-bottom: 10px;
 }
+@media screen and (max-width:400px) {
+    .admin-all-transactions-sub-container{
+        width: 100%;
+    } 
+}
+
 .admin-all-transactions-list {
     padding-left: 0px;
     list-style-type: none;

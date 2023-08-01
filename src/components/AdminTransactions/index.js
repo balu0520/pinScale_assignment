@@ -77,7 +77,7 @@ const AdminTransactions = () => {
             },
         }).then(response => {
             if (response.status === 200) {
-                console.log(response.data.transactions)
+                // console.log(response.data.transactions)
                 const newTransactions = filterTransactions(response.data.transactions, id)
                 setTransactions(newTransactions)
                 setApiStatus(apiStatusConstants.success)
@@ -191,8 +191,7 @@ const AdminTransactions = () => {
     return (
         <>
             {load && (
-                <div>
-                    <div className='container'>
+                    <div className='admin-transaction-main-container'>
                         <SideBar activeId={1} />
                         <div className='admin-transaction-container'>
                             <div className='admin-all-transaction-header-container'>
@@ -210,7 +209,6 @@ const AdminTransactions = () => {
                             </div>
                         </div>
                     </div>
-                </div>
             )}
         </>
     )

@@ -1,6 +1,23 @@
+.admin-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+    /* overflow: hidden; */
+}
+
 .admin-dashboard-container {
     width: 80%;
     overflow-y: scroll;
+}
+@media screen and (max-width:991px) {
+    .admin-container {
+        display: flex;
+        flex-direction: column;
+    }
+    .admin-dashboard-container {
+        width: 100%;
+    }
 }
 
 .admin-header-container {
@@ -26,12 +43,27 @@
     padding: 20px;
 
 }
+@media screen and (max-width:400px) {
+    .admin-dashboard-sub-container{
+        width: 160%;
+    }
+}
 
 .admin-type-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     padding: 20px;
+}
+@media screen and (max-width:767px) {
+    .admin-type-container{
+        flex-direction: column;
+    }
+}
+@media screen and (max-width: 400px) {
+    .admin-type-container{
+        align-items: flex-start;
+    }
 }
 
 .admin-credit-heading {
@@ -62,7 +94,16 @@
     margin: 10px;
     padding: 10px;
 }
-
+@media screen and (max-width:767px) {
+    .admin-credit-debit-container{
+        width: 90%;
+    }
+}
+@media screen and (max-width:400px) {
+    .admin-credit-debit-container{
+        width: 50%;
+    }
+}
 .admin-debit-heading {
     color: #FE5C73;
     font-family: "Inter";
@@ -100,7 +141,12 @@
     margin: 15px;
     display: flex;
     flex-direction: column;
-
+}
+@media screen and (max-width:400px) {
+    .admin-transactions-list{
+        width: 100%;
+    }
+    
 }
 
 .admin-transaction-item {
@@ -214,6 +260,15 @@
     flex-direction: row;
     justify-content: space-around;
     width: 20%;
+}
+
+@media screen and (max-width:576px) {
+    .admin-overview-sub-container{
+        flex-direction: column;
+    }
+    .admin-overview-sub-container-1{
+        width: 40%;
+    }
 }
 
 .admin-overview-heading {

@@ -21,7 +21,7 @@ const apiStatusConstants = {
 
 const UserTransactions = () => {
     const [activeId, setActiveId] = useState(0);
-    const [load,setLoad] = useState(false)
+    const [load, setLoad] = useState(false)
     const [transactions, setTransactions] = useState([])
     const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
     const [cookie, _] = useCookies(["user_id"])
@@ -30,7 +30,7 @@ const UserTransactions = () => {
     useEffect(() => {
         if (!cookie.user_id) {
             navigate("/login")
-        } else if(cookie.user_id == 3){
+        } else if (cookie.user_id == 3) {
             navigate("/admin-transactions")
         } else {
             setLoad(true)
@@ -78,7 +78,7 @@ const UserTransactions = () => {
             },
         }).then(response => {
             if (response.status === 200) {
-                console.log(response.data.transactions)
+                // console.log(response.data.transactions)
                 const newTransactions = filterTransactions(response.data.transactions, id)
                 setTransactions(newTransactions)
                 setApiStatus(apiStatusConstants.success)
@@ -158,7 +158,7 @@ const UserTransactions = () => {
                             <div className='all-transaction-update-delete-container'>
                                 <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type.toLowerCase() === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
                                 <UpdatePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
-                                <DeletePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId}/>
+                                <DeletePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
                             </div>
                         </div>
                         {ind !== len - 1 && (<hr className='separator' />)}
@@ -182,27 +182,29 @@ const UserTransactions = () => {
     }
 
     return (
-        <div>
-            <div className='container'>
-                <SideBar activeId={1} />
-                <div className='transaction-container'>
-                    <div className='all-transaction-header-container'>
-                        <h1 className='all-transaction-heading'>Transactions</h1>
-                        <AddPopup reloadOperation={fetchAllTransactions} id={activeId}/>
-                    </div>
-                    <div className='transaction-btn-container'>
-                        <button className={`transaction-btn ${activeId === 0 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(0)}>All Transactions</button>
-                        <button className={`transaction-btn ${activeId === 1 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(1)}>Debit</button>
-                        <button className={`transaction-btn ${activeId === 2 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(2)}>Credit</button>
-                    </div>
-                    <div className='all-transactions-container'>
-                        <div className='all-transactions-sub-container'>
-                            {renderAllTransactions()}
+        <>
+            {load && (
+                <div className='user-transactions-container-1'>
+                    <SideBar activeId={1} />
+                    <div className='user-transactions-sub-container'>
+                        <div className='all-transaction-header-container'>
+                            <h1 className='all-transaction-heading'>Transactions</h1>
+                            <AddPopup reloadOperation={fetchAllTransactions} id={activeId} />
+                        </div>
+                        <div className='transaction-btn-container'>
+                            <button className={`transaction-btn ${activeId === 0 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(0)}>All Transactions</button>
+                            <button className={`transaction-btn ${activeId === 1 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(1)}>Debit</button>
+                            <button className={`transaction-btn ${activeId === 2 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(2)}>Credit</button>
+                        </div>
+                        <div className='all-transactions-container'>
+                            <div className='all-transactions-sub-container'>
+                                {renderAllTransactions()}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            )}
+        </>
     )
 }
 

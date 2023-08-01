@@ -12,7 +12,7 @@ const SideBar = props => {
 
     return (
         <div className='sidebar-container'>
-            <div>
+            <div style={{width:"100%"}} className='sidebar-container-1'>
                 <div className='sidebar-sub-container'>
                     <img src="https://res.cloudinary.com/daz94wyq4/image/upload/v1690731094/dollar_icon_o1ss4i.png" className='dollar-icon' alt='dollar icon' />
                     <h1 className='money'>Money </h1>
@@ -33,9 +33,9 @@ const SideBar = props => {
                     </Link>
                 </div>
             </div>
-            <div className='profile-container'>
+            <div className='sidebar-profile-container'>
                 <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690710789/Avatar_dzpgxq.png' className='sidebar-profile-pic' alt="sidebar profile pic"/>
-                <div className='profile-sub-container'>
+                <div className='sidebar-profile-sub-container'>
                     <h1 className='profile-name'>Rhye</h1>
                     <p className='profile-mail'>olivia@untitledui.com</p>
                 </div>
