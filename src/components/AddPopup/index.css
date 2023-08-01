@@ -1,0 +1,97 @@
+.add-modal {
+    border-radius: 16px;
+    background: #FFF;
+    /* width: 50%; */
+    height: 80%;
+    padding: 10px;
+}
+
+.add-modal-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.add-modal-description-heading {
+    color: #333B69;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 28px;
+}
+
+.add-modal-description-para {
+    color: #505887;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    margin-bottom: 15px;
+}
+
+.transaction-label {
+    color: #505887;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-bottom: 5px;
+}
+
+.input-label {
+    height: 40px;
+    width: 400px;
+    border-radius: 10px;
+    border: 1px solid #DFEAF2;
+    background: #FFF;
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding-left:10px ;
+}
+.add-transaction-button {
+    display: flex;
+    padding: 8px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 12px;
+    background: #2D60FF;
+    cursor: pointer;
+    outline: none;
+    border-width: 0;
+    color: #ffffff;
+}
+
+.add-transaction-btn {
+    display: flex;
+    width: 418px;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    background-color: #2D60FF;
+    border-width: 0;
+    width: 95%;
+    margin: auto;
+    color: #ffffff;
+    cursor: pointer;
+}
+.err-msg{
+    color: red;
+    font-size: 15px;
+}

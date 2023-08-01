@@ -1,0 +1,107 @@
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    max-height: 100vh;
+    width: 20%;
+    border-right: 1px solid #E2E2E2;
+    background: #FFF;
+}
+
+.sidebar-sub-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 15px;
+}
+
+.dollar-icon {
+    width: 64px;
+    height: 60px;
+}
+
+.money {
+    color: #F89A23;
+    font-family: "poppins";
+    padding-right: 2px;
+}
+
+.matters {
+    color: #02969C;
+    font-family: "poppins";
+}
+
+.sidebar-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: auto;
+    padding-left: 20px;
+    text-decoration: none;
+}
+
+.sidebar-icon {
+    width: 25px;
+    height: 30px;
+    color: #5B73A0;
+}
+
+.button-name {
+    font-family: 'Inter';
+    color: #505887;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.active {
+    border-left: 5px solid #2D60FF;
+    border-radius: 4px;
+}
+
+.active-heading {
+    color: #2D60FF;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-top: 1px solid #EAECF0;
+}
+
+.sidebar-profile-pic {
+    width: 45px;
+}
+
+.profile-sub-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-left: 5px;
+}
+
+.profile-name {
+    color: #505887;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-mail {
+    color: #718EBF;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    padding: 0;
+    margin: 0;
+}

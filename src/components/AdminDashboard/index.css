@@ -1,0 +1,261 @@
+.admin-dashboard-container {
+    width: 80%;
+    overflow-y: scroll;
+}
+
+.admin-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.admin-heading {
+    color: #343C6A;
+    font-family: "Inter";
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+
+.admin-dashboard-sub-container {
+    background-color: #F5F7FA;
+    /* height: 190%; */
+    padding: 20px;
+
+}
+
+.admin-type-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+}
+
+.admin-credit-heading {
+    color: #16DBAA;
+    font-family: "Inter";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.admin-credit-para {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.admin-credit-debit-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-radius: 20px;
+    width: 45%;
+    margin: 10px;
+    padding: 10px;
+}
+
+.admin-debit-heading {
+    color: #FE5C73;
+    font-family: "Inter";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.admin-debit-para {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.admin-last-transaction-heading {
+    color: #333B69;
+    font-family: "Inter";
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    padding: 10px;
+    margin: 10px;
+}
+
+.admin-transactions-list {
+    padding-left: 0px;
+    list-style-type: none;
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.admin-transaction-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    /* border-bottom: 1px solid #E2E2E2; */
+}
+
+.separator {
+    border: 1px solid #E2E2E2;
+    width: 95%;
+}
+
+.admin-transaction-name-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 25%;
+}
+
+.admin-transaction-img-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.admin-transaction-img-container-para {
+    color: #505887;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding-left: 4px;
+}
+
+.admin-transaction-name {
+    color: #505887;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-left: 3px;
+}
+
+.admin-transaction-category {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 20%;
+}
+
+.admin-transaction-date {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 20%;
+}
+
+.admin-transaction-amount {
+    /* text-align: right; */
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.debit {
+    color: #FE5C73;
+}
+
+.credit {
+    color: #16DBAA;
+}
+
+.admin-loader-container {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.admin-overview-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin: 10px;
+    padding: 10px;
+}
+
+.admin-overview-sub-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-overview-sub-container-1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 20%;
+}
+
+.admin-overview-heading {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.admin-overview-sub-container-2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.admin-overview-btn-1 {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    background: #4C78FF;
+    border-width: 0;
+    box-shadow: 0px 0px 15px 0px rgba(17, 52, 133, 0.50) inset;
+}
+
+.admin-overview-para {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.admin-overview-btn-2 {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    background: #FCAA0B;
+    border-width: 0;
+    box-shadow: 0px 0px 15px 0px rgba(172, 13, 108, 0.50) inset;
+}

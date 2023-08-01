@@ -1,0 +1,129 @@
+.transaction-container{
+    width: 80%;
+    overflow-y: scroll;
+}
+.all-transaction-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.all-transaction-heading {
+    color: #343C6A;
+    font-family: "Inter";
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.transaction-btn-container{
+    display: flex;
+    flex-direction: row;
+    padding-left: 10px;
+}
+.transaction-btn{
+    display: flex;
+    flex-direction: row;
+    margin-right: 10px;
+    color: #718EBF;
+    border-width: 0;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+.active-btn{
+    border-bottom: 2px solid #2D60FF;
+    color: #2D60FF;
+}
+.all-transactions-container{
+    background-color: #F5F7FA;
+    padding: 20px;
+    height: 100%;
+}
+.all-transactions-sub-container{
+    background-color: #ffffff;
+    border-radius: 20px;
+    /* margin: 20px; */
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.all-transactions-list {
+    padding-left: 0px;
+    list-style-type: none;
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.all-transaction-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    /* border-bottom: 1px solid #E2E2E2; */
+}
+
+.separator{
+    border: 1px solid #E2E2E2;
+    width: 95%;
+}
+
+.all-transaction-name-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 25%;
+}
+
+.all-transaction-name {
+    color: #505887;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-left: 3px;
+}
+
+.all-transaction-category {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 20%;
+}
+
+.all-transaction-date {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 20%;
+}
+.all-transaction-amount{
+    /* text-align: right; */
+    font-family: "Inter";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.debit{
+    color: #FE5C73;
+}
+.credit{
+    color: #16DBAA;
+}
+.all-transaction-update-delete-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 20%;
+}

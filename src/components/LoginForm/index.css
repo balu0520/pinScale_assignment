@@ -1,0 +1,123 @@
+.container{
+    display: flex;
+}
+
+.desktopViewBoard{
+    background-color: #000000;
+    width:35vw;
+    height: 100vh;
+    max-width: 588px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.desktopViewBoardHeading{
+    font-family: "Roboto";
+    font-size: 72px;
+    color: #ffffff;
+}
+@media screen and (max-width:991px){
+    .desktopViewBoard{
+        display: none;
+    }
+    .desktopViewBoardHeading{
+        display: none;
+    }
+}
+.loginContainerMain{
+    background-color: #F5F5F5;
+    width: 65vw;
+    height:100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+@media screen and (max-width:991px) {
+    .loginContainerMain{
+        width: 100vw;
+        height:100vh;
+    }
+    
+}
+.signInHeading{
+    font-size: 32px;
+    font-family: "Montserrat";
+    font-weight: 700;
+}
+.signInPara{
+    font-size: 16px;
+    font-family: "Lato";
+    font-weight: 400;
+}
+@media screen and (max-width:576px) {
+    .signInHeading{
+        font-size: 22px;
+    }
+    .signInPara{
+        font-size: 12px;
+    }
+    
+}
+
+.loginFormContainer{
+    background-color: #ffffff;
+    border-radius: 20px;
+    width: 385px;
+    height: 317px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-top: 20px;
+}
+@media screen and (max-width:400px){
+    .loginFormContainer{
+        width: 100%;
+    }
+}
+.inputFormContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.loginFormName{
+    font-family: "Lato";
+    font-weight: 400;
+    font-size: 16px;
+    align-self: flex-start;
+}
+.loginFormInput{
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #F5F5F5;
+    outline: none;
+    font-size: 20px;
+    color: #000000;
+    padding-left: 10px;
+    margin-bottom: 20px;
+}
+.errorMsg{
+    color: red;
+    font-family: "Roboto";
+    font-size: 12px;
+    padding-top: 0;
+}
+.sign-in-btn{
+    width: 100%;
+    background-color: #000000;
+    border-radius: 10px;
+    color:#ffffff;
+    height: 40px;
+    cursor: pointer;
+    outline: none;
+}
+.account-description{
+    color: #858585;
+    text-align: center;
+    font-size: 16px;
+    font-family: "Lato";
+    margin-top: 5px;
+}
