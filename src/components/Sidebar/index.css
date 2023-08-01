@@ -131,6 +131,9 @@
     padding: 5px;
     border-top: 1px solid #EAECF0;
 }
+.sidebar-profile-pic {
+    width: 40px;
+}
 @media screen and (max-width:991px) {
     .sidebar-profile-container{
         display: flex;
@@ -145,11 +148,9 @@
         align-items: flex-end;
         justify-content: end;
     }
+    
 }
 
-.sidebar-profile-pic {
-    width: 40px;
-}
 
 .sidebar-profile-sub-container {
     display: flex;

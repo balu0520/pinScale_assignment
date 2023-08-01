@@ -83,7 +83,7 @@ const AdminDashboard = () => {
                 setApiStatusOne(apiStatusConstants.failure)
             }
         } catch (err) {
-            console.error(err)
+            // console.error(err)
         }
     }
 
@@ -128,7 +128,7 @@ const AdminDashboard = () => {
                 setApiStatus(apiStatusConstants.failure)
             }
         }).catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
     }
 
@@ -151,7 +151,7 @@ const AdminDashboard = () => {
                 setApiStatus(apiStatusConstants.failure)
             }
         }).catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
     }
 

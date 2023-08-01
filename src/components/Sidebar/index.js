@@ -1,9 +1,8 @@
-import { useState } from 'react'
+
 import './index.css'
 import {AiFillHome,AiOutlineTransaction} from 'react-icons/ai'
 import {BiSolidUser} from 'react-icons/bi'
 import { Link } from 'react-router-dom'
-import {MdLogout} from 'react-icons/md'
 import LogoutPopup from '../LogoutPopup'
 
 const SideBar = props => {

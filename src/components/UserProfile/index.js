@@ -54,7 +54,7 @@ const UserProfile = () => {
                 setApiStatus(apiStatusConstants.failure)
             }
         } catch (err) {
-            console.error(err)
+            // console.error(err)
         }
     }
 

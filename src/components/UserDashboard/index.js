@@ -76,7 +76,7 @@ const UserDashboard = () => {
                 setApiStatusOne(apiStatusConstants.failure)
             }
         } catch(err){
-            console.error(err)
+            // console.error(err)
         }
     }
 
@@ -127,7 +127,7 @@ const UserDashboard = () => {
                 setApiStatus(apiStatusConstants.failure)
             }
         }).catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
     }
 
@@ -160,7 +160,7 @@ const UserDashboard = () => {
                 setApiStatus(apiStatusConstants.failure)
             }
         }).catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
     }
 

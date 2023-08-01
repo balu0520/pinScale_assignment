@@ -34,14 +34,14 @@ const DeletePopup = props => {
             },
         }).then(response => {
             if (response.status === 200) {
-                console.log(response)
+                // console.log(response)
             } else {
                 alert('Something went wrong, please try again later')
             }
             close()
             reload()
         }).catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
     }
 

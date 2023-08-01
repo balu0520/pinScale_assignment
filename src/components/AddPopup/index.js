@@ -68,7 +68,7 @@ const AddPopup = props => {
         try {
             const response = await fetch(url, options)
             if (response.status === 200) {
-                console.log(response)
+                // console.log(response)
                 const data = await response.json()
                 alert("Added Successfully")
                 setErr(false)
@@ -87,7 +87,7 @@ const AddPopup = props => {
             reload()
 
         } catch (err) {
-            console.error(err)
+            // console.error(err)
         }
     }
 

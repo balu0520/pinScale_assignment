@@ -3,7 +3,6 @@ import './index.css'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 
-
 const LoginForm = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -16,7 +15,6 @@ const LoginForm = () => {
         setErr(false)
         setErrMsg("")
         setCookie("user_id", get_user_id[0].id);
-        console.log(get_user_id[0].id)
         if(get_user_id[0].id !== 3){
             navigate("/user-dashboard")
         } else {
@@ -28,7 +26,6 @@ const LoginForm = () => {
     const onSubmitFailure = msg => {
         setErr(true)
         setErrMsg("Invalid Credentials")
-        console.log(msg)
     }
 
     const handleLogin = async event => {
@@ -45,16 +42,15 @@ const LoginForm = () => {
         }
         try {
             const response = await fetch(url, options)
-            console.log(response)
+            // console.log(response)
             if (response.ok === true) {
                 const data = await response.json();
-                console.log(data)
                 onSubmitSuccess(data.get_user_id)
             } else {
                 onSubmitFailure(response.data)
             }
         } catch (error) {
-            console.error(error)
+            // console.error(error)
         }
 
     }
