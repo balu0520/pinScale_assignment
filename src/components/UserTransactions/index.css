@@ -64,19 +64,25 @@
 .all-transactions-container{
     background-color: #F5F7FA;
     padding: 20px;
-    height: 100%;
 }
-@media screen and (max-width:400px) {
+/* @media screen and (max-width:400px) {
     .all-transactions-container{
-        width: 130%;
+        width: 100%;
     }
-}
+} 
+ */
 .all-transactions-sub-container{
     background-color: #ffffff;
     border-radius: 20px;
     /* margin: 20px; */
     padding: 5px;
     margin-bottom: 10px;
+    overflow-x: hidden;
+}
+@media screen and (max-width:400px){
+    .all-transactions-sub-container{
+        overflow-x: scroll;
+    }
 }
 .all-transactions-list {
     padding-left: 0px;
@@ -89,7 +95,7 @@
 }
 @media screen and (max-width:400px) {
     .all-transactions-list{
-        width: 100%;
+        width: 380px;
     }
 }
 .all-transaction-item {

@@ -22,7 +22,7 @@ const AdminDashboard = () => {
     const [apiStatusOne, setApiStatusOne] = useState(apiStatusConstants.initial)
     const [load, setLoad] = useState(false)
     const [total7, setTotal7] = useState([])
-    const [weekCredit,setWeekCredit] = useState(0);
+    const [weekCredit, setWeekCredit] = useState(0);
     const [weekDebit, setWeekDebit] = useState(0);
     const [totalCredit, setTotalCredit] = useState("");
     const [totalDebit, setTotalDebit] = useState("")
@@ -47,15 +47,15 @@ const AdminDashboard = () => {
     const getWeekCreditDebit = weekCreditDebitTransactions => {
         let newWeekCredit = 0;
         let newWeekDebit = 0;
-        for(let item of weekCreditDebitTransactions){
-            if(item.type.toLowerCase() === "credit"){
+        for (let item of weekCreditDebitTransactions) {
+            if (item.type.toLowerCase() === "credit") {
                 newWeekCredit += item.sum;
             }
-            if(item.type.toLowerCase() === "debit"){
+            if (item.type.toLowerCase() === "debit") {
                 newWeekDebit += item.sum;
             }
         }
-        return ({weekCredit:newWeekCredit,weekDebit:newWeekDebit})
+        return ({ weekCredit: newWeekCredit, weekDebit: newWeekDebit })
     }
 
     const fetchLast7DaysCreditDebit = async () => {
@@ -74,7 +74,7 @@ const AdminDashboard = () => {
             if (response.ok === true) {
                 const data = await response.json();
                 const last7DaysTransactionsCreditDebitTotals = data.last_7_days_transactions_totals_admin;
-                const {weekCredit,weekDebit} = getWeekCreditDebit(last7DaysTransactionsCreditDebitTotals)
+                const { weekCredit, weekDebit } = getWeekCreditDebit(last7DaysTransactionsCreditDebitTotals)
                 setWeekCredit(weekCredit)
                 setWeekDebit(weekDebit)
                 setTotal7(last7DaysTransactionsCreditDebitTotals)
@@ -89,16 +89,16 @@ const AdminDashboard = () => {
 
     const getTotalCreditDebit = newTransactions => {
         let newTotalCredit = 0;
-            let newTotalDebit = 0;
-            for (let item of newTransactions) {
-                if (item.type.toLowerCase() === "credit") {
-                    newTotalCredit += item.sum;
-                }
-                if (item.type.toLowerCase() === "debit") {
-                    newTotalDebit += item.sum;
-                }
+        let newTotalDebit = 0;
+        for (let item of newTransactions) {
+            if (item.type.toLowerCase() === "credit") {
+                newTotalCredit += item.sum;
             }
-            return ({ totalCredit: newTotalCredit, totalDebit: newTotalDebit })
+            if (item.type.toLowerCase() === "debit") {
+                newTotalDebit += item.sum;
+            }
+        }
+        return ({ totalCredit: newTotalCredit, totalDebit: newTotalDebit })
     }
 
 
@@ -121,7 +121,7 @@ const AdminDashboard = () => {
             if (response.status === 200) {
                 const newTransactions = response.data.transactions;
                 newTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-                const sortedNewTransactions = newTransactions.slice(0,3)
+                const sortedNewTransactions = newTransactions.slice(0, 3)
                 setTransaction(sortedNewTransactions)
                 setApiStatus(apiStatusConstants.success)
             } else {
@@ -188,7 +188,6 @@ const AdminDashboard = () => {
 
     const renderTransactionSuccessView = () => {
         const len = transactions.length;
-        // console.log(transactions)
         return (
             <ul className='admin-transactions-list'>
                 {transactions.map((transaction, ind) => (
@@ -202,7 +201,7 @@ const AdminDashboard = () => {
                                     <p className='admin-transaction-img-container-para'>Arlene McCoy</p>
                                 </div>
                             </div>
-                            <p className='admin-transaction-category'>{transaction.transaction_name}</p>
+                            <p className='admin-transaction-name'>{transaction.transaction_name}</p>
                             <p className='admin-transaction-category'>{transaction.category}</p>
                             <p className='admin-transaction-date'>{formatDate(transaction.date)}</p>
                             <p className={`admin-transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
@@ -267,18 +266,20 @@ const AdminDashboard = () => {
                                         <h1 className='admin-credit-heading'>${totalCredit}</h1>
                                         <p className='admin-credit-para'>credit</p>
                                     </div>
-                                    <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690714183/credit_jbbub1.png' className='type-img' alt='credit' />
+                                    <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690714183/credit_jbbub1.png' className='admin-type-img' alt='credit' />
                                 </div>
                                 <div className='admin-credit-debit-container'>
                                     <div>
                                         <h1 className='admin-debit-heading'>${totalDebit}</h1>
                                         <p className='admin-debit-para'>Debit</p>
                                     </div>
-                                    <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690714183/Debit_hh7uxj.png' className='type-img' alt='debit' />
+                                    <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690714183/Debit_hh7uxj.png' className='admin-type-img' alt='debit' />
                                 </div>
                             </div>
                             <h1 className='admin-last-transaction-heading'>Last Transaction</h1>
-                            {renderTransactions()}
+                            <div className='admin-transaction-sub-container'>
+                                {renderTransactions()}
+                            </div>
                             <h1 className='admin-last-transaction-heading'>Debit & Credit Overview</h1>
                             <div className='admin-overview-container'>
                                 <div className='admin-overview-sub-container'>

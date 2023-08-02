@@ -60,7 +60,7 @@
     align-items: center;
     padding: 20px;
 }
-@media screen and (max-width:767px) {
+@media screen and (max-width:576px) {
     .type-container{
         flex-direction: column;
     }
@@ -89,6 +89,26 @@
     font-weight: 400;
     line-height: normal;
 }
+@media screen and (max-width:767px) {
+    .type-img{
+        height: 140px;
+        width: 160px;
+    }
+}
+@media screen and (max-width:576px) {
+    .type-img{
+        height: 140px;
+        width: 160px;
+    }
+}
+
+@media screen and (max-width:400px) {
+    .type-img{
+        height: 120px;
+        width: 140px;
+    }
+}
+
 
 .credit-debit-container {
     display: flex;
@@ -100,7 +120,7 @@
     margin: 10px;
     padding: 10px;
 }
-@media screen and (max-width:767px) {
+@media screen and (max-width:576px) {
     .credit-debit-container{
         width: 90%;
     }
@@ -135,17 +155,34 @@
     margin: 10px;
 }
 
+.transaction-sub-container{
+    background-color: #ffffff;
+    border-radius: 20px;
+    /* margin: 20px; */
+    padding: 5px;
+    margin-bottom: 10px;
+    overflow-x: hidden;
+}
+
+@media screen and (max-width:400px) {
+    .transaction-sub-container{
+        overflow-x: scroll;
+    }
+}
+
 .transactions-list {
     padding-left: 0px;
     list-style-type: none;
-    background-color: #ffffff;
-    border-radius: 20px;
+    /* background-color: #ffffff; */
     margin: 15px;
     display: flex;
     flex-direction: column;
-
 }
-
+@media screen and (max-width:400px){
+    .transactions-list{
+        width: 380px;
+    }
+}
 .transaction-item {
     display: flex;
     flex-direction: row;
@@ -226,7 +263,12 @@
     border-radius: 20px;
     margin: 10px;
     padding: 10px;
-}
+} 
+/* @media screen and (max-width:400px){
+    .overview-container{
+        width: 100%;
+    }
+} */
 
 .overview-sub-container {
     display: flex;

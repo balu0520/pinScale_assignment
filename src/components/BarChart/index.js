@@ -9,7 +9,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-
+import './index.css'
 
 
 ChartJS.register(
@@ -116,7 +116,7 @@ const BarChart = props => {
         ],
     };
     return (
-        <div style={{width:"100%"}}>
+        <div className='barchart-container'>
             <Bar options={options} data={chartData} />
         </div>
     )

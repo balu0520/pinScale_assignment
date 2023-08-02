@@ -45,7 +45,7 @@
 }
 @media screen and (max-width:400px) {
     .admin-dashboard-sub-container{
-        width: 160%;
+        width: 100%;
     }
 }
 
@@ -55,7 +55,7 @@
     align-items: center;
     padding: 20px;
 }
-@media screen and (max-width:767px) {
+@media screen and (max-width:576px) {
     .admin-type-container{
         flex-direction: column;
     }
@@ -73,6 +73,16 @@
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+}
+@media screen and (max-width:576px) {
+    .admin-credit-heading{
+        font-size: 25px;
+    }
+}
+@media screen and (max-width: 400px) {
+    .admin-credit-heading{
+        font-size: 18px;
+    }
 }
 
 .admin-credit-para {
@@ -94,14 +104,14 @@
     margin: 10px;
     padding: 10px;
 }
-@media screen and (max-width:767px) {
+@media screen and (max-width:576px) {
     .admin-credit-debit-container{
         width: 90%;
     }
 }
 @media screen and (max-width:400px) {
     .admin-credit-debit-container{
-        width: 50%;
+        width: 80%;
     }
 }
 .admin-debit-heading {
@@ -113,13 +123,56 @@
     line-height: normal;
 }
 
+@media screen and (max-width:576px) {
+    .admin-debit-heading{
+        font-size: 25px;
+    }
+}
+@media screen and (max-width: 400px) {
+    .admin-debit-heading{
+        font-size: 18px;
+    }
+}
+
+
 .admin-debit-para {
     color: #718EBF;
     font-family: "Inter";
-    font-size: 16px;
+    font-size: 26px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+}
+@media screen and (max-width:576px) {
+    .admin-debit-para{
+        font-size: 22px;
+    }
+}
+@media screen and (max-width: 400px) {
+    .admin-debit-para{
+        font-size: 18px;
+    }
+}
+
+
+@media screen and (max-width:767px) {
+    .admin-type-img{
+        height: 130px;
+        width: 140px;
+    }
+}
+@media screen and (max-width:576px) {
+    .admin-type-img{
+        height: 120px;
+        width: 130px;
+    }
+}
+
+@media screen and (max-width:400px) {
+    .admin-type-img{
+        height: 110px;
+        width: 120px;
+    }
 }
 
 .admin-last-transaction-heading {
@@ -133,18 +186,33 @@
     margin: 10px;
 }
 
+.admin-transaction-sub-container{
+    background-color: #ffffff;
+    border-radius: 20px;
+    /* margin: 20px; */
+    padding: 5px;
+    margin-bottom: 10px;
+    overflow-x: hidden;
+}
+
+@media screen and (max-width:510px) {
+    .admin-transaction-sub-container{
+        overflow-x: scroll;
+    }
+}
+
 .admin-transactions-list {
     padding-left: 0px;
     list-style-type: none;
-    background-color: #ffffff;
-    border-radius: 20px;
-    margin: 15px;
+    /* background-color: #ffffff; */
+    /* border-radius: 20px; */
+    margin: 10px;
     display: flex;
     flex-direction: column;
 }
-@media screen and (max-width:400px) {
+@media screen and (max-width:510px) {
     .admin-transactions-list{
-        width: 100%;
+        width: 450px;
     }
     
 }
@@ -246,6 +314,11 @@
     border-radius: 20px;
     margin: 10px;
     padding: 10px;
+}
+@media screen and (max-width:500px) {
+    .admin-overview-container{
+        width: 100%;
+    }
 }
 
 .admin-overview-sub-container {
