@@ -73,7 +73,7 @@
     margin-bottom: 10px;
     overflow-x: hidden;
 }
-@media screen and (max-width:510px) {
+@media screen and (max-width:767px) {
     .admin-all-transactions-sub-container{
         overflow-x: scroll;
     } 
@@ -88,9 +88,9 @@
     display: flex;
     flex-direction: column;
 }
-@media screen and (max-width:510px) {
+@media screen and (max-width:767px) {
     .admin-all-transactions-list{
-        width: 450px;
+        width: 700px;
     }
 }
 .admin-all-transaction-item {
@@ -131,7 +131,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    width: 10%;
+    width: 15%;
 }
 
 .admin-all-transaction-date {
@@ -150,6 +150,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+    width: 10%;
 }
 .debit{
     color: #FE5C73;

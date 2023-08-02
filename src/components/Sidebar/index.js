@@ -8,7 +8,6 @@ import LogoutPopup from '../LogoutPopup'
 const SideBar = props => {
     const {activeId} = props 
 
-
     return (
         <div className='sidebar-container'>
             <div style={{width:"100%"}} className='sidebar-container-1'>

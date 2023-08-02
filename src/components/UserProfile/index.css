@@ -44,7 +44,7 @@
     flex-direction: row;
     justify-content: space-around;
 }
-@media screen and (max-width:400px) {
+@media screen and (max-width:576px) {
     .profile-data-container{
         flex-direction: column;
     }
@@ -54,11 +54,16 @@
     height: 120px;
     width: 120px;
 }
+@media screen and (max-width:576px) {
+    .profile-pic{
+        margin-bottom: 10px;
+        align-self: center;
+    }
+}
 @media screen and (max-width:400px) {
     .profile-pic{
         height: 100px;
         width: 100px;
-        align-self: center;
         margin-bottom: 5px;
     }
 }
@@ -79,12 +84,30 @@
     margin-bottom: 10px;
     width: 100%;
 }
+@media screen and (max-width:860px){
+    .profile-inputs-container{
+        flex-direction: column;
+    }
+}
 
 .profile-input-container {
     display: flex;
     flex-direction: column;
     width: 40%;
 }
+@media screen and (max-width:860px){
+    .profile-input-container{
+        width: 80%;
+        margin-bottom: 10px;
+    }
+}
+@media screen and (max-width:767px){
+    .profile-input-container{
+        width: 80%;
+        margin-bottom: 10px;
+    }
+}
+
 
 .profile-input-label {
     color: #505887;

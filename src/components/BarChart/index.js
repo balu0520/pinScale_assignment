@@ -87,6 +87,21 @@ const options = {
 
 const labels = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
+const calculateBarThickness = () => {
+    const deviceWidth = window.innerWidth;
+    if(deviceWidth > 767){
+        return 45
+    } else if(deviceWidth > 600){
+        return 40
+    } else if(deviceWidth > 500){
+        return 30
+    } else if(deviceWidth > 400){
+        return 20
+    } else{
+        return 15
+    }
+}
+
 
 const BarChart = props => {
     const { total7 } = props
@@ -102,7 +117,7 @@ const BarChart = props => {
                 borderRadius:'15px',
                 borderWidth:2,
                 borderColor:"rgba(77, 120, 255, 1)",
-                barThickness:45,   
+                barThickness:calculateBarThickness(),   
             },
             {
                 label: 'Credit',
@@ -111,7 +126,7 @@ const BarChart = props => {
                 borderRadius:'10px',
                 borderWidth:2,
                 borderColor:"rgba(252, 170, 11, 1)",
-                barThickness:45,
+                barThickness:calculateBarThickness(),
             },
         ],
     };

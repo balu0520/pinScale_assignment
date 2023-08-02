@@ -98,7 +98,7 @@ const AddPopup = props => {
                     <div className="add-modal-container">
                         <div className="add-modal-description-container">
                             <h1 className="add-modal-description-heading">Add Transaction</h1>
-                            <p className="add-modal-description-para"></p>
+                            <p className="add-modal-description-para">You can add your transaction here</p>
                         </div>
                         <button className="into-btn" onClick={() => close()}>X</button>
                     </div>

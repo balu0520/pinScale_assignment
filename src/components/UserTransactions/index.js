@@ -139,6 +139,8 @@ const UserTransactions = () => {
                         <p className='all-transaction-date' style={{ color: '#343C6A' }}>Date</p>
                         <div className='all-transaction-update-delete-container'>
                             <p className="all-transaction-amount" style={{ color: '#343C6A' }}>Amount </p>
+                        </div>
+                        <div className='all-transaction-update-delete-sub-container'>
                             <button className='btn' style={{ color: "#2D60FF", visibility: 'hidden' }} ><VscEdit /></button>
                             <button className='btn' style={{ color: "#FE5C73", visibility: 'hidden' }}><FaRegTrashAlt /></button>
                         </div>
@@ -150,13 +152,15 @@ const UserTransactions = () => {
                         <div className='all-transaction-item'>
                             <div className='all-transaction-name-container'>
                                 {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
-                                {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
+                                {transaction.type.toLowerCase() !== "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
                                 <h1 className='all-transaction-name'>{transaction.transaction_name}</h1>
                             </div>
                             <p className='all-transaction-category'>{transaction.category}</p>
                             <p className='all-transaction-date'>{formatDate(transaction.date)}</p>
                             <div className='all-transaction-update-delete-container'>
                                 <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type.toLowerCase() === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                            </div>
+                            <div className='all-transaction-update-delete-sub-container'>
                                 <UpdatePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
                                 <DeletePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
                             </div>
