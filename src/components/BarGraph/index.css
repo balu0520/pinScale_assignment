@@ -1,0 +1,11 @@
+@media screen and (min-width:901px) {
+    .chart-container{
+        width: 100% !important;
+    }
+}
+@media screen and (max-width:900px) {
+    .chart-container{
+        width: 900px !important;
+        overflow-x: scroll;
+    }
+}

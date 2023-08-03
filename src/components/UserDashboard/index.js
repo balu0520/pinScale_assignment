@@ -8,7 +8,7 @@ import { BallTriangle } from 'react-loader-spinner'
 import DeletePopup from '../DeletePopup'
 import AddPopup from '../AddPopup'
 import UpdatePopup from '../UpdatePopup'
-import BarChart from '../BarChart'
+import BarGraph from '../BarGraph'
 
 
 const apiStatusConstants = {
@@ -227,7 +227,7 @@ const UserDashboard = () => {
     )
 
     const renderBarChartSuccessView = () => (
-        <BarChart total7={total7} />
+        <BarGraph total7={total7} />
     )
 
 

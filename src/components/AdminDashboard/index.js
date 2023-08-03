@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import './index.css'
 import { useNavigate } from 'react-router-dom'
-import BarChart from '../BarChart'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
 import SideBar from '../Sidebar'
 import AddPopup from '../AddPopup'
 import { BallTriangle } from 'react-loader-spinner'
+import BarGraph from '../BarGraph'
 
 const apiStatusConstants = {
     initial: "INITIAL",
@@ -233,7 +233,7 @@ const AdminDashboard = () => {
     }
 
     const renderBarChartSuccessView = () => (
-        <BarChart total7={total7} />
+        <BarGraph total7={total7} />
     )
 
     const renderBarChart = () => {

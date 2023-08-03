@@ -37,8 +37,13 @@ const SideBar = props => {
                     <h1 className='profile-name'>Rhye</h1>
                     <p className='profile-mail'>olivia@untitledui.com</p>
                 </div>
-                <LogoutPopup />
+                <LogoutPopup className="logout-profile"/>
             </div>
+            < >
+            <div className="max-device-false">
+            <LogoutPopup />
+            </div>
+            </>
         </div>
     )
 }

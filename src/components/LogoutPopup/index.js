@@ -17,7 +17,7 @@ const LogoutPopup = () => {
 
 
     return(
-        <Popup trigger={<button className='btn'><MdLogout style={{color:"rgba(113, 142, 191, 1)",width:"20px",height:"20px"}}/></button>} position="center" {...{ overlayStyle }} modal>
+        <Popup trigger={<button className='btn logout-profile-1'><MdLogout style={{color:"rgba(113, 142, 191, 1)",width:"20px",height:"20px"}}/></button>} position="center" {...{ overlayStyle }} modal>
         {close => (
             <div className='logout-modal' >
                 <div className='logout-modal-container'>
