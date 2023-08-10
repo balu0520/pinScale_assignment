@@ -42,9 +42,9 @@ const UserDashboard = () => {
         }
     }, [cookie.user_id])
 
-    if (cookie.user_id === 3) {
-        navigate("/admin-dashboard")
-    }
+    // if (cookie.user_id === 3) {
+    //     navigate("/admin-dashboard")
+    // }
 
     useEffect(() => {
         fetchTransactions();

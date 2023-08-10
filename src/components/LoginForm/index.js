@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import './index.css'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
@@ -8,14 +8,25 @@ const LoginForm = () => {
     const [password, setPassword] = useState("")
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
-    const [_, setCookie] = useCookies(["user_id"])
+    const [cookie, setCookie] = useCookies(["user_id"])
+    const [load, setLoad] = useState(false)
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!cookie.user_id) {
+            setLoad(true)
+        } else if (cookie.user_id == 3) {
+            navigate("/admin-dashboard")
+        } else {
+            navigate("/user-dashboard")
+        }
+    }, [cookie.user_id])
 
     const onSubmitSuccess = get_user_id => {
         setErr(false)
         setErrMsg("")
         setCookie("user_id", get_user_id[0].id);
-        if(get_user_id[0].id !== 3){
+        if (get_user_id[0].id !== 3) {
             navigate("/user-dashboard")
         } else {
             navigate("/admin-dashboard")
@@ -56,31 +67,35 @@ const LoginForm = () => {
     }
 
     return (
-        <div className="container">
-            <div className="desktopViewBoard">
-                <h1 className="desktopViewBoardHeading">Login</h1>
-            </div>
-            <div className="loginContainerMain">
-                <div className="signInContainer">
-                    <h1 className="signInHeading">Sign In</h1>
-                    <p className="signInPara">Sign in to your account</p>
-                    <form className="loginFormContainer" onSubmit={handleLogin}>
-                        <div style={{ margin: 'auto', width: '85%' }}>
-                            <div className="inputFormContainer">
-                                <label className="loginFormName" htmlFor='email'>email</label>
-                                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} id='email' className="loginFormInput" />
-                            </div>
-                            <div className="inputFormContainer">
-                                <label className="loginFormName" htmlFor='password'>Password</label>
-                                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="password" className="loginFormInput" />
-                                {err && (<p className="errorMsg">{errMsg}</p>)}
-                            </div>
-                            <button type="submit" className="sign-in-btn">Sign In</button>
+        <>
+            {load && (
+                <div className="container">
+                    <div className="desktopViewBoard">
+                        <h1 className="desktopViewBoardHeading">Login</h1>
+                    </div>
+                    <div className="loginContainerMain">
+                        <div className="signInContainer">
+                            <h1 className="signInHeading">Sign In</h1>
+                            <p className="signInPara">Sign in to your account</p>
+                            <form className="loginFormContainer" onSubmit={handleLogin}>
+                                <div style={{ margin: 'auto', width: '85%' }}>
+                                    <div className="inputFormContainer">
+                                        <label className="loginFormName" htmlFor='email'>email</label>
+                                        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} id='email' className="loginFormInput" />
+                                    </div>
+                                    <div className="inputFormContainer">
+                                        <label className="loginFormName" htmlFor='password'>Password</label>
+                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="password" className="loginFormInput" />
+                                        {err && (<p className="errorMsg">{errMsg}</p>)}
+                                    </div>
+                                    <button type="submit" className="sign-in-btn">Sign In</button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </div>
+            )}
+        </>
     )
 }
 

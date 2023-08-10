@@ -2,31 +2,52 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './index.css'
 
-// Helper function to group transactions by week
 function groupByWeekday(transactions) {
-    const weekdays = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+    const weekdays = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const groupedData = {};
 
-    // Initialize all weekdays with default values
     weekdays.forEach(weekday => {
         groupedData[weekday] = { credit: 0, debit: 0 };
     });
 
-    transactions.forEach((transaction) => {
+    const oneWeekAgo = new Date(); 
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    for (const transaction of transactions){
         const date = new Date(transaction.date);
+        // console.log(date)
+        if(date == "Invalid Date" || date < oneWeekAgo){
+            continue
+        }
         const weekday = weekdays[date.getDay()];
+        console.log(transaction)
         if (transaction.type.toLowerCase() === 'credit') {
             groupedData[weekday].credit += transaction.sum;
         } else if (transaction.type.toLowerCase() === 'debit') {
             groupedData[weekday].debit += transaction.sum;
         }
-    });
+    }
+
+    // transactions.forEach((transaction) => {
+    //     const date = new Date(transaction.date);
+    //     console.log(date)
+    //     if(date == "Invalid Date"){
+    //         return
+    //     }
+    //     const weekday = weekdays[date.getDay()];
+    //     console.log(transaction)
+    //     if (transaction.type.toLowerCase() === 'credit') {
+    //         groupedData[weekday].credit += transaction.sum;
+    //     } else if (transaction.type.toLowerCase() === 'debit') {
+    //         groupedData[weekday].debit += transaction.sum;
+    //     }
+    // });
     return groupedData;
 }
 
 const CustomBar = (props) => {
     const { x, y, width, height, fill } = props;
-    const borderRadius = 10; // Adjust the value to control the curvature of the bars
+    const borderRadius = 10; 
     return (
         <g>
            <rect x={x} y={y} width={width} height={height} fill={fill} rx={borderRadius} ry={borderRadius} />
