@@ -37,7 +37,6 @@ const LoginForm = () => {
     const onSubmitFailure = msg => {
         setErr(true)
         setErrMsg("Invalid Credentials")
-        console.log(msg)
     }
 
     const handleLogin = async event => {
@@ -54,7 +53,6 @@ const LoginForm = () => {
         }
         try {
             const response = await fetch(url, options)
-            // console.log(response)
             if (response.ok === true) {
                 const data = await response.json();
                 onSubmitSuccess(data.get_user_id)
@@ -62,7 +60,6 @@ const LoginForm = () => {
                 onSubmitFailure(response.data)
             }
         } catch (error) {
-            // console.error(error)
         }
 
     }

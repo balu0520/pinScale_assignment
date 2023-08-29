@@ -81,7 +81,7 @@ const AdminTransactions = () => {
                 setTransactions(newTransactions)
             }
         }catch(err){
-            // console.log(err)
+            
         }
 
     }

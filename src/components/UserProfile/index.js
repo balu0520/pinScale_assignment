@@ -46,7 +46,6 @@ const UserProfile = () => {
                 SetProfile(data.users[0])
             } 
         } catch (err) {
-            // console.error(err)
         }
     }
 

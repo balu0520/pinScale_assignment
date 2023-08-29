@@ -53,7 +53,7 @@ const WeekCreditDebit = props => {
             setWeekDebit(weekDebit)
             setTotal7(last7DaysTransactionsCreditDebitTotals)
         } catch (error) {
-            // console.log(error)
+           
         }
     }
 

@@ -59,7 +59,6 @@ const AdminDashboard = () => {
                 setTransaction(sortedNewTransactions)
             }
         } catch (err) {
-            // console.log(err)
         }
     }
 

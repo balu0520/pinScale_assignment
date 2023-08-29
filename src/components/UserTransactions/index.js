@@ -82,7 +82,7 @@ const UserTransactions = () => {
                 setTransactions(newTransactions)
             }
         }catch(err){
-            // console.log(err)
+            
         }
 
     }

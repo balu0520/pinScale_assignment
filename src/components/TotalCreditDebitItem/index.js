@@ -53,7 +53,7 @@ const TotalCreditDebitItem = props => {
                 setTotalDebit(totalDebit)
             }
         } catch (err) {
-            // console.error(err)
+            
         }
     }
 
