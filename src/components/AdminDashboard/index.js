@@ -151,7 +151,7 @@ const AdminDashboard = () => {
                 setApiStatus(apiStatusConstants.failure)
             }
         }).catch(error => {
-            // console.error('Error:', error);
+            console.error('Error:', error);
         });
     }
 
@@ -167,9 +167,6 @@ const AdminDashboard = () => {
 
         return date.toLocaleString('en-US', options);
     }
-
-
-
 
     const renderTransactionsLoadingView = () => (
         <div className='admin-loader-container'>
