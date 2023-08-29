@@ -15,12 +15,10 @@ function groupByWeekday(transactions) {
 
     for (const transaction of transactions){
         const date = new Date(transaction.date);
-        // console.log(date)
         if(date == "Invalid Date" || date < oneWeekAgo){
             continue
         }
         const weekday = weekdays[date.getDay()];
-        // console.log(transaction)
         if (transaction.type.toLowerCase() === 'credit') {
             groupedData[weekday].credit += transaction.sum;
         } else if (transaction.type.toLowerCase() === 'debit') {
