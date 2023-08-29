@@ -2,10 +2,13 @@ import Popup from "reactjs-popup";
 import './index.css'
 import { useState } from "react";
 import { useCookies } from "react-cookie";
+import { useFetch } from "../../hooks/useFetch";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
 const AddPopup = props => {
-    const {reloadOperation,id} = props
+    const { reloadOperation, id } = props
     const [cookie, _] = useCookies(["user_id"])
     const [transactionName, setTransactionName] = useState("")
     const [transactionType, setTransactionType] = useState("")
@@ -14,22 +17,37 @@ const AddPopup = props => {
     const [transactionDate, setTransactionDate] = useState("")
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
+    const { fetchData } = useFetch({
+        url: "https://bursting-gelding-24.hasura.app/api/rest/add-transaction", method: "POST", headers: {
+            'content-type': 'application/json',
+            'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+            'x-hasura-role': 'user',
+            'x-hasura-user-id': cookie.user_id
+        }, body: {
+            name: transactionName,
+            type: transactionType,
+            category: transactionCategory,
+            amount: transactionAmount,
+            date: transactionDate,
+            user_id: cookie.user_id
+        }
+    })
 
     const reload = () => {
-        if(id === -1){
+        if (id === -1) {
             reloadOperation()
         } else {
             reloadOperation(id)
         }
     }
 
-    const submitTransaction = async (event,close) => {
+    const submitTransaction = async (event, close) => {
         event.preventDefault();
         if (transactionName === "") {
             setErr(true)
             setErrMsg("Enter transaction Name")
             return
-        }else if (transactionType === "") {
+        } else if (transactionType === "") {
             setErr(true)
             setErrMsg("Enter transaction Type")
             return
@@ -46,34 +64,22 @@ const AddPopup = props => {
             setErrMsg("Enter transaction Date")
             return
         }
-        const url = "https://bursting-gelding-24.hasura.app/api/rest/add-transaction"
-        const details = {
-            name: transactionName,
-            type: transactionType,
-            category: transactionCategory,
-            amount: transactionAmount,
-            date: transactionDate,
-            user_id: cookie.user_id
-        }
-        const options = {
-            method: "POST",
-            headers: {
-                'content-type': 'application/json',
-                'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
-                'x-hasura-role': 'user',
-                'x-hasura-user-id': cookie.user_id
-            },
-            body: JSON.stringify(details)
-        }
         try {
-            const response = await fetch(url, options)
-            if (response.status === 200) {
-                const data = await response.json()
-                alert("Added Successfully")
+            const { response_err } = await fetchData()
+            if (response_err !== null) {
+                toast.success('Added successfully!', {
+                    position: 'top-right',
+                    autoClose: 3000, // Time in milliseconds
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
                 setErr(false)
                 setErrMsg("")
             } else {
-                alert('Something went wrong, please try again later')
+                toast('Something went wrong, please try again later')
                 setErr(false)
                 setErrMsg("")
             }
@@ -92,7 +98,7 @@ const AddPopup = props => {
     return (
         <Popup trigger={<button className='add-transaction-button'>+ Add Transaction</button>} position="center" {...{ overlayStyle }} modal>
             {close => (
-                <form className="add-modal" onSubmit={(event) => submitTransaction(event,close)}>
+                <form className="add-modal" onSubmit={(event) => submitTransaction(event, close)}>
                     <div className="add-modal-container">
                         <div className="add-modal-description-container">
                             <h1 className="add-modal-description-heading">Add Transaction</h1>

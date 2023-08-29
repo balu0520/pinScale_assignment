@@ -18,7 +18,7 @@ const WeekCreditDebit = props => {
     const [weekCredit, setWeekCredit] = useState("")
     const [weekDebit, setWeekDebit] = useState("")
     const { url, method, headers } = props
-    const { fetchHook, apiStatus } = useFetch({ url, method, headers })
+    const { fetchData, apiStatus } = useFetch({ url, method, headers })
 
     useEffect(() => {
         fetchLast7DaysCreditDebit()
@@ -40,20 +40,21 @@ const WeekCreditDebit = props => {
 
     const fetchLast7DaysCreditDebit = async () => {
         try {
-            const response = await fetchHook();
-            const data = await response.json()
-            let last7DaysTransactionsCreditDebitTotals = null
-            if(cookie.user_id == 3){
-                last7DaysTransactionsCreditDebitTotals = data.last_7_days_transactions_totals_admin;
-            } else {
-                last7DaysTransactionsCreditDebitTotals = data.last_7_days_transactions_credit_debit_totals;
+            const { response_data } = await fetchData();
+            if (response_data !== null) {
+                let last7DaysTransactionsCreditDebitTotals = null
+                if (cookie.user_id == 3) {
+                    last7DaysTransactionsCreditDebitTotals = response_data.last_7_days_transactions_totals_admin;
+                } else {
+                    last7DaysTransactionsCreditDebitTotals = response_data.last_7_days_transactions_credit_debit_totals;
+                }
+                const { weekCredit, weekDebit } = getCreditDebit(last7DaysTransactionsCreditDebitTotals)
+                setWeekCredit(weekCredit)
+                setWeekDebit(weekDebit)
+                setTotal7(last7DaysTransactionsCreditDebitTotals)
             }
-            const { weekCredit, weekDebit } = getCreditDebit(last7DaysTransactionsCreditDebitTotals)
-            setWeekCredit(weekCredit)
-            setWeekDebit(weekDebit)
-            setTotal7(last7DaysTransactionsCreditDebitTotals)
         } catch (error) {
-           
+
         }
     }
 
@@ -80,20 +81,20 @@ const WeekCreditDebit = props => {
 
     const renderWeekCreditDebitSuccessView = () => (
         <div className='overview-container'>
-        <div className='overview-sub-container'>
-            <h1 className='overview-heading'><span style={{ color: "#333B69" }}>{weekDebit}</span> Debited & <span style={{ color: "#333B69" }}>{weekCredit}</span> Credited in this Week</h1>
-            <div className='overview-sub-container-1'>
-                <div className='overview-sub-container-2'>
-                    <button className='overview-btn-1'></button>
-                    <p className='overview-para'>Debit</p>
-                </div>
-                <div className='overview-sub-container-2'>
-                    <button className='overview-btn-2'></button>
-                    <p className='overview-para'>Credit</p>
+            <div className='overview-sub-container'>
+                <h1 className='overview-heading'><span style={{ color: "#333B69" }}>{weekDebit}</span> Debited & <span style={{ color: "#333B69" }}>{weekCredit}</span> Credited in this Week</h1>
+                <div className='overview-sub-container-1'>
+                    <div className='overview-sub-container-2'>
+                        <button className='overview-btn-1'></button>
+                        <p className='overview-para'>Debit</p>
+                    </div>
+                    <div className='overview-sub-container-2'>
+                        <button className='overview-btn-2'></button>
+                        <p className='overview-para'>Credit</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <BarGraph total7={total7} />
+            <BarGraph total7={total7} />
         </div>
     )
 

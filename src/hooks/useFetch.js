@@ -5,24 +5,38 @@ const apiStatusConstants = {
     failure: "FAILURE",
     inProgress: "IN_PROGRESS"
 }
-export function useFetch({url,method,headers,params}){
-    const [apiStatus,setApiStatus] = useState(apiStatusConstants.initial)
-    const options = {method,headers}
+export function useFetch({ url, method, headers, params, body }) {
+    const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
+    let options = { method, headers }
+    if (body !== undefined) {
+        options = { method, headers, body: JSON.stringify(body) }
+    }
     let modifiedUrl = url
-    if(params !== undefined){
-        const limit = params.limit
-        const offset = params.offset
-        modifiedUrl = `${url}?limit=${limit}&offset=${offset}`
-    } 
-    const fetchHook = async () => {
+    if (params !== undefined) {
+        if (params.id === undefined) {
+            const limit = params.limit
+            const offset = params.offset
+            modifiedUrl = `${url}?limit=${limit}&offset=${offset}`
+        } else {
+            const id = params.id
+            modifiedUrl = `${url}?id=${id}`
+        }
+    }
+    let response_data = null;
+    let response_err = null;
+    const fetchData = async () => {
         setApiStatus(apiStatusConstants.inProgress)
-        const response = await fetch(modifiedUrl,options)
-        if(response.ok === true){
+        const response = await fetch(modifiedUrl, options)
+        // console.log(response)
+        if (response.ok === true) {
+            response_data = await response.json()
             setApiStatus(apiStatusConstants.success)
         } else {
             setApiStatus(apiStatusConstants.failure)
+            response_err = response.status
         }
-        return response
+        return { response, response_data, response_err }
     }
-    return {fetchHook,apiStatus}
+
+    return { fetchData, apiStatus }
 } 

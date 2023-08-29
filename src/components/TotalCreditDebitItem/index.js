@@ -15,7 +15,7 @@ const apiStatusConstants = {
 const TotalCreditDebitItem = props => {
     const [cookie, _] = useCookies(['user_id'])
     const { url, method, headers } = props
-    const { fetchHook, apiStatus } = useFetch({ url, method, headers })
+    const { fetchData, apiStatus } = useFetch({ url, method, headers })
     const [totalCredit, setTotalCredit] = useState("");
     const [totalDebit, setTotalDebit] = useState("");
 
@@ -39,14 +39,13 @@ const TotalCreditDebitItem = props => {
 
     const fetchAllDebitAndCredit = async () => {
         try {
-            const response = await fetchHook();
-            if (response.ok === true) {
-                const data = await response.json();
+            const {response_data} = await fetchData();
+            if (response_data !== null) {
                 let totalCreditDebitTransactions = null
                 if (cookie.user_id == 3) {
-                    totalCreditDebitTransactions = data.transaction_totals_admin;
+                    totalCreditDebitTransactions = response_data.transaction_totals_admin;
                 } else {
-                    totalCreditDebitTransactions = data.totals_credit_debit_transactions
+                    totalCreditDebitTransactions = response_data.totals_credit_debit_transactions
                 }
                 const { totalCredit, totalDebit } = getTotalCreditDebit(totalCreditDebitTransactions)
                 setTotalCredit(totalCredit)

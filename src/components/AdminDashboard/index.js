@@ -19,7 +19,7 @@ const apiStatusConstants = {
 const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
     const [transactions, setTransaction] = useState([])
-    const { fetchHook, apiStatus } = useFetch({
+    const { fetchData, apiStatus } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -50,10 +50,9 @@ const AdminDashboard = () => {
 
     const fetchTransactions = async () => {
         try {
-            const response = await fetchHook()
-            if (response.ok === true) {
-                const data = await response.json()
-                const newTransactions = data.transactions;
+            const {response_data} = await fetchData()
+            if (response_data !== null) {
+                const newTransactions = response_data.transactions;
                 newTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
                 const sortedNewTransactions = newTransactions.slice(0, 3)
                 setTransaction(sortedNewTransactions)

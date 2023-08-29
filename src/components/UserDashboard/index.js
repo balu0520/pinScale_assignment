@@ -24,7 +24,7 @@ const apiStatusConstants = {
 const UserDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
     const [transactions, setTransaction] = useState([])
-    const { fetchHook, apiStatus } = useFetch({
+    const { fetchData, apiStatus } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -54,14 +54,19 @@ const UserDashboard = () => {
 
 
     const fetchTransactions = async () => {
-        const response = await fetchHook();
-        if (response.ok === true) {
-            const data = await response.json()
-            const newTransactions = data.transactions;
-            newTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-            const sortedNewTransactions = newTransactions.slice(0, 3)
-            setTransaction(sortedNewTransactions)
+        try {
+            const { response_data, response_error } = await fetchData();
+            if (response_data !== null) {
+                const newTransactions = response_data.transactions;
+                newTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                const sortedNewTransactions = newTransactions.slice(0, 3)
+                setTransaction(sortedNewTransactions)
+            }
+
+        } catch (err) {
+
         }
+
     }
 
 
@@ -156,7 +161,7 @@ const UserDashboard = () => {
                                 'x-hasura-role': 'user',
                                 'x-hasura-user-id': cookie.user_id
                             }} />
-                                {/* <div className='type-container'>
+                            {/* <div className='type-container'>
                                 <div className='credit-debit-container'>
                                     <div>
                                         <h1 className='credit-heading'>${totalCredit}</h1>

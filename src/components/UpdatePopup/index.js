@@ -2,13 +2,15 @@ import { useState } from 'react'
 import './index.css'
 import Popup from 'reactjs-popup'
 import { VscEdit } from 'react-icons/vsc'
-import {useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie'
+import { useFetch } from '../../hooks/useFetch'
+import { toast } from 'react-toastify'
 
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
 const UpdatePopup = props => {
-    const [cookie,_] = useCookies(["user_id"])
-    const { transaction,reloadOperation,id} = props
+    const [cookie, _] = useCookies(["user_id"])
+    const { transaction, reloadOperation, id } = props
     const dateString = transaction.date;
     const dateObject = new Date(dateString);
     const day = String(dateObject.getDate()).padStart(2, "0");
@@ -22,9 +24,24 @@ const UpdatePopup = props => {
     const [transactionDate, setTransactionDate] = useState(formattedDate)
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
+    const { fetchData } = useFetch({
+        url: "https://bursting-gelding-24.hasura.app/api/rest/update-transaction", method: "POST", headers: {
+            'content-type': 'application/json',
+            'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+            'x-hasura-role': 'user',
+            'x-hasura-user-id': cookie.user_id
+        }, body: {
+            id: transaction.id,
+            name: transactionName,
+            type: transactionType,
+            category: transactionCategory,
+            amount: transactionAmount,
+            date: transactionDate,
+        }
+    })
 
     const reload = () => {
-        if(id === -1){
+        if (id === -1) {
             reloadOperation()
         } else {
             reloadOperation(id)
@@ -34,9 +51,9 @@ const UpdatePopup = props => {
     // useEffect(() => {
     //     setTransactionDate(formattedDate);
     //   }, [transaction.date]);
-    
 
-    const updateTransaction =async (event,close) => {
+
+    const updateTransaction = async (event, close) => {
         event.preventDefault();
         if (transactionName === "") {
             setErr(true)
@@ -46,50 +63,48 @@ const UpdatePopup = props => {
             setErr(true)
             setErrMsg("Enter transaction Amount")
             return
-        } 
-        const url = "https://bursting-gelding-24.hasura.app/api/rest/update-transaction"
-        const params = {
-            id:transaction.id,
-            name: transactionName,
-            type: transactionType,
-            category: transactionCategory,
-            amount: transactionAmount,
-            date: transactionDate,
         }
-        const options = {
-            method:'POST',
-            headers:{
-                'content-type': 'application/json',
-                'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
-                'x-hasura-role': 'user',
-                'x-hasura-user-id': cookie.user_id
-            },
-            body:JSON.stringify(params)
-        }
-        try{
-            const response = await fetch(url,options)
-            if(response.ok === true){
-                const data = await response.json()
-                alert("updated Successfully")
+        // const url = "https://bursting-gelding-24.hasura.app/api/rest/update-transaction"
+        // const params = {
+        //     id: transaction.id,
+        //     name: transactionName,
+        //     type: transactionType,
+        //     category: transactionCategory,
+        //     amount: transactionAmount,
+        //     date: transactionDate,
+        // }
+        // const options = {
+        //     method: 'POST',
+        //     headers: {
+        //         'content-type': 'application/json',
+        //         'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+        //         'x-hasura-role': 'user',
+        //         'x-hasura-user-id': cookie.user_id
+        //     },
+        //     body: JSON.stringify(params)
+        // }
+        try {
+            const {response_err} = await fetchData()
+            if (response_err !== null) {
+                toast("updated Successfully")
                 setErr(false)
-                setErrMsg("")
 
-            } else{
-                alert('Something went wrong, please try again later')
+            } else {
+                toast('Something went wrong, please try again later')
                 setErr(false)
-                setErrMsg("")
             }
+            setErrMsg("")
             close()
             reload()
-        }catch(error){
-            
+        } catch (error) {
+
         }
     }
 
     return (
         <Popup trigger={<button className='btn' style={{ color: "#2D60FF" }}><VscEdit /></button>} position="center" {...{ overlayStyle }} modal>
             {close => (
-                <form className="update-add-modal" onSubmit={(event) => updateTransaction(event,close)}>
+                <form className="update-add-modal" onSubmit={(event) => updateTransaction(event, close)}>
                     <div className="update-add-modal-container">
                         <div className="update-add-modal-description-container">
                             <h1 className="update-add-modal-description-heading">Update Transaction</h1>

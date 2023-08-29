@@ -18,7 +18,7 @@ const UserProfile = () => {
     const [profile, SetProfile] = useState([])
     const [cookie, _] = useCookies(["user_id"])
     const [load, setLoad] = useState(false)
-    const {fetchHook,apiStatus}  = useFetch({url:"https://bursting-gelding-24.hasura.app/api/rest/profile",method: 'GET', headers:{
+    const {fetchData,apiStatus}  = useFetch({url:"https://bursting-gelding-24.hasura.app/api/rest/profile",method: 'GET', headers:{
         'content-type': 'application/json',
         'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
         'x-hasura-role': 'user',
@@ -40,10 +40,9 @@ const UserProfile = () => {
 
     const fetchProfileData = async () => {
         try {
-            const response = await fetchHook();
-            if(response.ok === true){
-                const data = await response.json();
-                SetProfile(data.users[0])
+            const {response_data} = await fetchData();
+            if(response_data !== null){
+                SetProfile(response_data.users[0])
             } 
         } catch (err) {
         }
