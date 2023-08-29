@@ -76,9 +76,6 @@ const AdminDashboard = () => {
         return date.toLocaleString('en-US', options);
     }
 
-
-
-
     const renderTransactionsLoadingView = () => (
         <div className='admin-loader-container'>
             <BallTriangle
