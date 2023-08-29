@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 const HandleRedirect = () => {
     const navigate = useNavigate()
     const [cookie,_] = useCookies(["user_id"])
+    
     useEffect(() => {
         if(!cookie.user_id){
             navigate("/login")

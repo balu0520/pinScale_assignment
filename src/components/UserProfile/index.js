@@ -5,6 +5,7 @@ import { BallTriangle } from 'react-loader-spinner'
 import { useCookies } from 'react-cookie'
 import AddPopup from '../AddPopup'
 import { useNavigate } from 'react-router-dom'
+import { useFetch} from './../../hooks/useFetch'
 
 const apiStatusConstants = {
     initial: "INITIAL",
@@ -16,8 +17,13 @@ const apiStatusConstants = {
 const UserProfile = () => {
     const [profile, SetProfile] = useState([])
     const [cookie, _] = useCookies(["user_id"])
-    const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
     const [load, setLoad] = useState(false)
+    const {fetchHook,apiStatus}  = useFetch({url:"https://bursting-gelding-24.hasura.app/api/rest/profile",method: 'GET', headers:{
+        'content-type': 'application/json',
+        'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+        'x-hasura-role': 'user',
+        'x-hasura-user-id': cookie.user_id
+    }})
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -33,26 +39,12 @@ const UserProfile = () => {
     }, [])
 
     const fetchProfileData = async () => {
-        setApiStatus(apiStatusConstants.inProgress)
-        const url = "https://bursting-gelding-24.hasura.app/api/rest/profile";
-        const options = {
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json',
-                'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
-                'x-hasura-role': 'user',
-                'x-hasura-user-id': cookie.user_id
-            },
-        }
         try {
-            const response = await fetch(url, options)
-            if (response.ok === true) {
+            const response = await fetchHook();
+            if(response.ok === true){
                 const data = await response.json();
                 SetProfile(data.users[0])
-                setApiStatus(apiStatusConstants.success)
-            } else {
-                setApiStatus(apiStatusConstants.failure)
-            }
+            } 
         } catch (err) {
             // console.error(err)
         }
@@ -173,3 +165,4 @@ const UserProfile = () => {
 }
 
 export default UserProfile
+

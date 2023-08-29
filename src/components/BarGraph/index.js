@@ -20,28 +20,13 @@ function groupByWeekday(transactions) {
             continue
         }
         const weekday = weekdays[date.getDay()];
-        console.log(transaction)
+        // console.log(transaction)
         if (transaction.type.toLowerCase() === 'credit') {
             groupedData[weekday].credit += transaction.sum;
         } else if (transaction.type.toLowerCase() === 'debit') {
             groupedData[weekday].debit += transaction.sum;
         }
     }
-
-    // transactions.forEach((transaction) => {
-    //     const date = new Date(transaction.date);
-    //     console.log(date)
-    //     if(date == "Invalid Date"){
-    //         return
-    //     }
-    //     const weekday = weekdays[date.getDay()];
-    //     console.log(transaction)
-    //     if (transaction.type.toLowerCase() === 'credit') {
-    //         groupedData[weekday].credit += transaction.sum;
-    //     } else if (transaction.type.toLowerCase() === 'debit') {
-    //         groupedData[weekday].debit += transaction.sum;
-    //     }
-    // });
     return groupedData;
 }
 

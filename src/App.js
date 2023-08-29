@@ -13,7 +13,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-      <Route exact path="/user-dashboard" element={<UserDashboard />} />
+        <Route exact path="/user-dashboard" element={<UserDashboard />} />
         <Route exact path="/login" element={<LoginForm />} />
         <Route exact path="/user-transactions" element={<UserTransactions />} />
         <Route exact path='/user-profile' element={<UserProfile />} />

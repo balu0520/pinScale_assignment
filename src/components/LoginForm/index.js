@@ -37,6 +37,7 @@ const LoginForm = () => {
     const onSubmitFailure = msg => {
         setErr(true)
         setErrMsg("Invalid Credentials")
+        console.log(msg)
     }
 
     const handleLogin = async event => {

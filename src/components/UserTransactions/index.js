@@ -10,6 +10,7 @@ import DeletePopup from '../DeletePopup';
 import AddPopup from '../AddPopup';
 import UpdatePopup from '../UpdatePopup';
 import { useNavigate } from 'react-router-dom';
+import { useFetch } from '../../hooks/useFetch';
 
 
 const apiStatusConstants = {
@@ -23,8 +24,19 @@ const UserTransactions = () => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
     const [transactions, setTransactions] = useState([])
-    const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
+    // const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
     const [cookie, _] = useCookies(["user_id"])
+    const { fetchHook, apiStatus } = useFetch({
+        url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
+            'content-type': 'application/json',
+            'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+            'x-hasura-role': 'user',
+            'x-hasura-user-id': cookie.user_id
+        }, params: {
+            limit: 100,
+            offset: 0
+        }
+    })
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -60,34 +72,19 @@ const UserTransactions = () => {
         }
     }
 
-    const fetchAllTransactions = id => {
-        setApiStatus(apiStatusConstants.inProgress)
+    const fetchAllTransactions = async id => {
         setActiveId(id)
-        const url = "https://bursting-gelding-24.hasura.app/api/rest/all-transactions"
-        const params = {
-            limit: 100,
-            offset: 0
-        }
-        axios.get(url, {
-            params: params,
-            headers: {
-                'content-type': 'application/json',
-                'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
-                'x-hasura-role': 'user',
-                'x-hasura-user-id': cookie.user_id
-            },
-        }).then(response => {
-            if (response.status === 200) {
-                // console.log(response.data.transactions)
-                const newTransactions = filterTransactions(response.data.transactions, id)
+        try{
+            const response = await fetchHook();
+            if(response.ok === true){
+                const data = await response.json()
+                const newTransactions = filterTransactions(data.transactions,id)
                 setTransactions(newTransactions)
-                setApiStatus(apiStatusConstants.success)
-            } else {
-                setApiStatus(apiStatusConstants.failure)
             }
-        }).catch(error => {
-            // console.error('Error:', error);
-        });
+        }catch(err){
+            // console.log(err)
+        }
+
     }
 
     const renderAllTransactionsLoadingView = () => (
