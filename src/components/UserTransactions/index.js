@@ -5,12 +5,11 @@ import SideBar from '../Sidebar';
 import { BallTriangle } from 'react-loader-spinner'
 import { VscEdit } from 'react-icons/vsc'
 import { FaRegTrashAlt } from 'react-icons/fa'
-import axios from 'axios';
 import DeletePopup from '../DeletePopup';
 import AddPopup from '../AddPopup';
 import UpdatePopup from '../UpdatePopup';
 import { useNavigate } from 'react-router-dom';
-import { useFetch } from '../../hooks/useFetch';
+import useFetch from '../../hooks/useFetch';
 
 
 const apiStatusConstants = {
@@ -26,7 +25,7 @@ const UserTransactions = () => {
     const [transactions, setTransactions] = useState([])
     // const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
     const [cookie, _] = useCookies(["user_id"])
-    const { fetchData, apiStatus } = useFetch({
+    const { fetchData, apiStatus,res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -57,6 +56,10 @@ const UserTransactions = () => {
         fetchAllTransactions(activeId)
     }, [])
 
+    useEffect(() => {
+        getData()
+    },[res_data])
+
     const filterTransactions = (transactions, id) => {
         if (id === 0) {
             transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -72,14 +75,21 @@ const UserTransactions = () => {
         }
     }
 
+    const getData = () => {
+        try{
+            if (res_data !== null) {
+                const newTransactions = filterTransactions(res_data.transactions, activeId)
+                setTransactions(newTransactions)
+            }
+        }catch(err){
+
+        }
+    }
+
     const fetchAllTransactions = async id => {
         setActiveId(id)
         try {
-            const { response_data } = await fetchData();
-            if (response_data !== null) {
-                const newTransactions = filterTransactions(response_data.transactions, id)
-                setTransactions(newTransactions)
-            }
+             await fetchData();
         } catch (err) {
 
         }

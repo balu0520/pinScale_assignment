@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFetch } from "../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 import { BallTriangle } from "react-loader-spinner";
 import './index.css'
 import { useCookies } from "react-cookie";
@@ -18,11 +18,15 @@ const WeekCreditDebit = props => {
     const [weekCredit, setWeekCredit] = useState("")
     const [weekDebit, setWeekDebit] = useState("")
     const { url, method, headers } = props
-    const { fetchData, apiStatus } = useFetch({ url, method, headers })
+    const { fetchData, apiStatus,res_data } = useFetch({ url, method, headers })
 
     useEffect(() => {
         fetchLast7DaysCreditDebit()
     }, [])
+
+    useEffect(() => {
+        getData()
+    },[res_data])
 
     const getCreditDebit = weekCreditDebitTransactions => {
         let newWeekCredit = 0;
@@ -38,21 +42,28 @@ const WeekCreditDebit = props => {
         return ({ weekCredit: newWeekCredit, weekDebit: newWeekDebit })
     }
 
-    const fetchLast7DaysCreditDebit = async () => {
-        try {
-            const { response_data } = await fetchData();
-            if (response_data !== null) {
+    const getData = () => {
+        try{
+            if (res_data !== null) {
                 let last7DaysTransactionsCreditDebitTotals = null
                 if (cookie.user_id == 3) {
-                    last7DaysTransactionsCreditDebitTotals = response_data.last_7_days_transactions_totals_admin;
+                    last7DaysTransactionsCreditDebitTotals = res_data.last_7_days_transactions_totals_admin;
                 } else {
-                    last7DaysTransactionsCreditDebitTotals = response_data.last_7_days_transactions_credit_debit_totals;
+                    last7DaysTransactionsCreditDebitTotals = res_data.last_7_days_transactions_credit_debit_totals;
                 }
                 const { weekCredit, weekDebit } = getCreditDebit(last7DaysTransactionsCreditDebitTotals)
                 setWeekCredit(weekCredit)
                 setWeekDebit(weekDebit)
                 setTotal7(last7DaysTransactionsCreditDebitTotals)
             }
+        } catch(err){
+
+        }
+    }
+
+    const fetchLast7DaysCreditDebit = async () => {
+        try {
+            await fetchData();
         } catch (error) {
 
         }

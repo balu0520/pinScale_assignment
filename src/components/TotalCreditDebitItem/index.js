@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useFetch } from '../../hooks/useFetch'
+import useFetch from '../../hooks/useFetch'
 import { BallTriangle } from "react-loader-spinner";
-import BarGraph from '../BarGraph'
 import './index.css'
 import { useCookies } from 'react-cookie';
 
@@ -15,13 +14,17 @@ const apiStatusConstants = {
 const TotalCreditDebitItem = props => {
     const [cookie, _] = useCookies(['user_id'])
     const { url, method, headers } = props
-    const { fetchData, apiStatus } = useFetch({ url, method, headers })
+    const { fetchData, res_data, apiStatus } = useFetch({ url, method, headers })
     const [totalCredit, setTotalCredit] = useState("");
     const [totalDebit, setTotalDebit] = useState("");
 
     useEffect(() => {
         fetchAllDebitAndCredit();
     }, [])
+
+    useEffect(() => {
+        getData()
+    },[res_data])
 
     const getTotalCreditDebit = newTransactions => {
         let newTotalCredit = 0;
@@ -37,20 +40,27 @@ const TotalCreditDebitItem = props => {
         return ({ totalCredit: newTotalCredit, totalDebit: newTotalDebit })
     }
 
-    const fetchAllDebitAndCredit = async () => {
-        try {
-            const {response_data} = await fetchData();
-            if (response_data !== null) {
+    const getData = () => {
+        try{
+            if (res_data !== null) {
                 let totalCreditDebitTransactions = null
                 if (cookie.user_id == 3) {
-                    totalCreditDebitTransactions = response_data.transaction_totals_admin;
+                    totalCreditDebitTransactions = res_data.transaction_totals_admin;
                 } else {
-                    totalCreditDebitTransactions = response_data.totals_credit_debit_transactions
+                    totalCreditDebitTransactions = res_data.totals_credit_debit_transactions
                 }
                 const { totalCredit, totalDebit } = getTotalCreditDebit(totalCreditDebitTransactions)
                 setTotalCredit(totalCredit)
                 setTotalDebit(totalDebit)
             }
+        }catch(err){
+
+        }
+    }
+
+    const fetchAllDebitAndCredit = async () => {
+        try {
+            await fetchData();
         } catch (err) {
             
         }

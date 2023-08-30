@@ -3,7 +3,7 @@ import './index.css'
 import Popup from 'reactjs-popup'
 import { VscEdit } from 'react-icons/vsc'
 import { useCookies } from 'react-cookie'
-import { useFetch } from '../../hooks/useFetch'
+import useFetch from '../../hooks/useFetch'
 import { toast } from 'react-toastify'
 
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
@@ -24,7 +24,7 @@ const UpdatePopup = props => {
     const [transactionDate, setTransactionDate] = useState(formattedDate)
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
-    const { fetchData } = useFetch({
+    const { fetchData,res_error } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/update-transaction", method: "POST", headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -48,10 +48,6 @@ const UpdatePopup = props => {
         }
     }
 
-    // useEffect(() => {
-    //     setTransactionDate(formattedDate);
-    //   }, [transaction.date]);
-
 
     const updateTransaction = async (event, close) => {
         event.preventDefault();
@@ -64,28 +60,9 @@ const UpdatePopup = props => {
             setErrMsg("Enter transaction Amount")
             return
         }
-        // const url = "https://bursting-gelding-24.hasura.app/api/rest/update-transaction"
-        // const params = {
-        //     id: transaction.id,
-        //     name: transactionName,
-        //     type: transactionType,
-        //     category: transactionCategory,
-        //     amount: transactionAmount,
-        //     date: transactionDate,
-        // }
-        // const options = {
-        //     method: 'POST',
-        //     headers: {
-        //         'content-type': 'application/json',
-        //         'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
-        //         'x-hasura-role': 'user',
-        //         'x-hasura-user-id': cookie.user_id
-        //     },
-        //     body: JSON.stringify(params)
-        // }
         try {
-            const {response_err} = await fetchData()
-            if (response_err !== null) {
+            await fetchData()
+            if (res_error !== null) {
                 toast("updated Successfully")
                 setErr(false)
 

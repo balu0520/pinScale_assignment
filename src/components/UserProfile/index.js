@@ -5,7 +5,7 @@ import { BallTriangle } from 'react-loader-spinner'
 import { useCookies } from 'react-cookie'
 import AddPopup from '../AddPopup'
 import { useNavigate } from 'react-router-dom'
-import { useFetch} from './../../hooks/useFetch'
+import useFetch from './../../hooks/useFetch'
 
 const apiStatusConstants = {
     initial: "INITIAL",
@@ -18,12 +18,14 @@ const UserProfile = () => {
     const [profile, SetProfile] = useState([])
     const [cookie, _] = useCookies(["user_id"])
     const [load, setLoad] = useState(false)
-    const {fetchData,apiStatus}  = useFetch({url:"https://bursting-gelding-24.hasura.app/api/rest/profile",method: 'GET', headers:{
-        'content-type': 'application/json',
-        'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
-        'x-hasura-role': 'user',
-        'x-hasura-user-id': cookie.user_id
-    }})
+    const { fetchData, apiStatus, res_data } = useFetch({
+        url: "https://bursting-gelding-24.hasura.app/api/rest/profile", method: 'GET', headers: {
+            'content-type': 'application/json',
+            'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+            'x-hasura-role': 'user',
+            'x-hasura-user-id': cookie.user_id
+        }
+    })
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -38,12 +40,23 @@ const UserProfile = () => {
         fetchProfileData();
     }, [])
 
+    useEffect(() => {
+        getData()
+    })
+
+    const getData = () => {
+        try {
+            if (res_data !== null) {
+                SetProfile(res_data.users[0])
+            }
+        } catch (err) {
+
+        }
+    }
+
     const fetchProfileData = async () => {
         try {
-            const {response_data} = await fetchData();
-            if(response_data !== null){
-                SetProfile(response_data.users[0])
-            } 
+            await fetchData();
         } catch (err) {
         }
     }

@@ -1,8 +1,8 @@
-import { useState,useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import './index.css'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
-import { useFetch } from '../../hooks/useFetch'
+import useFetch from '../../hooks/useFetch'
 
 const LoginForm = () => {
     const [email, setEmail] = useState("")
@@ -11,10 +11,12 @@ const LoginForm = () => {
     const [errMsg, setErrMsg] = useState("")
     const [cookie, setCookie] = useCookies(["user_id"])
     const [load, setLoad] = useState(false)
-    const {fetchData,apiStatus} = useFetch({url:"https://bursting-gelding-24.hasura.app/api/rest/get-user-id", method:'POST',headers:{
-        'content-type': 'application/json',
-        'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF'
-    },body:{ email, password }})
+    const { fetchData, res_data, res_error,res } = useFetch({
+        url: "https://bursting-gelding-24.hasura.app/api/rest/get-user-id", method: 'POST', headers: {
+            'content-type': 'application/json',
+            'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF'
+        }, body: { email, password }
+    })
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -26,6 +28,10 @@ const LoginForm = () => {
             navigate("/user-dashboard")
         }
     }, [cookie.user_id])
+
+    useEffect(() => {
+        getLogin()
+    },[res_data])
 
     const onSubmitSuccess = get_user_id => {
         setErr(false)
@@ -39,6 +45,16 @@ const LoginForm = () => {
 
     }
 
+    const getLogin = () => {
+        if(res?.ok === true){
+            if (res_data !== null && res_data.get_user_id.length !== 0) {
+                onSubmitSuccess(res_data.get_user_id)
+            } else {
+                onSubmitFailure(res_error)
+            }
+        }
+    }
+
     const onSubmitFailure = msg => {
         setErr(true)
         setErrMsg("Invalid Credentials")
@@ -46,24 +62,8 @@ const LoginForm = () => {
 
     const handleLogin = async event => {
         event.preventDefault()
-        // const url = "https://bursting-gelding-24.hasura.app/api/rest/get-user-id"
-        // const userDetails = { email, password }
-        // const options = {
-        //     method: 'POST',
-        //     headers: {
-        //         'content-type': 'application/json',
-        //         'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF'
-        //     },
-        //     body: JSON.stringify(userDetails)
-        // }
         try {
-            const {response_data,response_err} = await fetchData()
-            console.log(response_data)
-            if(response_data === null){
-                onSubmitFailure(response_err)
-            } else{
-                onSubmitSuccess(response_data.get_user_id)
-            }
+            await fetchData()
         } catch (error) {
         }
 

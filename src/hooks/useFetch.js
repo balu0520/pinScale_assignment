@@ -1,12 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 const apiStatusConstants = {
     initial: "INITIAL",
     success: "SUCCESS",
     failure: "FAILURE",
     inProgress: "IN_PROGRESS"
 }
-export function useFetch({ url, method, headers, params, body }) {
+function useFetch({ url, method, headers, params, body }) {
     const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
+    const [res, setRes] = useState(null)
+    const [resData, setResData] = useState(null)
+    const [resError, setResError] = useState(null)
     let options = { method, headers }
     if (body !== undefined) {
         options = { method, headers, body: JSON.stringify(body) }
@@ -22,21 +25,24 @@ export function useFetch({ url, method, headers, params, body }) {
             modifiedUrl = `${url}?id=${id}`
         }
     }
-    let response_data = null;
-    let response_err = null;
     const fetchData = async () => {
         setApiStatus(apiStatusConstants.inProgress)
         const response = await fetch(modifiedUrl, options)
-        // console.log(response)
+        setRes(response)
         if (response.ok === true) {
-            response_data = await response.json()
+            const data = await response.json()
+            setResData(data)
+            setResError(null)
             setApiStatus(apiStatusConstants.success)
         } else {
+            const err = response.status
+            setResError(err)
+            setResData(null)
             setApiStatus(apiStatusConstants.failure)
-            response_err = response.status
         }
-        return { response, response_data, response_err }
     }
 
-    return { fetchData, apiStatus }
-} 
+    return { fetchData, apiStatus, res, res_data: resData, res_error: resError }
+}
+
+export default useFetch

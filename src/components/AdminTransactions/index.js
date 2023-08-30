@@ -3,9 +3,8 @@ import './index.css'
 import { useCookies } from 'react-cookie';
 import SideBar from '../Sidebar';
 import { BallTriangle } from 'react-loader-spinner'
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useFetch } from '../../hooks/useFetch';
+import useFetch from '../../hooks/useFetch';
 
 const usernames = [
     { user_id: 1, username: "janedoe" }, { user_id: 2, username: "samsmith" }, { user_id: 4, username: "rahul" },
@@ -26,18 +25,19 @@ const AdminTransactions = () => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
     const [transactions, setTransactions] = useState([])
-    // const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
     const [cookie, _] = useCookies(["user_id"])
-    const {fetchData,apiStatus} = useFetch({url:"https://bursting-gelding-24.hasura.app/api/rest/all-transactions",method:'GET',headers: {
-        'content-type': 'application/json',
-        'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
-        'x-hasura-role': 'admin',
-        'x-hasura-user-id': cookie.user_id
-    },
-    params:{
-        limit:100,
-        offset:0
-    }})
+    const { fetchData, apiStatus, res_data } = useFetch({
+        url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
+            'content-type': 'application/json',
+            'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+            'x-hasura-role': 'admin',
+            'x-hasura-user-id': cookie.user_id
+        },
+        params: {
+            limit: 100,
+            offset: 0
+        }
+    })
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -53,6 +53,10 @@ const AdminTransactions = () => {
             setLoad(true)
         }
     }, [cookie.user_id])
+
+    useEffect(() => {
+        getData();
+    },[res_data])
 
 
     const filterTransactions = (transactions, id) => {
@@ -70,18 +74,24 @@ const AdminTransactions = () => {
         }
     }
 
-    const fetchAllTransactions = async id => {
-        setActiveId(id)
-        try{
-            const {response_data}= await fetchData();
-            if(response_data !== null){
-                const newTransactions = filterTransactions(response_data.transactions,id)
+    const getData = () => {
+        try {
+            if (res_data !== null) {
+                const newTransactions = filterTransactions(res_data.transactions, activeId)
                 setTransactions(newTransactions)
             }
-        }catch(err){
-            
-        }
+        } catch (err) {
 
+        }
+    }
+
+    const fetchAllTransactions = async id => {
+        setActiveId(id)
+        try {
+            await fetchData();
+        } catch (err) {
+
+        }
     }
 
     const renderAllTransactionsLoadingView = () => (
@@ -186,24 +196,24 @@ const AdminTransactions = () => {
     return (
         <>
             {load && (
-                    <div className='admin-transaction-main-container'>
-                        <SideBar activeId={1} />
-                        <div className='admin-transaction-container'>
-                            <div className='admin-all-transaction-header-container'>
-                                <h1 className='admin-all-transaction-heading'>Transactions</h1>
-                            </div>
-                            <div className='admin-transaction-btn-container'>
-                                <button className={`admin-transaction-btn ${activeId === 0 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(0)}>All Transactions</button>
-                                <button className={`admin-transaction-btn ${activeId === 1 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(1)}>Debit</button>
-                                <button className={`admin-transaction-btn ${activeId === 2 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(2)}>Credit</button>
-                            </div>
-                            <div className='admin-all-transactions-container'>
-                                <div className='admin-all-transactions-sub-container'>
-                                    {renderAllTransactions()}
-                                </div>
+                <div className='admin-transaction-main-container'>
+                    <SideBar activeId={1} />
+                    <div className='admin-transaction-container'>
+                        <div className='admin-all-transaction-header-container'>
+                            <h1 className='admin-all-transaction-heading'>Transactions</h1>
+                        </div>
+                        <div className='admin-transaction-btn-container'>
+                            <button className={`admin-transaction-btn ${activeId === 0 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(0)}>All Transactions</button>
+                            <button className={`admin-transaction-btn ${activeId === 1 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(1)}>Debit</button>
+                            <button className={`admin-transaction-btn ${activeId === 2 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(2)}>Credit</button>
+                        </div>
+                        <div className='admin-all-transactions-container'>
+                            <div className='admin-all-transactions-sub-container'>
+                                {renderAllTransactions()}
                             </div>
                         </div>
                     </div>
+                </div>
             )}
         </>
     )

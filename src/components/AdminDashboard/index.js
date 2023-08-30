@@ -5,7 +5,7 @@ import { useCookies } from 'react-cookie'
 import SideBar from '../Sidebar'
 import AddPopup from '../AddPopup'
 import { BallTriangle } from 'react-loader-spinner'
-import { useFetch } from '../../hooks/useFetch'
+import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
 
@@ -19,7 +19,7 @@ const apiStatusConstants = {
 const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
     const [transactions, setTransaction] = useState([])
-    const { fetchData, apiStatus } = useFetch({
+    const { fetchData, apiStatus,res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -47,16 +47,27 @@ const AdminDashboard = () => {
         fetchTransactions();
     }, [])
 
+    useEffect(() => {
+        getData();
+    },[res_data])
 
-    const fetchTransactions = async () => {
-        try {
-            const {response_data} = await fetchData()
-            if (response_data !== null) {
-                const newTransactions = response_data.transactions;
+    const getData = () => {
+        try{
+            if (res_data !== null) {
+                const newTransactions = res_data.transactions;
                 newTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
                 const sortedNewTransactions = newTransactions.slice(0, 3)
                 setTransaction(sortedNewTransactions)
             }
+        }catch(error){
+
+        }
+    }
+
+
+    const fetchTransactions = async () => {
+        try {
+            await fetchData()
         } catch (err) {
         }
     }
