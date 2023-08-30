@@ -24,7 +24,7 @@ const TotalCreditDebitItem = props => {
 
     useEffect(() => {
         getData()
-    },[res_data])
+    }, [res_data])
 
     const getTotalCreditDebit = newTransactions => {
         let newTotalCredit = 0;
@@ -41,29 +41,21 @@ const TotalCreditDebitItem = props => {
     }
 
     const getData = () => {
-        try{
-            if (res_data !== null) {
-                let totalCreditDebitTransactions = null
-                if (cookie.user_id == 3) {
-                    totalCreditDebitTransactions = res_data.transaction_totals_admin;
-                } else {
-                    totalCreditDebitTransactions = res_data.totals_credit_debit_transactions
-                }
-                const { totalCredit, totalDebit } = getTotalCreditDebit(totalCreditDebitTransactions)
-                setTotalCredit(totalCredit)
-                setTotalDebit(totalDebit)
+        if (res_data !== null) {
+            let totalCreditDebitTransactions = null
+            if (cookie.user_id == 3) {
+                totalCreditDebitTransactions = res_data.transaction_totals_admin;
+            } else {
+                totalCreditDebitTransactions = res_data.totals_credit_debit_transactions
             }
-        }catch(err){
-
+            const { totalCredit, totalDebit } = getTotalCreditDebit(totalCreditDebitTransactions)
+            setTotalCredit(totalCredit)
+            setTotalDebit(totalDebit)
         }
     }
 
     const fetchAllDebitAndCredit = async () => {
-        try {
-            await fetchData();
-        } catch (err) {
-            
-        }
+        await fetchData();
     }
 
     const renderTotalCreditDebitItemFailureView = () => (

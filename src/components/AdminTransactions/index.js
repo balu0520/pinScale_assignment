@@ -56,7 +56,7 @@ const AdminTransactions = () => {
 
     useEffect(() => {
         getData();
-    },[res_data])
+    }, [res_data])
 
 
     const filterTransactions = (transactions, id) => {
@@ -75,23 +75,15 @@ const AdminTransactions = () => {
     }
 
     const getData = () => {
-        try {
-            if (res_data !== null) {
-                const newTransactions = filterTransactions(res_data.transactions, activeId)
-                setTransactions(newTransactions)
-            }
-        } catch (err) {
-
+        if (res_data !== null) {
+            const newTransactions = filterTransactions(res_data.transactions, activeId)
+            setTransactions(newTransactions)
         }
     }
 
     const fetchAllTransactions = async id => {
         setActiveId(id)
-        try {
-            await fetchData();
-        } catch (err) {
-
-        }
+        await fetchData();
     }
 
     const renderAllTransactionsLoadingView = () => (

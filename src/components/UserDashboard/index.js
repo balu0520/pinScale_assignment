@@ -72,12 +72,7 @@ const UserDashboard = () => {
 
 
     const fetchTransactions = async () => {
-        try {
             await fetchData();
-        } catch (err) {
-
-        }
-
     }
 
 

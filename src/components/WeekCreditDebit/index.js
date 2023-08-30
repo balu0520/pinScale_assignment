@@ -18,7 +18,7 @@ const WeekCreditDebit = props => {
     const [weekCredit, setWeekCredit] = useState("")
     const [weekDebit, setWeekDebit] = useState("")
     const { url, method, headers } = props
-    const { fetchData, apiStatus,res_data } = useFetch({ url, method, headers })
+    const { fetchData, apiStatus, res_data } = useFetch({ url, method, headers })
 
     useEffect(() => {
         fetchLast7DaysCreditDebit()
@@ -26,7 +26,7 @@ const WeekCreditDebit = props => {
 
     useEffect(() => {
         getData()
-    },[res_data])
+    }, [res_data])
 
     const getCreditDebit = weekCreditDebitTransactions => {
         let newWeekCredit = 0;
@@ -43,30 +43,22 @@ const WeekCreditDebit = props => {
     }
 
     const getData = () => {
-        try{
-            if (res_data !== null) {
-                let last7DaysTransactionsCreditDebitTotals = null
-                if (cookie.user_id == 3) {
-                    last7DaysTransactionsCreditDebitTotals = res_data.last_7_days_transactions_totals_admin;
-                } else {
-                    last7DaysTransactionsCreditDebitTotals = res_data.last_7_days_transactions_credit_debit_totals;
-                }
-                const { weekCredit, weekDebit } = getCreditDebit(last7DaysTransactionsCreditDebitTotals)
-                setWeekCredit(weekCredit)
-                setWeekDebit(weekDebit)
-                setTotal7(last7DaysTransactionsCreditDebitTotals)
+        if (res_data !== null) {
+            let last7DaysTransactionsCreditDebitTotals = null
+            if (cookie.user_id == 3) {
+                last7DaysTransactionsCreditDebitTotals = res_data.last_7_days_transactions_totals_admin;
+            } else {
+                last7DaysTransactionsCreditDebitTotals = res_data.last_7_days_transactions_credit_debit_totals;
             }
-        } catch(err){
-
+            const { weekCredit, weekDebit } = getCreditDebit(last7DaysTransactionsCreditDebitTotals)
+            setWeekCredit(weekCredit)
+            setWeekDebit(weekDebit)
+            setTotal7(last7DaysTransactionsCreditDebitTotals)
         }
     }
 
     const fetchLast7DaysCreditDebit = async () => {
-        try {
-            await fetchData();
-        } catch (error) {
-
-        }
+        await fetchData();
     }
 
     const renderWeekCreditDebitLoadingView = () => (

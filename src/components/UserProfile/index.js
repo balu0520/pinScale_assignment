@@ -45,20 +45,13 @@ const UserProfile = () => {
     })
 
     const getData = () => {
-        try {
-            if (res_data !== null) {
-                SetProfile(res_data.users[0])
-            }
-        } catch (err) {
-
+        if (res_data !== null) {
+            SetProfile(res_data.users[0])
         }
     }
 
     const fetchProfileData = async () => {
-        try {
-            await fetchData();
-        } catch (err) {
-        }
+        await fetchData();
     }
 
     const renderProfileLoadingView = () => (

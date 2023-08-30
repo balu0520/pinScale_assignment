@@ -24,7 +24,7 @@ const UpdatePopup = props => {
     const [transactionDate, setTransactionDate] = useState(formattedDate)
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
-    const { fetchData,res_error } = useFetch({
+    const { fetchData, res_error } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/update-transaction", method: "POST", headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -60,22 +60,18 @@ const UpdatePopup = props => {
             setErrMsg("Enter transaction Amount")
             return
         }
-        try {
-            await fetchData()
-            if (res_error !== null) {
-                toast("updated Successfully")
-                setErr(false)
+        await fetchData()
+        if (res_error !== null) {
+            toast("updated Successfully")
+            setErr(false)
 
-            } else {
-                toast('Something went wrong, please try again later')
-                setErr(false)
-            }
-            setErrMsg("")
-            close()
-            reload()
-        } catch (error) {
-
+        } else {
+            toast('Something went wrong, please try again later')
+            setErr(false)
         }
+        setErrMsg("")
+        close()
+        reload()
     }
 
     return (

@@ -19,7 +19,7 @@ const apiStatusConstants = {
 const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
     const [transactions, setTransaction] = useState([])
-    const { fetchData, apiStatus,res_data } = useFetch({
+    const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -49,27 +49,20 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         getData();
-    },[res_data])
+    }, [res_data])
 
     const getData = () => {
-        try{
-            if (res_data !== null) {
-                const newTransactions = res_data.transactions;
-                newTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-                const sortedNewTransactions = newTransactions.slice(0, 3)
-                setTransaction(sortedNewTransactions)
-            }
-        }catch(error){
-
+        if (res_data !== null) {
+            const newTransactions = res_data.transactions;
+            newTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            const sortedNewTransactions = newTransactions.slice(0, 3)
+            setTransaction(sortedNewTransactions)
         }
     }
 
 
     const fetchTransactions = async () => {
-        try {
-            await fetchData()
-        } catch (err) {
-        }
+        await fetchData()
     }
 
     const formatDate = (dateString) => {
@@ -172,7 +165,7 @@ const AdminDashboard = () => {
                                 'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
                                 'x-hasura-role': 'admin',
                             }} />
-                            
+
                         </div>
                     </div>
                 </div>

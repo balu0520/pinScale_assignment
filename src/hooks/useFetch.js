@@ -27,7 +27,8 @@ function useFetch({ url, method, headers, params, body }) {
     }
     const fetchData = async () => {
         setApiStatus(apiStatusConstants.inProgress)
-        const response = await fetch(modifiedUrl, options)
+        try{
+            const response = await fetch(modifiedUrl, options)
         setRes(response)
         if (response.ok === true) {
             const data = await response.json()
@@ -38,6 +39,10 @@ function useFetch({ url, method, headers, params, body }) {
             const err = response.status
             setResError(err)
             setResData(null)
+            setApiStatus(apiStatusConstants.failure)
+        }
+        }catch(err){
+            setResError(err)
             setApiStatus(apiStatusConstants.failure)
         }
     }
