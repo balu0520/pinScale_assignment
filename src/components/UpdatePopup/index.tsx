@@ -4,24 +4,8 @@ import Popup from 'reactjs-popup'
 import { VscEdit } from 'react-icons/vsc'
 import { useCookies } from 'react-cookie'
 import useFetch from '../../hooks/useFetch'
-
+import { TransactionItem,UpdatePopupProps } from '../../types/interfaces'
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
-
-interface TransactionItem {
-    id: number
-    transaction_name: string,
-    type: string,
-    amount: number,
-    category: string
-    date: Date,
-}
-
-
-interface UpdatePopupProps {
-    transaction: TransactionItem
-    reloadOperation: (id?: number) => Promise<any>,
-    id: number
-}
 
 const UpdatePopup = (props: UpdatePopupProps) => {
     const [cookie, _] = useCookies(["user_id"])

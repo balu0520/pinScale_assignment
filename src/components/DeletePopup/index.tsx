@@ -3,26 +3,11 @@ import { FiAlertTriangle } from 'react-icons/fi'
 import { FaRegTrashAlt } from 'react-icons/fa'
 import './index.css'
 import { useCookies } from 'react-cookie'
-import { toast } from 'react-toastify';
 import useFetch from '../../hooks/useFetch'
+import { DeletePopupProps } from '../../types/interfaces'
 
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
-interface TransactionItem {
-    id:number
-    transaction_name:string,
-    type:string,
-    amount:number,
-    category:string
-    date: Date,
-}
-
-
-interface DeletePopupProps {
-    transaction:TransactionItem
-    reloadOperation: (id?:number) => Promise<any>,
-    id:number
-}
 
 const DeletePopup = (props:DeletePopupProps) => {
     const [cookie, _] = useCookies(["user_id"])

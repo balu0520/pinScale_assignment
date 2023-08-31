@@ -6,25 +6,8 @@ import { useCookies } from 'react-cookie'
 import AddPopup from '../AddPopup'
 import { useNavigate } from 'react-router-dom'
 import useFetch from './../../hooks/useFetch'
+import { UserData } from '../../types/interfaces'
 
-interface UserData{
-    id:number,
-    name:string | undefined,
-    email:string | undefined,
-    country:string | undefined,
-    date_of_birth: string,
-    city: string | undefined,
-    permanent_address:string | undefined,
-    postal_code: string | number | undefined,
-    present_address: string | undefined
-}
-
-const apiStatusConstants = {
-    initial: "INITIAL",
-    success: "SUCCESS",
-    failure: "FAILURE",
-    inProgress: "IN_PROGRESS"
-}
 
 const UserProfile = () => {
     const [profile, SetProfile] = useState<UserData>()
@@ -75,8 +58,6 @@ const UserProfile = () => {
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
                 visible={true}
-                // wrapperClass={{}}
-                // wrapperStyle=""
             />
         </div>
     )
@@ -148,11 +129,11 @@ const UserProfile = () => {
 
     const renderProfile = () => {
         switch (apiStatus) {
-            case apiStatusConstants.success:
+            case "SUCCESS":
                 return renderProfileSuccessView()
-            case apiStatusConstants.failure:
+            case "FAILURE":
                 return renderProfileFailureView()
-            case apiStatusConstants.inProgress:
+            case "IN_PROGRESS":
                 return renderProfileLoadingView()
             default:
                 return null

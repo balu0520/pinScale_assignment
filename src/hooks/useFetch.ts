@@ -1,60 +1,11 @@
 import { useState } from "react"
+import { FetchResult,FetchProps,Params,Body } from "../types/interfaces";
 
-interface FetchResult {
-    fetchData: () => Promise<void>;
-    apiStatus: string;
-    res: Response | null;
-    res_data: any;
-    res_error: any;
-  }
+type apiStatusConstants = "INITIAL" | "SUCCESS" | "FAILURE" | "IN_PROGRESS"
 
-interface Params {
-    limit?: number,
-    offset?: number,
-    id?: number
-}
-
-// interface Headers {
-//     "content-type": string,
-//     "x-hasura-admin-secret": string,
-//     'x-hasura-role'?: string,
-//     'x-hasura-user-id'?: number
-// }
-interface Body {
-    id?: number,
-    email?: string,
-    password?: string,
-    name?:string,
-    type?:string,
-    amount?:number | string,
-    category?:string,
-    date?: Date | string,
-    user_id?:number
-}
-
-// interface Options {
-//     method: string,
-//     headers: HeadersInit ,
-//     body?: BodyInit | Body,
-// }
-
-interface FetchProps {
-    url: string,
-    method: string,
-    headers: HeadersInit,
-    params?: Params | undefined,
-    body?: BodyInit | Body
-}
-
-const apiStatusConstants = {
-    initial: "INITIAL",
-    success: "SUCCESS",
-    failure: "FAILURE",
-    inProgress: "IN_PROGRESS"
-}
 function useFetch(props: FetchProps):FetchResult {
     const { url, method, headers, body, params } = props
-    const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
+    const [apiStatus, setApiStatus] = useState<apiStatusConstants>("INITIAL")
     const [res, setRes] = useState<Response | any>(null)
     const [resData, setResData] = useState<any>(null)
     const [resError, setResError] = useState<any>(null)
@@ -74,7 +25,7 @@ function useFetch(props: FetchProps):FetchResult {
         }
     }
     const fetchData = async (): Promise<void> => {
-        setApiStatus(apiStatusConstants.inProgress)
+        setApiStatus("IN_PROGRESS")
         try {
             const response:Response = await fetch(modifiedUrl, options)
             setRes(response)
@@ -82,16 +33,16 @@ function useFetch(props: FetchProps):FetchResult {
                 const data = await response.json()
                 setResData(data)
                 setResError(null)
-                setApiStatus(apiStatusConstants.success)
+                setApiStatus("SUCCESS")
             } else {
                 const err = response.status
                 setResError(err)
                 setResData(null)
-                setApiStatus(apiStatusConstants.failure)
+                setApiStatus("FAILURE")
             }
         } catch (err) {
             setResError(err)
-            setApiStatus(apiStatusConstants.failure)
+            setApiStatus("FAILURE")
         }
     }
 

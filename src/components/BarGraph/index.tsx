@@ -1,25 +1,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './index.css'
-
-interface Week7Transaction{
-    date:Date,
-    type:string,
-    sum:number
-}
-
-interface WeeklyData{
-    credit:number,
-    debit:number
-}
-
-interface GroupedData {
-    [key: string]: WeeklyData; // Assuming Week7Transaction is your type/interface
-}
-
-interface BarGraphProps{
-    total7:Week7Transaction[]
-}
+import { Week7Transaction,GroupedData,BarGraphProps } from '../../types/interfaces';
 
 function groupByWeekday(transactions:Week7Transaction[]) {
     const weekdays = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -46,16 +28,6 @@ function groupByWeekday(transactions:Week7Transaction[]) {
     }
     return groupedData;
 }
-
-// const CustomBar = props => {
-//     const { x, y, width, height, fill } = props;
-//     const borderRadius = 10; 
-//     return (
-//         <g>
-//            <rect x={x} y={y} width={width} height={height} fill={fill} rx={borderRadius} ry={borderRadius} />
-//         </g>
-//     );
-// };
 
 
 const BarGraph = (props:BarGraphProps) => {

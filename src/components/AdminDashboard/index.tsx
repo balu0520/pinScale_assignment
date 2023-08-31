@@ -8,31 +8,7 @@ import { BallTriangle } from 'react-loader-spinner'
 import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
-
-interface DateOptions{
-    day: 'numeric',
-    month: 'short',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-}
-
-interface TransactionItem {
-    id:number
-    transaction_name:string,
-    type:string,
-    amount:number,
-    category:string
-    date: Date,
-}
-
-
-const apiStatusConstants = {
-    initial: "INITIAL",
-    success: "SUCCESS",
-    failure: "FAILURE",
-    inProgress: "IN_PROGRESS"
-}
+import { DateOptions,TransactionItem } from '../../types/interfaces'
 
 const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
@@ -72,7 +48,6 @@ const AdminDashboard = () => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions = res_data.transactions;
-            // newTransactions.sort((a:TransactionItem, b:TransactionItem) => {});
             const sortedNewTransactions = newTransactions.slice(0, 3)
             setTransaction(sortedNewTransactions)
         }
@@ -105,8 +80,6 @@ const AdminDashboard = () => {
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
                 visible={true}
-                // wrapperClass={{}}
-                // wrapperStyle=""
             />
         </div>
     )
@@ -146,11 +119,11 @@ const AdminDashboard = () => {
 
     const renderTransactions = () => {
         switch (apiStatus) {
-            case apiStatusConstants.success:
+            case "SUCCESS":
                 return renderTransactionSuccessView();
-            case apiStatusConstants.failure:
+            case "FAILURE":
                 return renderTransactionsFailureView();
-            case apiStatusConstants.inProgress:
+            case "IN_PROGRESS":
                 return renderTransactionsLoadingView();
             default:
                 return null

@@ -10,37 +10,12 @@ import UpdatePopup from '../UpdatePopup'
 import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
-
-
-interface Options {
-    day: 'numeric',
-    month: 'short',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-}
-
-interface TransactionItems {
-    id:number
-    transaction_name:string,
-    type:string,
-    amount:number,
-    category:string
-    date: Date,
-}
-
-
-const apiStatusConstants = {
-    initial: "INITIAL",
-    success: "SUCCESS",
-    failure: "FAILURE",
-    inProgress: "IN_PROGRESS"
-}
+import { DateOptions,TransactionItem } from '../../types/interfaces'
 
 
 const UserDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
-    const [transactions, setTransaction] = useState<TransactionItems[]>([])
+    const [transactions, setTransaction] = useState<TransactionItem[]>([])
     const { fetchData, res_data, apiStatus } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
@@ -76,12 +51,6 @@ const UserDashboard = () => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions = res_data.transactions;
-            // newTransactions.sort((a:Transaction, b:Transaction):number => {
-            //     const dateA = new Date(a.date).getTime()
-            //     const dateB = new Date(b.date).getTime()
-            //     return dateB-dateA
-            // });
-            // console.log(newTransactions)
             const sortedNewTransactions = newTransactions.slice(0, 3)
             setTransaction(sortedNewTransactions)
         }
@@ -102,15 +71,13 @@ const UserDashboard = () => {
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
                 visible={true}
-                // wrapperClass={{}}
-                // wrapperStyle=""
             />
         </div>
     )
 
     const formatDate = (dateString: Date) => {
         const date = new Date(dateString);
-        const options: Options = {
+        const options: DateOptions = {
             day: 'numeric',
             month: 'short',
             hour: 'numeric',
@@ -158,11 +125,11 @@ const UserDashboard = () => {
 
     const renderTransactions = () => {
         switch (apiStatus) {
-            case apiStatusConstants.success:
+            case "SUCCESS":
                 return renderTransactionSuccessView();
-            case apiStatusConstants.failure:
+            case "FAILURE":
                 return renderTransactionsFailureView();
-            case apiStatusConstants.inProgress:
+            case "IN_PROGRESS":
                 return renderTransactionsLoadingView();
             default:
                 return null

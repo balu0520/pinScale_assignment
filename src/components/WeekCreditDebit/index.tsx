@@ -4,36 +4,9 @@ import { BallTriangle } from "react-loader-spinner";
 import './index.css'
 import { useCookies } from "react-cookie";
 import BarGraph from "../BarGraph";
+import { WeekCreditDebitProps,WeekCreditDebitItem,Week7Transaction,WeekCreditDebitResult } from "../../types/interfaces";
 
-interface WeekCreditDebit {
-    url: string,
-    method: string,
-    headers: HeadersInit,
-}
-
-interface WeekCreditDebitItem {
-    type: string,
-    sum: number
-}
-interface Week7Transaction {
-    date: Date,
-    type: string,
-    sum: number
-}
-interface WeekCreditDebitResult {
-    weekCredit: number,
-    weekDebit: number
-}
-
-
-const apiStatusConstants = {
-    initial: "INITIAL",
-    success: "SUCCESS",
-    failure: "FAILURE",
-    inProgress: "IN_PROGRESS"
-}
-
-const WeekCreditDebit = (props: WeekCreditDebit) => {
+const WeekCreditDebit = (props: WeekCreditDebitProps) => {
     const [cookie, _] = useCookies(['user_id'])
     const [total7, setTotal7] = useState<Week7Transaction[]>([])
     const [weekCredit, setWeekCredit] = useState<number | string>("")
@@ -91,8 +64,6 @@ const WeekCreditDebit = (props: WeekCreditDebit) => {
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
                 visible={true}
-            // wrapperClass={{}}
-            // wrapperStyle=""
             />
         </div>
     )
@@ -127,11 +98,11 @@ const WeekCreditDebit = (props: WeekCreditDebit) => {
 
     const renderWeekCreditDebit = () => {
         switch (apiStatus) {
-            case apiStatusConstants.success:
+            case "SUCCESS":
                 return renderWeekCreditDebitSuccessView();
-            case apiStatusConstants.failure:
+            case "FAILURE":
                 return renderWeekCreditDebitFailureView();
-            case apiStatusConstants.inProgress:
+            case "IN_PROGRESS":
                 return renderWeekCreditDebitLoadingView();
             default:
                 return null

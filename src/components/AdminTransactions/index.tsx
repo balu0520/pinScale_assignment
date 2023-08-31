@@ -5,13 +5,10 @@ import SideBar from '../Sidebar';
 import { BallTriangle } from 'react-loader-spinner'
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
+import { UserNames, DateOptions, TransactionsList } from '../../types/interfaces';
 
-interface UserNames{
-    user_id:number,
-    username:string
-}
 
-const usernames:UserNames[] = [
+const usernames: UserNames[] = [
     { user_id: 1, username: "janedoe" }, { user_id: 2, username: "samsmith" }, { user_id: 4, username: "rahul" },
     { user_id: 5, username: "teja" }, { user_id: 6, username: "loki" }, { user_id: 7, username: "ramesh" },
     { user_id: 8, username: "suresh" }, { user_id: 9, username: "prem" }, { user_id: 10, username: "piyush" },
@@ -19,30 +16,6 @@ const usernames:UserNames[] = [
     { user_id: 16, username: "radha" }, { user_id: 17, username: "phani" }
 ]
 
-interface TransactionsList {
-    id:number
-    transaction_name:string,
-    type:string,
-    amount:number,
-    category:string,
-    user_id:number,
-    date: Date,
-}
-
-interface DateOptions {
-    day: 'numeric',
-    month: 'short',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-}
-
-const apiStatusConstants = {
-    initial: "INITIAL",
-    success: "SUCCESS",
-    failure: "FAILURE",
-    inProgress: "IN_PROGRESS"
-}
 
 const AdminTransactions = () => {
     const [activeId, setActiveId] = useState(0);
@@ -82,28 +55,28 @@ const AdminTransactions = () => {
     }, [res_data])
 
 
-    const filterTransactions = (transactions:TransactionsList[], id:number) => {
+    const filterTransactions = (transactions: TransactionsList[], id: number) => {
         if (id === 0) {
-            transactions.sort((a:TransactionsList, b:TransactionsList):number => {
+            transactions.sort((a: TransactionsList, b: TransactionsList): number => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
-                return dateB-dateA
+                return dateB - dateA
             });
             return transactions
         } else if (id === 1) {
             const filteredTransactions = transactions.filter(transaction => transaction.type === "debit");
-            filteredTransactions.sort((a:TransactionsList, b:TransactionsList):number => {
+            filteredTransactions.sort((a: TransactionsList, b: TransactionsList): number => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
-                return dateB-dateA
+                return dateB - dateA
             });
             return filteredTransactions
         } else {
             const filteredTransactions = transactions.filter(transaction => transaction.type === "credit")
-            filteredTransactions.sort((a:TransactionsList, b:TransactionsList):number => {
+            filteredTransactions.sort((a: TransactionsList, b: TransactionsList): number => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
-                return dateB-dateA
+                return dateB - dateA
             });
             return filteredTransactions
         }
@@ -116,7 +89,7 @@ const AdminTransactions = () => {
         }
     }
 
-    const fetchAllTransactions = async (id:number) => {
+    const fetchAllTransactions = async (id: number) => {
         setActiveId(id)
         await fetchData();
     }
@@ -130,8 +103,6 @@ const AdminTransactions = () => {
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
                 visible={true}
-                // wrapperClass={{}}
-                // wrapperStyle=""
             />
         </div>
     )
@@ -142,9 +113,9 @@ const AdminTransactions = () => {
         </div>
     )
 
-    const formatDate = (dateString:Date) => {
+    const formatDate = (dateString: Date) => {
         const date = new Date(dateString);
-        const options:DateOptions = {
+        const options: DateOptions = {
             day: 'numeric',
             month: 'short',
             hour: 'numeric',
@@ -155,12 +126,12 @@ const AdminTransactions = () => {
         return date.toLocaleString('en-US', options);
     }
 
-    const getUsername = ((userId:number) => {
+    const getUsername = ((userId: number) => {
         const User = usernames.find((user) => user.user_id === userId);
         return User ? User.username : null;
     })
 
-    const renderTransactionProfile = (userId:number) => {
+    const renderTransactionProfile = (userId: number) => {
         const user = getUsername(userId)
         return (
             <div className='admin-all-transactions-img-container'>
@@ -209,11 +180,11 @@ const AdminTransactions = () => {
 
     const renderAllTransactions = () => {
         switch (apiStatus) {
-            case apiStatusConstants.success:
+            case "SUCCESS":
                 return renderAllTransactionsSuccessView()
-            case apiStatusConstants.failure:
+            case "FAILURE":
                 return renderAllTransactionsFailureView()
-            case apiStatusConstants.inProgress:
+            case "IN_PROGRESS":
                 return renderAllTransactionsLoadingView()
             default:
                 return null

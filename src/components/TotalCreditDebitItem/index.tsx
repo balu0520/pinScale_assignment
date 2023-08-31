@@ -3,34 +3,7 @@ import useFetch from '../../hooks/useFetch'
 import { BallTriangle } from "react-loader-spinner";
 import './index.css'
 import { useCookies } from 'react-cookie';
-
-// url="https://bursting-gelding-24.hasura.app/api/rest/credit-debit-totals" method="GET" headers={{
-//                                 'content-type': 'application/json',
-//                                 'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
-//                                 'x-hasura-role': 'user',
-//                                 'x-hasura-user-id': cookie.user_id
-
-interface TotalCreditDebit {
-    url: string,
-    method: string,
-    headers: HeadersInit,
-}
-
-interface TransactionItem {
-    type:string,
-    sum:number
-}
-interface TransactionItemResult{
-    totalCredit:number,
-    totalDebit:number
-}
-
-const apiStatusConstants = {
-    initial: "INITIAL",
-    success: "SUCCESS",
-    failure: "FAILURE",
-    inProgress: "IN_PROGRESS"
-}
+import { TotalCreditDebit,TotalTransactionItem,TransactionItemResult } from '../../types/interfaces';
 
 const TotalCreditDebitItem = (props: TotalCreditDebit) => {
     const [cookie, _] = useCookies(['user_id'])
@@ -47,7 +20,7 @@ const TotalCreditDebitItem = (props: TotalCreditDebit) => {
         getData()
     }, [res_data])
 
-    const getTotalCreditDebit = (newTransactions:TransactionItem[]): TransactionItemResult => {
+    const getTotalCreditDebit = (newTransactions:TotalTransactionItem[]): TransactionItemResult => {
         let newTotalCredit = 0;
         let newTotalDebit = 0;
         for (let item of newTransactions) {
@@ -94,8 +67,6 @@ const TotalCreditDebitItem = (props: TotalCreditDebit) => {
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
                 visible={true}
-                // wrapperClass={{}}
-                // wrapperStyle=""
             />
         </div>
     )
@@ -121,11 +92,11 @@ const TotalCreditDebitItem = (props: TotalCreditDebit) => {
 
     const renderTotalCreditDebitItem = () => {
         switch (apiStatus) {
-            case apiStatusConstants.success:
+            case "SUCCESS":
                 return renderTotalCreditDebitItemSuccessView();
-            case apiStatusConstants.failure:
+            case "FAILURE":
                 return renderTotalCreditDebitItemFailureView();
-            case apiStatusConstants.inProgress:
+            case "IN_PROGRESS":
                 return renderTotalCreditDebitItemLoadingView();
             default:
                 return null

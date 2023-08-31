@@ -10,31 +10,7 @@ import AddPopup from '../AddPopup';
 import UpdatePopup from '../UpdatePopup';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-
-interface TransactionsList {
-    id:number
-    transaction_name:string,
-    type:string,
-    amount:number,
-    category:string,
-    user_id:number,
-    date: Date,
-}
-
-interface DateOptions {
-    day: 'numeric',
-    month: 'short',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-}
-
-const apiStatusConstants = {
-    initial: "INITIAL",
-    success: "SUCCESS",
-    failure: "FAILURE",
-    inProgress: "IN_PROGRESS"
-}
+import { DateOptions,TransactionsList } from '../../types/interfaces';
 
 const UserTransactions = () => {
     const [activeId, setActiveId] = useState(0);
@@ -128,8 +104,6 @@ const UserTransactions = () => {
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
                 visible={true}
-                // wrapperClass={{}}
-                // wrapperStyle=""
             />
         </div>
     )
@@ -203,11 +177,11 @@ const UserTransactions = () => {
 
     const renderAllTransactions = () => {
         switch (apiStatus) {
-            case apiStatusConstants.success:
+            case "SUCCESS":
                 return renderAllTransactionsSuccessView()
-            case apiStatusConstants.failure:
+            case "FAILURE":
                 return renderAllTransactionsFailureView()
-            case apiStatusConstants.inProgress:
+            case "IN_PROGRESS":
                 return renderAllTransactionsLoadingView()
             default:
                 return null

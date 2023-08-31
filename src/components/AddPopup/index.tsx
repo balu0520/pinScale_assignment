@@ -3,14 +3,9 @@ import './index.css'
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import useFetch from "../../hooks/useFetch";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { AddPopupProps } from "../../types/interfaces";
 const overlayStyle = { background: 'rgba(0,0,0,0.5)'};
 
-interface AddPopupProps {
-    reloadOperation: (id?: number) => Promise<void>,
-    id: number
-}
 
 const AddPopup = (props:AddPopupProps) => {
     const { reloadOperation, id } = props
