@@ -4,6 +4,27 @@ import { BallTriangle } from "react-loader-spinner";
 import './index.css'
 import { useCookies } from 'react-cookie';
 
+// url="https://bursting-gelding-24.hasura.app/api/rest/credit-debit-totals" method="GET" headers={{
+//                                 'content-type': 'application/json',
+//                                 'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+//                                 'x-hasura-role': 'user',
+//                                 'x-hasura-user-id': cookie.user_id
+
+interface TotalCreditDebit {
+    url: string,
+    method: string,
+    headers: HeadersInit,
+}
+
+interface TransactionItem {
+    type:string,
+    sum:number
+}
+interface TransactionItemResult{
+    totalCredit:number,
+    totalDebit:number
+}
+
 const apiStatusConstants = {
     initial: "INITIAL",
     success: "SUCCESS",
@@ -11,12 +32,12 @@ const apiStatusConstants = {
     inProgress: "IN_PROGRESS"
 }
 
-const TotalCreditDebitItem = props => {
+const TotalCreditDebitItem = (props: TotalCreditDebit) => {
     const [cookie, _] = useCookies(['user_id'])
     const { url, method, headers } = props
     const { fetchData, res_data, apiStatus } = useFetch({ url, method, headers })
-    const [totalCredit, setTotalCredit] = useState("");
-    const [totalDebit, setTotalDebit] = useState("");
+    const [totalCredit, setTotalCredit] = useState<number | string>("");
+    const [totalDebit, setTotalDebit] = useState<number | string>("");
 
     useEffect(() => {
         fetchAllDebitAndCredit();
@@ -26,7 +47,7 @@ const TotalCreditDebitItem = props => {
         getData()
     }, [res_data])
 
-    const getTotalCreditDebit = newTransactions => {
+    const getTotalCreditDebit = (newTransactions:TransactionItem[]): TransactionItemResult => {
         let newTotalCredit = 0;
         let newTotalDebit = 0;
         for (let item of newTransactions) {
@@ -72,9 +93,9 @@ const TotalCreditDebitItem = props => {
                 radius={5}
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
-                wrapperClass={{}}
-                wrapperStyle=""
                 visible={true}
+                // wrapperClass={{}}
+                // wrapperStyle=""
             />
         </div>
     )

@@ -9,6 +9,24 @@ import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
 
+interface DateOptions{
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+}
+
+interface TransactionItem {
+    id:number
+    transaction_name:string,
+    type:string,
+    amount:number,
+    category:string
+    date: Date,
+}
+
+
 const apiStatusConstants = {
     initial: "INITIAL",
     success: "SUCCESS",
@@ -18,7 +36,7 @@ const apiStatusConstants = {
 
 const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
-    const [transactions, setTransaction] = useState([])
+    const [transactions, setTransaction] = useState<TransactionItem[]>([])
     const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
@@ -54,20 +72,20 @@ const AdminDashboard = () => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions = res_data.transactions;
-            newTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // newTransactions.sort((a:TransactionItem, b:TransactionItem) => {});
             const sortedNewTransactions = newTransactions.slice(0, 3)
             setTransaction(sortedNewTransactions)
         }
     }
 
 
-    const fetchTransactions = async () => {
+    const fetchTransactions = async (id?:number) => {
         await fetchData()
     }
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString:Date) => {
         const date = new Date(dateString);
-        const options = {
+        const options:DateOptions = {
             day: 'numeric',
             month: 'short',
             hour: 'numeric',
@@ -86,9 +104,9 @@ const AdminDashboard = () => {
                 radius={5}
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
-                wrapperClass={{}}
-                wrapperStyle=""
                 visible={true}
+                // wrapperClass={{}}
+                // wrapperStyle=""
             />
         </div>
     )

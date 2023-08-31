@@ -5,9 +5,14 @@ import { useCookies } from "react-cookie";
 import useFetch from "../../hooks/useFetch";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
+const overlayStyle = { background: 'rgba(0,0,0,0.5)'};
 
-const AddPopup = props => {
+interface AddPopupProps {
+    reloadOperation: (id?: number) => Promise<void>,
+    id: number
+}
+
+const AddPopup = (props:AddPopupProps) => {
     const { reloadOperation, id } = props
     const [cookie, _] = useCookies(["user_id"])
     const [transactionName, setTransactionName] = useState("")
@@ -41,7 +46,7 @@ const AddPopup = props => {
         }
     }
 
-    const submitTransaction = async (event, close) => {
+    const submitTransaction = async (event: any) => {
         event.preventDefault();
         if (transactionName === "") {
             setErr(true)
@@ -66,19 +71,11 @@ const AddPopup = props => {
         }
         await fetchData()
         if (res_error !== null) {
-            toast.success('Added successfully!', {
-                position: 'top-right',
-                autoClose: 3000, // Time in milliseconds
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            alert("Added Successfully")
             setErr(false)
             setErrMsg("")
         } else {
-            toast('Something went wrong, please try again later')
+            alert('Something went wrong, please try again later')
             setErr(false)
             setErrMsg("")
         }
@@ -87,20 +84,18 @@ const AddPopup = props => {
         setTransactionCategory("")
         setTransactionAmount("")
         setTransactionDate("")
-        close()
         reload()
     }
 
     return (
-        <Popup trigger={<button className='add-transaction-button'>+ Add Transaction</button>} position="center" {...{ overlayStyle }} modal>
-            {close => (
-                <form className="add-modal" onSubmit={(event) => submitTransaction(event, close)}>
+        <Popup trigger={<button className='add-transaction-button'>+ Add Transaction</button>} {...{ overlayStyle }} modal>
+                <form className="add-modal" onSubmit={(event) => submitTransaction(event)}>
                     <div className="add-modal-container">
                         <div className="add-modal-description-container">
                             <h1 className="add-modal-description-heading">Add Transaction</h1>
                             <p className="add-modal-description-para">You can add your transaction here</p>
                         </div>
-                        <button className="into-btn" onClick={() => close()}>X</button>
+                        <button className="into-btn">X</button>
                     </div>
                     <div className="input-container">
                         <label htmlFor="transactionName" className="transaction-label">Transaction name</label>
@@ -138,7 +133,6 @@ const AddPopup = props => {
                     <button className="add-transaction-btn" type="submit">Add Transaction</button>
                     {err && (<p className="err-msg">{errMsg}</p>)}
                 </form>
-            )}
         </Popup>
     )
 

@@ -11,6 +11,23 @@ import UpdatePopup from '../UpdatePopup';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 
+interface TransactionsList {
+    id:number
+    transaction_name:string,
+    type:string,
+    amount:number,
+    category:string,
+    user_id:number,
+    date: Date,
+}
+
+interface DateOptions {
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+}
 
 const apiStatusConstants = {
     initial: "INITIAL",
@@ -22,10 +39,9 @@ const apiStatusConstants = {
 const UserTransactions = () => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
-    const [transactions, setTransactions] = useState([])
-    // const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
+    const [transactions, setTransactions] = useState<TransactionsList[]>([])
     const [cookie, _] = useCookies(["user_id"])
-    const { fetchData, apiStatus,res_data } = useFetch({
+    const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -58,42 +74,49 @@ const UserTransactions = () => {
 
     useEffect(() => {
         getData()
-    },[res_data])
+    }, [res_data])
 
-    const filterTransactions = (transactions, id) => {
+    const filterTransactions = (transactions:TransactionsList[], id:number):TransactionsList[] => {
         if (id === 0) {
-            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            transactions.sort((a:TransactionsList, b:TransactionsList):number => {
+                const dateA = new Date(a.date).getTime()
+                const dateB = new Date(b.date).getTime()
+                return dateB-dateA
+            });
             return transactions
         } else if (id === 1) {
             const filteredTransactions = transactions.filter(transaction => transaction.type === "debit");
-            filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            filteredTransactions.sort((a:TransactionsList, b:TransactionsList):number => {
+                const dateA = new Date(a.date).getTime()
+                const dateB = new Date(b.date).getTime()
+                return dateB-dateA
+            });
             return filteredTransactions
         } else {
             const filteredTransactions = transactions.filter(transaction => transaction.type === "credit")
-            filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            filteredTransactions.sort((a:TransactionsList, b:TransactionsList):number => {
+                const dateA = new Date(a.date).getTime()
+                const dateB = new Date(b.date).getTime()
+                return dateB-dateA
+            });
             return filteredTransactions
         }
     }
 
     const getData = () => {
-        try{
-            if (res_data !== null) {
-                const newTransactions = filterTransactions(res_data.transactions, activeId)
-                setTransactions(newTransactions)
-            }
-        }catch(err){
-
+        if (res_data !== null) {
+            const newTransactions:TransactionsList[] = filterTransactions(res_data.transactions, activeId)
+            setTransactions(newTransactions)
         }
     }
 
-    const fetchAllTransactions = async id => {
-        setActiveId(id)
-        try {
-             await fetchData();
-        } catch (err) {
-
+    const fetchAllTransactions = async (id?:number) => {
+        if(id === undefined){
+            setActiveId(0)
+        } else{
+            setActiveId(id)
         }
-
+        await fetchData();
     }
 
     const renderAllTransactionsLoadingView = () => (
@@ -104,9 +127,9 @@ const UserTransactions = () => {
                 radius={5}
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
-                wrapperClass={{}}
-                wrapperStyle=""
                 visible={true}
+                // wrapperClass={{}}
+                // wrapperStyle=""
             />
         </div>
     )
@@ -117,9 +140,9 @@ const UserTransactions = () => {
         </div>
     )
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString:Date) => {
         const date = new Date(dateString);
-        const options = {
+        const options:DateOptions = {
             day: 'numeric',
             month: 'short',
             hour: 'numeric',

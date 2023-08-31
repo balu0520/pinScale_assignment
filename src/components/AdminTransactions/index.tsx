@@ -6,13 +6,36 @@ import { BallTriangle } from 'react-loader-spinner'
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 
-const usernames = [
+interface UserNames{
+    user_id:number,
+    username:string
+}
+
+const usernames:UserNames[] = [
     { user_id: 1, username: "janedoe" }, { user_id: 2, username: "samsmith" }, { user_id: 4, username: "rahul" },
     { user_id: 5, username: "teja" }, { user_id: 6, username: "loki" }, { user_id: 7, username: "ramesh" },
     { user_id: 8, username: "suresh" }, { user_id: 9, username: "prem" }, { user_id: 10, username: "piyush" },
     { user_id: 12, username: "isha" }, { user_id: 14, username: "seema" }, { user_id: 15, username: "seema" },
     { user_id: 16, username: "radha" }, { user_id: 17, username: "phani" }
 ]
+
+interface TransactionsList {
+    id:number
+    transaction_name:string,
+    type:string,
+    amount:number,
+    category:string,
+    user_id:number,
+    date: Date,
+}
+
+interface DateOptions {
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+}
 
 const apiStatusConstants = {
     initial: "INITIAL",
@@ -24,7 +47,7 @@ const apiStatusConstants = {
 const AdminTransactions = () => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
-    const [transactions, setTransactions] = useState([])
+    const [transactions, setTransactions] = useState<TransactionsList[]>([])
     const [cookie, _] = useCookies(["user_id"])
     const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
@@ -59,17 +82,29 @@ const AdminTransactions = () => {
     }, [res_data])
 
 
-    const filterTransactions = (transactions, id) => {
+    const filterTransactions = (transactions:TransactionsList[], id:number) => {
         if (id === 0) {
-            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            transactions.sort((a:TransactionsList, b:TransactionsList):number => {
+                const dateA = new Date(a.date).getTime()
+                const dateB = new Date(b.date).getTime()
+                return dateB-dateA
+            });
             return transactions
         } else if (id === 1) {
             const filteredTransactions = transactions.filter(transaction => transaction.type === "debit");
-            filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            filteredTransactions.sort((a:TransactionsList, b:TransactionsList):number => {
+                const dateA = new Date(a.date).getTime()
+                const dateB = new Date(b.date).getTime()
+                return dateB-dateA
+            });
             return filteredTransactions
         } else {
             const filteredTransactions = transactions.filter(transaction => transaction.type === "credit")
-            filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            filteredTransactions.sort((a:TransactionsList, b:TransactionsList):number => {
+                const dateA = new Date(a.date).getTime()
+                const dateB = new Date(b.date).getTime()
+                return dateB-dateA
+            });
             return filteredTransactions
         }
     }
@@ -81,7 +116,7 @@ const AdminTransactions = () => {
         }
     }
 
-    const fetchAllTransactions = async id => {
+    const fetchAllTransactions = async (id:number) => {
         setActiveId(id)
         await fetchData();
     }
@@ -94,9 +129,9 @@ const AdminTransactions = () => {
                 radius={5}
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
-                wrapperClass={{}}
-                wrapperStyle=""
                 visible={true}
+                // wrapperClass={{}}
+                // wrapperStyle=""
             />
         </div>
     )
@@ -107,9 +142,9 @@ const AdminTransactions = () => {
         </div>
     )
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString:Date) => {
         const date = new Date(dateString);
-        const options = {
+        const options:DateOptions = {
             day: 'numeric',
             month: 'short',
             hour: 'numeric',
@@ -120,12 +155,12 @@ const AdminTransactions = () => {
         return date.toLocaleString('en-US', options);
     }
 
-    const getUsername = userId => {
+    const getUsername = ((userId:number) => {
         const User = usernames.find((user) => user.user_id === userId);
         return User ? User.username : null;
-    }
+    })
 
-    const renderTransactionProfile = userId => {
+    const renderTransactionProfile = (userId:number) => {
         const user = getUsername(userId)
         return (
             <div className='admin-all-transactions-img-container'>

@@ -1,16 +1,33 @@
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import './index.css'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Sidebar from '../Sidebar'
 import { BallTriangle } from 'react-loader-spinner'
 import DeletePopup from '../DeletePopup'
 import AddPopup from '../AddPopup'
 import UpdatePopup from '../UpdatePopup'
-import useFetch from './../../hooks/useFetch'
+import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
 
+
+interface Options {
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+}
+
+interface TransactionItems {
+    id:number
+    transaction_name:string,
+    type:string,
+    amount:number,
+    category:string
+    date: Date,
+}
 
 
 const apiStatusConstants = {
@@ -23,8 +40,8 @@ const apiStatusConstants = {
 
 const UserDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
-    const [transactions, setTransaction] = useState([])
-    const { fetchData,res_data, apiStatus } = useFetch({
+    const [transactions, setTransaction] = useState<TransactionItems[]>([])
+    const { fetchData, res_data, apiStatus } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -54,25 +71,25 @@ const UserDashboard = () => {
 
     useEffect(() => {
         getData()
-    },[res_data])
+    }, [res_data])
 
     const getData = () => {
-        try{
-            if (res_data !== null) {
-                const newTransactions = res_data.transactions;
-                newTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-                const sortedNewTransactions = newTransactions.slice(0, 3)
-                setTransaction(sortedNewTransactions)
-            }
-
-        }catch(err){
-
+        if (res_data !== null) {
+            const newTransactions = res_data.transactions;
+            // newTransactions.sort((a:Transaction, b:Transaction):number => {
+            //     const dateA = new Date(a.date).getTime()
+            //     const dateB = new Date(b.date).getTime()
+            //     return dateB-dateA
+            // });
+            // console.log(newTransactions)
+            const sortedNewTransactions = newTransactions.slice(0, 3)
+            setTransaction(sortedNewTransactions)
         }
     }
 
 
     const fetchTransactions = async () => {
-            await fetchData();
+        await fetchData();
     }
 
 
@@ -84,16 +101,16 @@ const UserDashboard = () => {
                 radius={5}
                 color="#2D60FF"
                 ariaLabel="ball-triangle-loading"
-                wrapperClass={{}}
-                wrapperStyle=""
                 visible={true}
+                // wrapperClass={{}}
+                // wrapperStyle=""
             />
         </div>
     )
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString: Date) => {
         const date = new Date(dateString);
-        const options = {
+        const options: Options = {
             day: 'numeric',
             month: 'short',
             hour: 'numeric',
@@ -108,25 +125,27 @@ const UserDashboard = () => {
         const len = transactions.length;
         return (
             <ul className='transactions-list'>
-                {transactions.map((transaction, ind) => (
-                    <li key={transaction.id}>
-                        <div className='transaction-item'>
-                            <div className='transaction-name-container'>
-                                {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
-                                {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
-                                <h1 className='transaction-name'>{transaction.transaction_name}</h1>
+                {transactions.map((transaction, ind) => {
+                    return (
+                        <li key={transaction.id}>
+                            <div className='transaction-item'>
+                                <div className='transaction-name-container'>
+                                    {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
+                                    {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
+                                    <h1 className='transaction-name'>{transaction.transaction_name}</h1>
+                                </div>
+                                <p className='transaction-category'>{transaction.category}</p>
+                                <p className='transaction-date'>{formatDate(transaction.date)}</p>
+                                <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                                <div className='update-delete-container'>
+                                    <UpdatePopup transaction={transaction} reloadOperation={fetchTransactions} id={-1} />
+                                    <DeletePopup transaction={transaction} reloadOperation={fetchTransactions} id={-1} />
+                                </div>
                             </div>
-                            <p className='transaction-category'>{transaction.category}</p>
-                            <p className='transaction-date'>{formatDate(transaction.date)}</p>
-                            <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
-                            <div className='update-delete-container'>
-                                <UpdatePopup transaction={transaction} reloadOperation={fetchTransactions} id={-1} />
-                                <DeletePopup transaction={transaction} reloadOperation={fetchTransactions} id={-1} />
-                            </div>
-                        </div>
-                        {ind !== len - 1 && (<hr className='separator' />)}
-                    </li>
-                ))}
+                            {ind !== len - 1 && (<hr className='separator' />)}
+                        </li>
+                    )
+                })}
             </ul>
         )
     }
@@ -167,22 +186,6 @@ const UserDashboard = () => {
                                 'x-hasura-role': 'user',
                                 'x-hasura-user-id': cookie.user_id
                             }} />
-                            {/* <div className='type-container'>
-                                <div className='credit-debit-container'>
-                                    <div>
-                                        <h1 className='credit-heading'>${totalCredit}</h1>
-                                        <p className='credit-para'>credit</p>
-                                    </div>
-                                    <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690714183/credit_jbbub1.png' className='type-img' alt='credit' />
-                                </div>
-                                <div className='credit-debit-container'>
-                                    <div>
-                                        <h1 className='debit-heading'>${totalDebit}</h1>
-                                        <p className='debit-para'>Debit</p>
-                                    </div>
-                                    <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690714183/Debit_hh7uxj.png' className='type-img' alt='debit' />
-                                </div>
-                            </div> */}
                             <h1 className='last-transaction-heading'>Last Transaction</h1>
                             <div className='transaction-sub-container'>
                                 {renderTransactions()}
