@@ -11,12 +11,16 @@ import UpdatePopup from '../UpdatePopup';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { DateOptions,TransactionsList } from '../../types/interfaces';
+import { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
+import { TransactionContext } from '../../context/transactionContext';
 
 const UserTransactions = () => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
-    const [transactions, setTransactions] = useState<TransactionsList[]>([])
+    // const [transactions, setTransactions] = useState<TransactionsList[]>([])
     const [cookie, _] = useCookies(["user_id"])
+    const store = useContext(TransactionContext)
     const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
@@ -82,7 +86,8 @@ const UserTransactions = () => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions:TransactionsList[] = filterTransactions(res_data.transactions, activeId)
-            setTransactions(newTransactions)
+            store.addTransactions(newTransactions)
+            // setTransactions(newTransactions)
         }
     }
 
@@ -128,6 +133,7 @@ const UserTransactions = () => {
     }
 
     const renderAllTransactionsSuccessView = () => {
+        const transactions = store.transactions
         const len = transactions.length;
         return (
             <ul className='all-transactions-list'>

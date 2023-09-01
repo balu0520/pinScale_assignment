@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import './index.css'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Sidebar from '../Sidebar'
 import { BallTriangle } from 'react-loader-spinner'
 import DeletePopup from '../DeletePopup'
@@ -10,12 +10,15 @@ import UpdatePopup from '../UpdatePopup'
 import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
-import { DateOptions,TransactionItem } from '../../types/interfaces'
+import { DateOptions, TransactionItem, TransactionsList } from '../../types/interfaces'
+import { TransactionContext } from './../../context/transactionContext'
+import { observer } from 'mobx-react-lite'
 
 
-const UserDashboard = () => {
+const UserDashboard = observer(() => {
     const [cookie, _] = useCookies(["user_id"])
-    const [transactions, setTransaction] = useState<TransactionItem[]>([])
+    // const [transactions, setTransaction] = useState<TransactionsList[]>([])
+    const store = useContext(TransactionContext)
     const { fetchData, res_data, apiStatus } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
@@ -41,7 +44,7 @@ const UserDashboard = () => {
     }, [cookie.user_id])
 
     useEffect(() => {
-        fetchTransactions();
+        fetchData();
     }, [])
 
     useEffect(() => {
@@ -51,15 +54,16 @@ const UserDashboard = () => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions = res_data.transactions;
-            const sortedNewTransactions = newTransactions.slice(0, 3)
-            setTransaction(sortedNewTransactions)
+            newTransactions.sort((a:TransactionItem,b:TransactionItem) => {
+                const dateA = new Date(a.date).getTime()
+                const dateB = new Date(b.date).getTime()
+                return dateB-dateA
+            })
+            const sortedNewTransactions: TransactionsList[] = newTransactions.slice(0, 3)
+            store.addTransactions([...sortedNewTransactions])
         }
     }
 
-
-    const fetchTransactions = async () => {
-        await fetchData();
-    }
 
 
     const renderTransactionsLoadingView = () => (
@@ -88,7 +92,9 @@ const UserDashboard = () => {
         return date.toLocaleString('en-US', options);
     }
 
+
     const renderTransactionSuccessView = () => {
+        const transactions = store.transactions
         const len = transactions.length;
         return (
             <ul className='transactions-list'>
@@ -105,8 +111,8 @@ const UserDashboard = () => {
                                 <p className='transaction-date'>{formatDate(transaction.date)}</p>
                                 <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
                                 <div className='update-delete-container'>
-                                    <UpdatePopup transaction={transaction} reloadOperation={fetchTransactions} id={-1} />
-                                    <DeletePopup transaction={transaction} reloadOperation={fetchTransactions} id={-1} />
+                                    <UpdatePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
+                                    <DeletePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
                                 </div>
                             </div>
                             {ind !== len - 1 && (<hr className='separator' />)}
@@ -144,7 +150,7 @@ const UserDashboard = () => {
                     <div className='dashboard-container'>
                         <div className='header-container'>
                             <h1 className='heading'>Account</h1>
-                            <AddPopup reloadOperation={fetchTransactions} id={-1} />
+                            <AddPopup reloadOperation={fetchData} id={-1} />
                         </div>
                         <div className='dashboard-sub-container'>
                             <TotalCreditDebitItem url="https://bursting-gelding-24.hasura.app/api/rest/credit-debit-totals" method="GET" headers={{
@@ -170,6 +176,6 @@ const UserDashboard = () => {
             )}
         </>
     )
-}
+})
 
 export default UserDashboard

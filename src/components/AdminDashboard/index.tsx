@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState,useContext } from 'react'
 import './index.css'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
@@ -8,11 +8,14 @@ import { BallTriangle } from 'react-loader-spinner'
 import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
+import { observer } from 'mobx-react-lite'
 import { DateOptions,TransactionItem } from '../../types/interfaces'
+import { TransactionContext } from '../../context/transactionContext'
 
-const AdminDashboard = () => {
+const AdminDashboard = observer(() => {
     const [cookie, _] = useCookies(["user_id"])
-    const [transactions, setTransaction] = useState<TransactionItem[]>([])
+    // const [transactions, setTransaction] = useState<TransactionItem[]>([])
+    const store = useContext(TransactionContext)
     const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
@@ -48,8 +51,13 @@ const AdminDashboard = () => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions = res_data.transactions;
+            newTransactions.sort((a:TransactionItem,b:TransactionItem) => {
+                const dateA = new Date(a.date).getTime()
+                const dateB = new Date(b.date).getTime()
+                return dateB-dateA
+            })
             const sortedNewTransactions = newTransactions.slice(0, 3)
-            setTransaction(sortedNewTransactions)
+            store.addTransactions(sortedNewTransactions)
         }
     }
 
@@ -85,6 +93,7 @@ const AdminDashboard = () => {
     )
 
     const renderTransactionSuccessView = () => {
+        const transactions = store.transactions
         const len = transactions.length;
         return (
             <ul className='admin-transactions-list'>
@@ -163,6 +172,6 @@ const AdminDashboard = () => {
             )}
         </>
     )
-}
+})
 
 export default AdminDashboard

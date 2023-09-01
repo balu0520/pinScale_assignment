@@ -1,15 +1,17 @@
-import { useState } from 'react'
+import { useState,useContext } from 'react'
 import './index.css'
 import Popup from 'reactjs-popup'
 import { VscEdit } from 'react-icons/vsc'
 import { useCookies } from 'react-cookie'
 import useFetch from '../../hooks/useFetch'
 import { TransactionItem,UpdatePopupProps } from '../../types/interfaces'
+import { TransactionContext } from '../../context/transactionContext'
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
 const UpdatePopup = (props: UpdatePopupProps) => {
     const [cookie, _] = useCookies(["user_id"])
     const { transaction, reloadOperation, id } = props
+    const store = useContext(TransactionContext)
     const dateString = transaction.date;
     const dateObject = new Date(dateString);
     const day = String(dateObject.getDate()).padStart(2, "0");
@@ -23,7 +25,7 @@ const UpdatePopup = (props: UpdatePopupProps) => {
     const [transactionDate, setTransactionDate] = useState(formattedDate)
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
-    const { fetchData, res_error } = useFetch({
+    const { fetchData, res_error,res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/update-transaction", method: "POST", headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -61,6 +63,8 @@ const UpdatePopup = (props: UpdatePopupProps) => {
         }
         await fetchData()
         if (res_error !== null) {
+            const updatedItem:TransactionItem = res_data.update_transactions_by_pk
+            store.updateTransaction(updatedItem)
             alert("updated Successfully")
             setErr(false)
 

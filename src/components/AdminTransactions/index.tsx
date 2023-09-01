@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState,useContext } from 'react'
 import './index.css'
 import { useCookies } from 'react-cookie';
 import SideBar from '../Sidebar';
@@ -6,6 +6,8 @@ import { BallTriangle } from 'react-loader-spinner'
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { UserNames, DateOptions, TransactionsList } from '../../types/interfaces';
+import { TransactionContext } from '../../context/transactionContext';
+import { observer } from 'mobx-react-lite';
 
 
 const usernames: UserNames[] = [
@@ -17,10 +19,11 @@ const usernames: UserNames[] = [
 ]
 
 
-const AdminTransactions = () => {
+const AdminTransactions = observer(() => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
-    const [transactions, setTransactions] = useState<TransactionsList[]>([])
+    // const [transactions, setTransactions] = useState<TransactionsList[]>([])
+    const store = useContext(TransactionContext)
     const [cookie, _] = useCookies(["user_id"])
     const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
@@ -85,7 +88,7 @@ const AdminTransactions = () => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions = filterTransactions(res_data.transactions, activeId)
-            setTransactions(newTransactions)
+            store.addTransactions(newTransactions)
         }
     }
 
@@ -131,18 +134,21 @@ const AdminTransactions = () => {
         return User ? User.username : null;
     })
 
-    const renderTransactionProfile = (userId: number) => {
-        const user = getUsername(userId)
-        return (
-            <div className='admin-all-transactions-img-container'>
-                <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690873427/admin-profiles_t49bxr.png' />
-                <p className='admin-all-transaction-name'>{user}</p>
-            </div>
-        )
+    const renderTransactionProfile = (userId?: number) => {
+        if (userId !== undefined) {
+            const user = getUsername(userId)
+            return (
+                <div className='admin-all-transactions-img-container'>
+                    <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690873427/admin-profiles_t49bxr.png' />
+                    <p className='admin-all-transaction-name'>{user}</p>
+                </div>
+            )
+        }
 
     }
 
     const renderAllTransactionsSuccessView = () => {
+        const transactions = store.transactions
         const len = transactions.length;
         return (
             <ul className='admin-all-transactions-list'>
@@ -164,7 +170,7 @@ const AdminTransactions = () => {
                             <div className='admin-all-transaction-name-container'>
                                 {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
                                 {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
-                                {renderTransactionProfile(transaction.user_id)}
+                                {renderTransactionProfile(transaction?.user_id)}
                             </div>
                             <p className='admin-all-transaction-name'>{transaction.transaction_name}</p>
                             <p className='admin-all-transaction-category'>{transaction.category}</p>
@@ -215,6 +221,6 @@ const AdminTransactions = () => {
             )}
         </>
     )
-}
+})
 
 export default AdminTransactions

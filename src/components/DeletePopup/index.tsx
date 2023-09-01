@@ -1,17 +1,20 @@
 import Popup from 'reactjs-popup'
 import { FiAlertTriangle } from 'react-icons/fi'
 import { FaRegTrashAlt } from 'react-icons/fa'
+import {useContext} from 'react'
 import './index.css'
 import { useCookies } from 'react-cookie'
 import useFetch from '../../hooks/useFetch'
 import { DeletePopupProps } from '../../types/interfaces'
-
+import { observer } from 'mobx-react-lite'
+import { TransactionContext } from '../../context/transactionContext'
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
 
-const DeletePopup = (props:DeletePopupProps) => {
+const DeletePopup = observer((props:DeletePopupProps) => {
     const [cookie, _] = useCookies(["user_id"])
     const { transaction, reloadOperation, id } = props
+    const store = useContext(TransactionContext)
     const { fetchData, res_error } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/delete-transaction", method: "DELETE", headers: {
             'content-type': 'application/json',
@@ -33,10 +36,12 @@ const DeletePopup = (props:DeletePopupProps) => {
 
     const deleteTransaction = async (id:number) => {
         await fetchData()
-        if (res_error !== 200) {
-            alert('Something went wrong, please try again later')
-        } else {
+        // console.log(res_error)
+        if (res_error !== 400) {
+            store.deleteNewTransaction(id)
             alert("Successful")
+        } else {
+            alert('Something went wrong, please try again later')
         }
         reload()
     }
@@ -63,6 +68,6 @@ const DeletePopup = (props:DeletePopupProps) => {
                 </div>
         </Popup>
     )
-}
+})
 
 export default DeletePopup

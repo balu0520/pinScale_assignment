@@ -17,7 +17,6 @@ export interface TransactionItem {
     category:string
     date: Date,
 }
-
 export interface UserNames{
     user_id:number,
     username:string
@@ -28,7 +27,7 @@ export interface TransactionsList {
     type:string,
     amount:number,
     category:string,
-    user_id:number,
+    user_id?:number,
     date: Date,
 }
 export interface Week7Transaction{
