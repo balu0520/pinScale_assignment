@@ -1,11 +1,18 @@
 import { makeObservable, observable } from 'mobx';
-import {TransactionsList,TransactionItem} from './../types/interfaces'
+import {TransactionsList,TransactionItem} from '../types/interfaces'
+import TransactionObject from './TransactionObject'
+
 
 class TransactionStore{
     transactions: TransactionsList[] = []
+    // transactionName: string = ""
+    // transactionType: string = ""
+    // transactionCategory: string = ""
+    // transactionAmount: number | string = ""
+    // transactionDate: string  = ""
     constructor(){
       makeObservable(this,{
-        transactions:observable
+        transactions:observable,
       })
     }
     addTransactions(newTransactions: TransactionsList[]){
@@ -27,6 +34,21 @@ class TransactionStore{
             this.transactions.splice(index,1,Item)
         }
     }
+    // addTransactionName(name:string){
+    //   this.transactionName = name
+    // }
+    // addTransactionType(Ttype:string){
+    //   this.transactionType = Ttype
+    // }
+    // addTransactionCategory(category: string){
+    //   this.transactionCategory = category
+    // }
+    // addTransactionAmount(amount: number | string){
+    //   this.transactionAmount = Number(amount)
+    // }
+    // addTransactionDate(date: string){
+    //   this.transactionDate = date
+    // }
     
   }
 

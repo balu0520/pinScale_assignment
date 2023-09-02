@@ -6,7 +6,7 @@ import UserProfile from './components/UserProfile';
 import AdminDashboard from './components/AdminDashboard';
 import AdminTransactions from './components/AdminTransactions';
 import HandleRedirect from './components/HandleRedirect';
-import TransactionStore from './store/TransactionStore'
+import TransactionStore from './models/TransactionStore'
 import { TransactionContext } from './context/transactionContext';
 import './App.css';
 

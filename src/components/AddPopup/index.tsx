@@ -5,17 +5,18 @@ import { useCookies } from "react-cookie";
 import useFetch from "../../hooks/useFetch";
 import { AddPopupProps } from "../../types/interfaces";
 import { TransactionContext } from "../../context/transactionContext";
+import { observer } from "mobx-react-lite";
+import TransactionObject from "../../models/TransactionObject";
 const overlayStyle = { background: 'rgba(0,0,0,0.5)'};
-
-
-const AddPopup = (props:AddPopupProps) => {
+const transactionObj = new TransactionObject("","","","","")
+const AddPopup = observer((props:AddPopupProps) => {
     const { reloadOperation, id } = props
     const [cookie, _] = useCookies(["user_id"])
-    const [transactionName, setTransactionName] = useState("")
-    const [transactionType, setTransactionType] = useState("")
-    const [transactionCategory, setTransactionCategory] = useState("")
-    const [transactionAmount, setTransactionAmount] = useState("")
-    const [transactionDate, setTransactionDate] = useState("")
+    // const [transactionName, setTransactionName] = useState("")
+    // const [transactionType, setTransactionType] = useState("")
+    // const [transactionCategory, setTransactionCategory] = useState("")
+    // const [transactionAmount, setTransactionAmount] = useState("")
+    // const [transactionDate, setTransactionDate] = useState("")
     const store = useContext(TransactionContext)
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
@@ -26,11 +27,11 @@ const AddPopup = (props:AddPopupProps) => {
             'x-hasura-role': 'user',
             'x-hasura-user-id': cookie.user_id
         }, body: {
-            name: transactionName,
-            type: transactionType,
-            category: transactionCategory,
-            amount: transactionAmount,
-            date: transactionDate,
+            name: transactionObj.transactionName,
+            type: transactionObj.transactionType,
+            category: transactionObj.transactionCategory,
+            amount: transactionObj.transactionAmount,
+            date: transactionObj.transactionDate,
             user_id: cookie.user_id
         }
     })
@@ -45,43 +46,39 @@ const AddPopup = (props:AddPopupProps) => {
 
     const submitTransaction = async (event: any) => {
         event.preventDefault();
-        if (transactionName === "") {
+        if (transactionObj.transactionName === "") {
             setErr(true)
             setErrMsg("Enter transaction Name")
             return
-        } else if (transactionType === "") {
+        } else if (transactionObj.transactionType === "") {
             setErr(true)
             setErrMsg("Enter transaction Type")
             return
-        } else if (transactionCategory === "") {
+        } else if (transactionObj.transactionCategory === "") {
             setErr(true)
             setErrMsg("Enter transaction Category")
             return
-        } else if (transactionAmount === "") {
+        } else if (transactionObj.transactionAmount === "") {
             setErr(true)
             setErrMsg("Enter transaction Amount")
             return
-        } else if (transactionDate === "") {
+        } else if (transactionObj.transactionDate === "") {
             setErr(true)
             setErrMsg("Enter transaction Date")
             return
         }
         await fetchData()
-        if (res_error !== null) {
+        if (res_error !== 400) {
             store.addNewTransaction(res_data.insert_transactions_one)
             alert("Added Successfully")
             setErr(false)
             setErrMsg("")
+            transactionObj.refreshValues()
         } else {
             alert('Something went wrong, please try again later')
             setErr(false)
             setErrMsg("")
         }
-        setTransactionName("")
-        setTransactionType("")
-        setTransactionCategory("")
-        setTransactionAmount("")
-        setTransactionDate("")
         reload()
     }
 
@@ -97,11 +94,11 @@ const AddPopup = (props:AddPopupProps) => {
                     </div>
                     <div className="input-container">
                         <label htmlFor="transactionName" className="transaction-label">Transaction name</label>
-                        <input type="text" id="transactionName" value={transactionName} className="input-label" placeholder="Enter Name" onChange={(event) => setTransactionName(event.target.value)} />
+                        <input type="text" id="transactionName" value={transactionObj.transactionName} className="input-label" placeholder="Enter Name" onChange={(event) => transactionObj.addTransactionName(event.target.value)} />
                     </div>
                     <div className="input-container">
                         <label htmlFor="transactionType" className="transaction-label">Transaction Type</label>
-                        <select value={transactionType} onChange={(event) => setTransactionType(event.target.value)} id="transactionType" className="input-label">
+                        <select value={transactionObj.transactionType} onChange={(event) => transactionObj.addTransactionType(event.target.value)} id="transactionType" className="input-label">
                             <option value="">Select type</option>
                             <option value="credit">Credit</option>
                             <option value="debit">Debit</option>
@@ -109,7 +106,7 @@ const AddPopup = (props:AddPopupProps) => {
                     </div>
                     <div className="input-container">
                         <label htmlFor="transactionCategory" className="transaction-label">Category</label>
-                        <select value={transactionCategory} onChange={(event) => setTransactionCategory(event.target.value)} id="transactionCategory" className="input-label">
+                        <select value={transactionObj.transactionCategory} onChange={(event) => transactionObj.addTransactionCategory(event.target.value)} id="transactionCategory" className="input-label">
                             <option value="">Select an Category</option>
                             <option value="Shopping">Shopping</option>
                             <option value="Entertainment">Entertainment</option>
@@ -122,11 +119,11 @@ const AddPopup = (props:AddPopupProps) => {
                     </div>
                     <div className="input-container">
                         <label htmlFor="transactionAmount" className="transaction-label">Amount</label>
-                        <input type="number" id="transactionAmount" value={transactionAmount} className="input-label" placeholder="Enter Your Amount" onChange={(event) => setTransactionAmount(event.target.value)} />
+                        <input type="number" id="transactionAmount" value={transactionObj.transactionAmount} className="input-label" placeholder="Enter Your Amount" onChange={(event) => transactionObj.addTransactionAmount(event.target.value)} />
                     </div>
                     <div className="input-container">
                         <label htmlFor="transactionDate" className="transaction-label">Date</label>
-                        <input type="date" id="transactionDate" value={transactionDate} className="input-label" placeholder="Select date" onChange={(event) => setTransactionDate(event.target.value)} />
+                        <input type="date" id="transactionDate" value={transactionObj.transactionDate} className="input-label" placeholder="Select date" onChange={(event) => transactionObj.addTransactionDate(event.target.value)} />
                     </div>
                     <button className="add-transaction-btn" type="submit">Add Transaction</button>
                     {err && (<p className="err-msg">{errMsg}</p>)}
@@ -134,6 +131,6 @@ const AddPopup = (props:AddPopupProps) => {
         </Popup>
     )
 
-}
+})
 
 export default AddPopup

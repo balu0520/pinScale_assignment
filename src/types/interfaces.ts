@@ -134,3 +134,10 @@ export interface FetchProps {
     params?: Params | undefined,
     body?: BodyInit | Body
 }
+// export interface TransactionUpdateItem {
+//     transaction_name:string,
+//     type:string,
+//     amount:number,
+//     category:string
+//     date:  string,
+// }
