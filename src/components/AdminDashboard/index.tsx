@@ -8,11 +8,11 @@ import { BallTriangle } from 'react-loader-spinner'
 import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
-import { observer } from 'mobx-react-lite'
+import { observer } from 'mobx-react'
 import { DateOptions,TransactionItem } from '../../types/interfaces'
 import { TransactionContext } from '../../context/transactionContext'
 
-const AdminDashboard = observer(() => {
+const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
     // const [transactions, setTransaction] = useState<TransactionItem[]>([])
     const store = useContext(TransactionContext)
@@ -57,7 +57,7 @@ const AdminDashboard = observer(() => {
                 return dateB-dateA
             })
             const sortedNewTransactions = newTransactions.slice(0, 3)
-            store.addTransactions(sortedNewTransactions)
+            store?.addTransactions(sortedNewTransactions)
         }
     }
 
@@ -93,11 +93,36 @@ const AdminDashboard = observer(() => {
     )
 
     const renderTransactionSuccessView = () => {
-        const transactions = store.transactions
-        const len = transactions.length;
+        const transactions = store?.transactions
+        const len = transactions?.length;
+        if(len !== undefined){
+            return (
+                <ul className='admin-transactions-list'>
+                    {transactions?.map((transaction, ind) => (
+                        <li key={transaction.id}>
+                            <div className='admin-transaction-item'>
+                                <div className='admin-transaction-name-container'>
+                                    {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
+                                    {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
+                                    <div className='admin-transaction-img-container'>
+                                        <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690873427/admin-profiles_t49bxr.png' />
+                                        <p className='admin-transaction-img-container-para'>Arlene McCoy</p>
+                                    </div>
+                                </div>
+                                <p className='admin-transaction-name'>{transaction.transaction_name}</p>
+                                <p className='admin-transaction-category'>{transaction.category}</p>
+                                <p className='admin-transaction-date'>{formatDate(transaction.date)}</p>
+                                <p className={`admin-transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                            </div>
+                            {ind !== len - 1 && (<hr className='separator' />)}
+                        </li>
+                    ))}
+                </ul>
+            )
+        }
         return (
             <ul className='admin-transactions-list'>
-                {transactions.map((transaction, ind) => (
+                {transactions?.map((transaction, ind) => (
                     <li key={transaction.id}>
                         <div className='admin-transaction-item'>
                             <div className='admin-transaction-name-container'>
@@ -113,7 +138,6 @@ const AdminDashboard = observer(() => {
                             <p className='admin-transaction-date'>{formatDate(transaction.date)}</p>
                             <p className={`admin-transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
                         </div>
-                        {ind !== len - 1 && (<hr className='separator' />)}
                     </li>
                 ))}
             </ul>
@@ -172,6 +196,6 @@ const AdminDashboard = observer(() => {
             )}
         </>
     )
-})
+}
 
-export default AdminDashboard
+export default observer(AdminDashboard)

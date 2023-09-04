@@ -10,9 +10,9 @@ import AddPopup from '../AddPopup';
 import UpdatePopup from '../UpdatePopup';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-import { DateOptions,TransactionsList } from '../../types/interfaces';
+import { DateOptions, TransactionsList } from '../../types/interfaces';
 import { useContext } from 'react';
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 import { TransactionContext } from '../../context/transactionContext';
 
 const UserTransactions = () => {
@@ -56,28 +56,28 @@ const UserTransactions = () => {
         getData()
     }, [res_data])
 
-    const filterTransactions = (transactions:TransactionsList[], id:number):TransactionsList[] => {
+    const filterTransactions = (transactions: TransactionsList[], id: number): TransactionsList[] => {
         if (id === 0) {
-            transactions.sort((a:TransactionsList, b:TransactionsList):number => {
+            transactions.sort((a: TransactionsList, b: TransactionsList): number => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
-                return dateB-dateA
+                return dateB - dateA
             });
             return transactions
         } else if (id === 1) {
             const filteredTransactions = transactions.filter(transaction => transaction.type === "debit");
-            filteredTransactions.sort((a:TransactionsList, b:TransactionsList):number => {
+            filteredTransactions.sort((a: TransactionsList, b: TransactionsList): number => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
-                return dateB-dateA
+                return dateB - dateA
             });
             return filteredTransactions
         } else {
             const filteredTransactions = transactions.filter(transaction => transaction.type === "credit")
-            filteredTransactions.sort((a:TransactionsList, b:TransactionsList):number => {
+            filteredTransactions.sort((a: TransactionsList, b: TransactionsList): number => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
-                return dateB-dateA
+                return dateB - dateA
             });
             return filteredTransactions
         }
@@ -85,16 +85,16 @@ const UserTransactions = () => {
 
     const getData = () => {
         if (res_data !== null) {
-            const newTransactions:TransactionsList[] = filterTransactions(res_data.transactions, activeId)
-            store.addTransactions(newTransactions)
+            const newTransactions: TransactionsList[] = filterTransactions(res_data.transactions, activeId)
+            store?.addTransactions(newTransactions)
             // setTransactions(newTransactions)
         }
     }
 
-    const fetchAllTransactions = async (id?:number) => {
-        if(id === undefined){
+    const fetchAllTransactions = async (id?: number) => {
+        if (id === undefined) {
             setActiveId(0)
-        } else{
+        } else {
             setActiveId(id)
         }
         await fetchData();
@@ -119,9 +119,9 @@ const UserTransactions = () => {
         </div>
     )
 
-    const formatDate = (dateString:Date) => {
+    const formatDate = (dateString: Date) => {
         const date = new Date(dateString);
-        const options:DateOptions = {
+        const options: DateOptions = {
             day: 'numeric',
             month: 'short',
             hour: 'numeric',
@@ -133,8 +133,54 @@ const UserTransactions = () => {
     }
 
     const renderAllTransactionsSuccessView = () => {
-        const transactions = store.transactions
-        const len = transactions.length;
+        const transactions = store?.transactions
+        const len = transactions?.length;
+        if (len !== undefined) {
+            return (
+                <ul className='all-transactions-list'>
+                    <li>
+                        <div className='all-transaction-item'>
+                            <div className='all-transaction-name-container'>
+                                <h1 className='all-transaction-name' style={{ color: '#343C6A' }}>Transaction name</h1>
+                                <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' style={{ visibility: 'hidden' }} />
+                                <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' style={{ visibility: 'hidden' }} />
+                            </div>
+                            <p className='all-transaction-category' style={{ color: '#343C6A' }}>Category</p>
+                            <p className='all-transaction-date' style={{ color: '#343C6A' }}>Date</p>
+                            <div className='all-transaction-update-delete-container'>
+                                <p className="all-transaction-amount" style={{ color: '#343C6A' }}>Amount </p>
+                            </div>
+                            <div className='all-transaction-update-delete-sub-container'>
+                                <button className='btn' style={{ color: "#2D60FF", visibility: 'hidden' }} ><VscEdit /></button>
+                                <button className='btn' style={{ color: "#FE5C73", visibility: 'hidden' }}><FaRegTrashAlt /></button>
+                            </div>
+                        </div>
+                        <hr className='separator' />
+                    </li>
+                    {transactions?.map((transaction, ind) => (
+                        <li key={transaction.id}>
+                            <div className='all-transaction-item'>
+                                <div className='all-transaction-name-container'>
+                                    {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
+                                    {transaction.type.toLowerCase() !== "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
+                                    <h1 className='all-transaction-name'>{transaction.transaction_name}</h1>
+                                </div>
+                                <p className='all-transaction-category'>{transaction.category}</p>
+                                <p className='all-transaction-date'>{formatDate(transaction.date)}</p>
+                                <div className='all-transaction-update-delete-container'>
+                                    <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type.toLowerCase() === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                                </div>
+                                <div className='all-transaction-update-delete-sub-container'>
+                                    <UpdatePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
+                                    <DeletePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
+                                </div>
+                            </div>
+                            {ind !== len - 1 && (<hr className='separator' />)}
+                        </li>
+                    ))}
+                </ul>
+            )
+        }
         return (
             <ul className='all-transactions-list'>
                 <li>
@@ -156,7 +202,7 @@ const UserTransactions = () => {
                     </div>
                     <hr className='separator' />
                 </li>
-                {transactions.map((transaction, ind) => (
+                {transactions?.map((transaction, ind) => (
                     <li key={transaction.id}>
                         <div className='all-transaction-item'>
                             <div className='all-transaction-name-container'>
@@ -174,7 +220,6 @@ const UserTransactions = () => {
                                 <DeletePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
                             </div>
                         </div>
-                        {ind !== len - 1 && (<hr className='separator' />)}
                     </li>
                 ))}
             </ul>
@@ -221,4 +266,4 @@ const UserTransactions = () => {
     )
 }
 
-export default UserTransactions
+export default observer(UserTransactions)

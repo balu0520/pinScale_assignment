@@ -1,16 +1,16 @@
-import { useState, useContext, useMemo } from 'react'
+import { useState, useContext, useMemo, ReactNode, ReactElement } from 'react'
 import './index.css'
 import Popup from 'reactjs-popup'
 import { VscEdit } from 'react-icons/vsc'
 import { useCookies } from 'react-cookie'
 import useFetch from '../../hooks/useFetch'
-import { TransactionItem, UpdatePopupProps } from '../../types/interfaces'
+import { TransactionItem, UpdatePopupProps,TransactionType } from '../../types/interfaces'
 import { TransactionContext } from '../../context/transactionContext'
-import { observer } from 'mobx-react-lite'
-import TransactionObject from '../../models/TransactionObject'
+import { observer } from 'mobx-react'
+import Transaction from '../../store/models/TransactionModel'
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
-const UpdatePopup = observer((props: UpdatePopupProps) => {
+const UpdatePopup = (props: UpdatePopupProps) => {
     const [cookie, _] = useCookies(["user_id"])
     const { transaction, reloadOperation, id } = props
     const store = useContext(TransactionContext)
@@ -20,9 +20,7 @@ const UpdatePopup = observer((props: UpdatePopupProps) => {
     const month = String(dateObject.getMonth() + 1).padStart(2, "0");
     const year = dateObject.getFullYear();
     const formattedDate = `${year}-${month}-${day}`
-    const transactionObj = useMemo(() => {
-        return new TransactionObject(transaction.transaction_name, transaction.type, transaction.category, transaction.amount, formattedDate)
-    }, [])
+    const [transactionObj] = useState(new Transaction(transaction.transaction_name, transaction.type, transaction.category as TransactionType, transaction.amount, formattedDate))
     // transactionObj.transactionName = transaction.transaction_name
     // transactionObj.transactionType = transaction.type
     // transactionObj.transactionAmount = transaction.amount
@@ -73,11 +71,14 @@ const UpdatePopup = observer((props: UpdatePopupProps) => {
         }
         await fetchData()
         if (res_error !== 400) {
-            if (res_data?.update_transactions_by_pk !== null) {
-                const updatedItem: TransactionItem = res_data.update_transactions_by_pk
-                store.updateTransaction(updatedItem)
-                alert("updated Successfully")
-                setErr(false)
+            console.log(res_data)
+            if(res_data !== null) {
+                if (res_data?.update_transactions_by_pk !== null) {
+                    const updatedItem: TransactionItem = res_data.update_transactions_by_pk
+                    store?.updateTransaction(updatedItem)
+                    alert("updated Successfully")
+                    setErr(false)
+                }
             }
 
         } else {
@@ -90,7 +91,7 @@ const UpdatePopup = observer((props: UpdatePopupProps) => {
 
     return (
         <Popup trigger={<button className='btn' style={{ color: "#2D60FF" }}><VscEdit /></button>} {...{ overlayStyle }} modal>
-            <form className="update-add-modal" onSubmit={(event) => updateTransaction(event)}>
+                <form className="update-add-modal" onSubmit={(event) => updateTransaction(event)}>
                 <div className="update-add-modal-container">
                     <div className="update-add-modal-description-container">
                         <h1 className="update-add-modal-description-heading">Update Transaction</h1>
@@ -104,7 +105,7 @@ const UpdatePopup = observer((props: UpdatePopupProps) => {
                 </div>
                 <div className="update-input-container">
                     <label htmlFor="transactionType" className="update-transaction-label">Transaction Type</label>
-                    <select value={transactionObj.transactionType} onChange={(event) => transactionObj.addTransactionType(event.target.value)} id="transactionType" className="update-input-label">
+                    <select value={transactionObj.transactionType} onChange={(event) => transactionObj.addTransactionType(event.target.value as "credit" | "debit")} id="transactionType" className="update-input-label">
                         <option value="credit">Credit</option>
                         <option value="debit">Debit</option>
                     </select>
@@ -136,6 +137,6 @@ const UpdatePopup = observer((props: UpdatePopupProps) => {
         </Popup>
     )
 
-})
+}
 
-export default UpdatePopup
+export default observer(UpdatePopup)

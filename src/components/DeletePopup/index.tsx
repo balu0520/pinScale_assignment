@@ -6,12 +6,12 @@ import './index.css'
 import { useCookies } from 'react-cookie'
 import useFetch from '../../hooks/useFetch'
 import { DeletePopupProps } from '../../types/interfaces'
-import { observer } from 'mobx-react-lite'
+import { observer } from 'mobx-react'
 import { TransactionContext } from '../../context/transactionContext'
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
 
-const DeletePopup = observer((props:DeletePopupProps) => {
+const DeletePopup = (props:DeletePopupProps) => {
     const [cookie, _] = useCookies(["user_id"])
     const { transaction, reloadOperation, id } = props
     const store = useContext(TransactionContext)
@@ -38,7 +38,7 @@ const DeletePopup = observer((props:DeletePopupProps) => {
         await fetchData()
         // console.log(res_error)
         if (res_error !== 400) {
-            store.deleteNewTransaction(id)
+            store?.deleteNewTransaction(id)
             alert("Successful")
         } else {
             alert('Something went wrong, please try again later')
@@ -68,6 +68,6 @@ const DeletePopup = observer((props:DeletePopupProps) => {
                 </div>
         </Popup>
     )
-})
+}
 
-export default DeletePopup
+export default observer(DeletePopup)

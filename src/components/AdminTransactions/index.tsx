@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { UserNames, DateOptions, TransactionsList } from '../../types/interfaces';
 import { TransactionContext } from '../../context/transactionContext';
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 
 
 const usernames: UserNames[] = [
@@ -19,7 +19,7 @@ const usernames: UserNames[] = [
 ]
 
 
-const AdminTransactions = observer(() => {
+const AdminTransactions = () => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
     // const [transactions, setTransactions] = useState<TransactionsList[]>([])
@@ -88,7 +88,7 @@ const AdminTransactions = observer(() => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions = filterTransactions(res_data.transactions, activeId)
-            store.addTransactions(newTransactions)
+            store?.addTransactions(newTransactions)
         }
     }
 
@@ -148,8 +148,42 @@ const AdminTransactions = observer(() => {
     }
 
     const renderAllTransactionsSuccessView = () => {
-        const transactions = store.transactions
-        const len = transactions.length;
+        const transactions = store?.transactions
+        const len = transactions?.length;
+        if(len !== undefined){
+            return (
+                <ul className='admin-all-transactions-list'>
+                    <li>
+                        <div className='admin-all-transaction-item'>
+                            <div className='admin-all-transaction-name-container'>
+                                <h1 className='admin-all-transaction-name' style={{ color: '#343C6A' }}>username</h1>
+                            </div>
+                            <p className='admin-all-transaction-name' style={{ color: '#343C6A' }}>Transaction Name</p>
+                            <p className='admin-all-transaction-category' style={{ color: '#343C6A' }}>Category</p>
+                            <p className='admin-all-transaction-date' style={{ color: '#343C6A' }}>Date</p>
+                            <p className="admin-all-transaction-amount" style={{ color: '#343C6A' }}>Amount </p>
+                        </div>
+                        <hr className='separator' />
+                    </li>
+                    {transactions?.map((transaction, ind) => (
+                        <li key={transaction.id}>
+                            <div className='admin-all-transaction-item'>
+                                <div className='admin-all-transaction-name-container'>
+                                    {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
+                                    {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
+                                    {renderTransactionProfile(transaction?.user_id)}
+                                </div>
+                                <p className='admin-all-transaction-name'>{transaction.transaction_name}</p>
+                                <p className='admin-all-transaction-category'>{transaction.category}</p>
+                                <p className='admin-all-transaction-date'>{formatDate(transaction.date)}</p>
+                                <p className={`admin-transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type.toLowerCase() === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                            </div>
+                            {ind !== len - 1 && (<hr className='separator' />)}
+                        </li>
+                    ))}
+                </ul>
+            )
+        }
         return (
             <ul className='admin-all-transactions-list'>
                 <li>
@@ -164,7 +198,7 @@ const AdminTransactions = observer(() => {
                     </div>
                     <hr className='separator' />
                 </li>
-                {transactions.map((transaction, ind) => (
+                {transactions?.map((transaction, ind) => (
                     <li key={transaction.id}>
                         <div className='admin-all-transaction-item'>
                             <div className='admin-all-transaction-name-container'>
@@ -177,7 +211,6 @@ const AdminTransactions = observer(() => {
                             <p className='admin-all-transaction-date'>{formatDate(transaction.date)}</p>
                             <p className={`admin-transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type.toLowerCase() === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
                         </div>
-                        {ind !== len - 1 && (<hr className='separator' />)}
                     </li>
                 ))}
             </ul>
@@ -221,6 +254,6 @@ const AdminTransactions = observer(() => {
             )}
         </>
     )
-})
+}
 
-export default AdminTransactions
+export default observer(AdminTransactions)

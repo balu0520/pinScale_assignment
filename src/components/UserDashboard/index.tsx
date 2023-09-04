@@ -12,10 +12,10 @@ import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
 import { DateOptions, TransactionItem, TransactionsList } from '../../types/interfaces'
 import { TransactionContext } from './../../context/transactionContext'
-import { observer } from 'mobx-react-lite'
+import { observer } from 'mobx-react'
 
 
-const UserDashboard = observer(() => {
+const UserDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
     // const [transactions, setTransaction] = useState<TransactionsList[]>([])
     const store = useContext(TransactionContext)
@@ -54,13 +54,13 @@ const UserDashboard = observer(() => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions = res_data.transactions;
-            newTransactions.sort((a:TransactionItem,b:TransactionItem) => {
+            newTransactions.sort((a: TransactionItem, b: TransactionItem) => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
-                return dateB-dateA
+                return dateB - dateA
             })
             const sortedNewTransactions: TransactionsList[] = newTransactions.slice(0, 3)
-            store.addTransactions([...sortedNewTransactions])
+            store?.addTransactions([...sortedNewTransactions])
         }
     }
 
@@ -94,11 +94,38 @@ const UserDashboard = observer(() => {
 
 
     const renderTransactionSuccessView = () => {
-        const transactions = store.transactions
-        const len = transactions.length;
+        const transactions = store?.transactions
+        const len = transactions?.length;
+        if (len !== undefined) {
+            return (
+                <ul className='transactions-list'>
+                    {transactions?.map((transaction, ind) => {
+                        return (
+                            <li key={transaction.id}>
+                                <div className='transaction-item'>
+                                    <div className='transaction-name-container'>
+                                        {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
+                                        {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
+                                        <h1 className='transaction-name'>{transaction.transaction_name}</h1>
+                                    </div>
+                                    <p className='transaction-category'>{transaction.category}</p>
+                                    <p className='transaction-date'>{formatDate(transaction.date)}</p>
+                                    <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                                    <div className='update-delete-container'>
+                                        <UpdatePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
+                                        <DeletePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
+                                    </div>
+                                </div>
+                                {ind !== len - 1 && (<hr className='separator' />)}
+                            </li>
+                        )
+                    })}
+                </ul>
+            )
+        }
         return (
             <ul className='transactions-list'>
-                {transactions.map((transaction, ind) => {
+                {transactions?.map((transaction, ind) => {
                     return (
                         <li key={transaction.id}>
                             <div className='transaction-item'>
@@ -115,7 +142,6 @@ const UserDashboard = observer(() => {
                                     <DeletePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
                                 </div>
                             </div>
-                            {ind !== len - 1 && (<hr className='separator' />)}
                         </li>
                     )
                 })}
@@ -176,6 +202,6 @@ const UserDashboard = observer(() => {
             )}
         </>
     )
-})
+}
 
-export default UserDashboard
+export default observer(UserDashboard)

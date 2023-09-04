@@ -1,19 +1,25 @@
-import { makeObservable, observable } from 'mobx';
-import { TransactionsList } from '../types/interfaces';
+import { action, computed, makeObservable, observable } from 'mobx';
+import {TransactionType } from '../../types/interfaces';
 
-class TransactionObject {
+
+class Transaction {
     transactionName: string 
-    transactionType: string 
+    transactionType: TransactionType 
     transactionCategory: string 
     transactionAmount: number | string 
     transactionDate: string
-    constructor(transationName:string,transactionType:string, transactionCategory: string, transactionAmount: number | string, transactionDate: string) {
+    constructor(transationName:string,transactionType:TransactionType, transactionCategory: string, transactionAmount: number | string, transactionDate: string) {
         makeObservable(this, {
             transactionName: observable,
             transactionType: observable,
             transactionCategory: observable,
             transactionAmount: observable,
             transactionDate: observable,
+            addTransactionName:action.bound,
+            addTransactionType:action.bound,
+            addTransactionAmount:action.bound,
+            addTransactionCategory:action.bound,
+            addTransactionDate:action.bound
         })
         this.transactionName = transationName
         this.transactionType = transactionType
@@ -24,7 +30,7 @@ class TransactionObject {
     addTransactionName(name:string){
       this.transactionName = name
     }
-    addTransactionType(Ttype:string){
+    addTransactionType(Ttype:TransactionType){
       this.transactionType = Ttype
     }
     addTransactionCategory(category: string){
@@ -38,7 +44,7 @@ class TransactionObject {
     }
     refreshValues(){
         this.transactionName = ""
-        this.transactionType = ""
+        this.transactionType = "credit"
         this.transactionAmount = ""
         this.transactionCategory = ""
         this.transactionDate = ""
@@ -46,4 +52,4 @@ class TransactionObject {
     
 }
 
-export default TransactionObject
+export default Transaction

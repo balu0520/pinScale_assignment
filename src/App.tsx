@@ -6,16 +6,15 @@ import UserProfile from './components/UserProfile';
 import AdminDashboard from './components/AdminDashboard';
 import AdminTransactions from './components/AdminTransactions';
 import HandleRedirect from './components/HandleRedirect';
-import TransactionStore from './models/TransactionStore'
-import { TransactionContext } from './context/transactionContext';
+// import TransactionStore from './store/TransactionStore'
+import {TransactionContextProvider } from './context/transactionContext';
 import './App.css';
 
 
 
 const App = () => {
-  // const myStoreInstance = new TransactionStore()
   return (
-    <TransactionContext.Provider value={new TransactionStore()}>
+    <TransactionContextProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginForm />} />
@@ -27,7 +26,8 @@ const App = () => {
         <Route path="*" element={<HandleRedirect />} />
       </Routes>
     </BrowserRouter>
-    </TransactionContext.Provider>
+    </TransactionContextProvider>
+    
   );
 }
 

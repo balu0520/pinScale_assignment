@@ -2,6 +2,8 @@ export interface AddPopupProps {
     reloadOperation: (id?: number) => Promise<void>,
     id: number
 }
+export type TransactionType = "credit" | "debit"
+
 export interface DateOptions{
     day: 'numeric',
     month: 'short',
@@ -12,7 +14,7 @@ export interface DateOptions{
 export interface TransactionItem {
     id:number
     transaction_name:string,
-    type:string,
+    type: TransactionType,
     amount:number,
     category:string
     date: Date,
@@ -24,9 +26,9 @@ export interface UserNames{
 export interface TransactionsList {
     id:number
     transaction_name:string,
-    type:string,
+    type:TransactionType,
     amount:number,
-    category:string,
+    category: string,
     user_id?:number,
     date: Date,
 }
