@@ -39,7 +39,6 @@ const SideBar = (props:SideBarProps) => {
                     <p className='profile-mail'>olivia@untitledui.com</p>
                 </div>
                 <LogoutPopup /> 
-                {/* className="logout-profile" */}
             </div>
             < >
             <div className="max-device-false">

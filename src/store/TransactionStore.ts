@@ -1,6 +1,5 @@
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { TransactionsList, TransactionItem } from '../types/interfaces'
-import TransactionObject from './models/TransactionModel'
 
 
 class TransactionStore {

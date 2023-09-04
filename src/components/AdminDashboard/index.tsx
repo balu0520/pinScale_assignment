@@ -14,7 +14,6 @@ import { TransactionContext } from '../../context/transactionContext'
 
 const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
-    // const [transactions, setTransaction] = useState<TransactionItem[]>([])
     const store = useContext(TransactionContext)
     const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {

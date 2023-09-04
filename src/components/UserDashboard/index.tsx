@@ -17,7 +17,6 @@ import { observer } from 'mobx-react'
 
 const UserDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
-    // const [transactions, setTransaction] = useState<TransactionsList[]>([])
     const store = useContext(TransactionContext)
     const { fetchData, res_data, apiStatus } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {

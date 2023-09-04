@@ -22,7 +22,6 @@ const usernames: UserNames[] = [
 const AdminTransactions = () => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
-    // const [transactions, setTransactions] = useState<TransactionsList[]>([])
     const store = useContext(TransactionContext)
     const [cookie, _] = useCookies(["user_id"])
     const { fetchData, apiStatus, res_data } = useFetch({

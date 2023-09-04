@@ -18,7 +18,6 @@ import { TransactionContext } from '../../context/transactionContext';
 const UserTransactions = () => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
-    // const [transactions, setTransactions] = useState<TransactionsList[]>([])
     const [cookie, _] = useCookies(["user_id"])
     const store = useContext(TransactionContext)
     const { fetchData, apiStatus, res_data } = useFetch({
@@ -87,7 +86,6 @@ const UserTransactions = () => {
         if (res_data !== null) {
             const newTransactions: TransactionsList[] = filterTransactions(res_data.transactions, activeId)
             store?.addTransactions(newTransactions)
-            // setTransactions(newTransactions)
         }
     }
 

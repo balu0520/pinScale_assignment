@@ -3,7 +3,7 @@ import './index.css'
 import { useState, useContext } from "react";
 import { useCookies } from "react-cookie";
 import useFetch from "../../hooks/useFetch";
-import { AddPopupProps } from "../../types/interfaces";
+import { AddPopupProps, TransactionType } from "../../types/interfaces";
 import { TransactionContext } from "../../context/transactionContext";
 import { observer } from "mobx-react";
 import Transaction from "../../store/models/TransactionModel";
@@ -12,11 +12,6 @@ const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 const AddPopup = (props: AddPopupProps) => {
     const { reloadOperation, id } = props
     const [cookie, _] = useCookies(["user_id"])
-    // const [transactionName, setTransactionName] = useState("")
-    // const [transactionType, setTransactionType] = useState("")
-    // const [transactionCategory, setTransactionCategory] = useState("")
-    // const [transactionAmount, setTransactionAmount] = useState("")
-    // const [transactionDate, setTransactionDate] = useState("")
     const store = useContext(TransactionContext)
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
@@ -101,7 +96,7 @@ const AddPopup = (props: AddPopupProps) => {
                 </div>
                 <div className="input-container">
                     <label htmlFor="transactionType" className="transaction-label">Transaction Type</label>
-                    <select value={transactionObj.transactionType} onChange={(event) => transactionObj.addTransactionType(event.target.value as "credit" | "debit")} id="transactionType" className="input-label">
+                    <select value={transactionObj.transactionType} onChange={(event) => transactionObj.addTransactionType(event.target.value as TransactionType)} id="transactionType" className="input-label">
                         <option value="">Select type</option>
                         <option value="credit">Credit</option>
                         <option value="debit">Debit</option>

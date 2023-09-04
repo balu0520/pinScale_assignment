@@ -11,7 +11,7 @@ const LoginForm = () => {
     const [errMsg, setErrMsg] = useState("")
     const [cookie, setCookie] = useCookies(["user_id"])
     const [load, setLoad] = useState(false)
-    const { fetchData, res_data, res_error, res } = useFetch({
+    const { fetchData, res_data, res } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/get-user-id", method: 'POST', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF'

@@ -1,4 +1,3 @@
-import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './index.css'
 import { Week7Transaction,GroupedData,BarGraphProps } from '../../types/interfaces';
@@ -16,9 +15,6 @@ function groupByWeekday(transactions:Week7Transaction[]) {
 
     for (const transaction of transactions){
         const date:Date | string = new Date(transaction.date);
-        // if(date == "Invalid Date" || date < oneWeekAgo){
-        //     continue
-        // }
         const weekday = weekdays[date.getDay()];
         if (transaction.type.toLowerCase() === 'credit') {
             groupedData[weekday].credit += transaction.sum;

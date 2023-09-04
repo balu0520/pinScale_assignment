@@ -36,7 +36,6 @@ const DeletePopup = (props:DeletePopupProps) => {
 
     const deleteTransaction = async (id:number) => {
         await fetchData()
-        // console.log(res_error)
         if (res_error !== 400) {
             store?.deleteNewTransaction(id)
             alert("Successful")

@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo, ReactNode, ReactElement } from 'react'
+import { useState, useContext } from 'react'
 import './index.css'
 import Popup from 'reactjs-popup'
 import { VscEdit } from 'react-icons/vsc'
@@ -21,16 +21,6 @@ const UpdatePopup = (props: UpdatePopupProps) => {
     const year = dateObject.getFullYear();
     const formattedDate = `${year}-${month}-${day}`
     const [transactionObj] = useState(new Transaction(transaction.transaction_name, transaction.type, transaction.category as TransactionType, transaction.amount, formattedDate))
-    // transactionObj.transactionName = transaction.transaction_name
-    // transactionObj.transactionType = transaction.type
-    // transactionObj.transactionAmount = transaction.amount
-    // transactionObj.transactionCategory = transaction.category
-    // transactionObj.transactionDate = formattedDate
-    // const [transactionName, setTransactionName] = useState(transaction.transaction_name)
-    // const [transactionType, setTransactionType] = useState(transaction.type)
-    // const [transactionCategory, setTransactionCategory] = useState(transaction.category)
-    // const [transactionAmount, setTransactionAmount] = useState(transaction.amount)
-    // const [transactionDate, setTransactionDate] = useState(formattedDate)
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
     const { fetchData, res_error, res_data } = useFetch({
@@ -105,7 +95,7 @@ const UpdatePopup = (props: UpdatePopupProps) => {
                 </div>
                 <div className="update-input-container">
                     <label htmlFor="transactionType" className="update-transaction-label">Transaction Type</label>
-                    <select value={transactionObj.transactionType} onChange={(event) => transactionObj.addTransactionType(event.target.value as "credit" | "debit")} id="transactionType" className="update-input-label">
+                    <select value={transactionObj.transactionType} onChange={(event) => transactionObj.addTransactionType(event.target.value as TransactionType)} id="transactionType" className="update-input-label">
                         <option value="credit">Credit</option>
                         <option value="debit">Debit</option>
                     </select>
