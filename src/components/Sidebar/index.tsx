@@ -4,8 +4,9 @@ import {AiFillHome,AiOutlineTransaction} from 'react-icons/ai'
 import {BiSolidUser} from 'react-icons/bi'
 import { Link } from 'react-router-dom'
 import LogoutPopup from '../LogoutPopup'
+import { SideBarProps } from '../../types/interfaces'
 
-const SideBar = props => {
+const SideBar = (props:SideBarProps) => {
     const {activeId} = props 
 
     return (
@@ -37,7 +38,7 @@ const SideBar = props => {
                     <h1 className='profile-name'>Rhye</h1>
                     <p className='profile-mail'>olivia@untitledui.com</p>
                 </div>
-                <LogoutPopup className="logout-profile"/>
+                <LogoutPopup /> 
             </div>
             < >
             <div className="max-device-false">

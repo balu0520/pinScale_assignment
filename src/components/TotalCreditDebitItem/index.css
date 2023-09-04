@@ -1,0 +1,142 @@
+.type-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+}
+
+@media screen and (max-width:576px) {
+    .type-container {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width:400px) {
+    .type-container {
+        align-items: flex-start;
+        width: 70%;
+    }
+}
+
+.credit-heading {
+    color: #16DBAA;
+    font-family: "Inter";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+@media screen and (max-width:576px) {
+    .credit-heading {
+        font-size: 25px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .credit-heading {
+        font-size: 18px;
+    }
+}
+
+.credit-para {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+@media screen and (max-width:576px) {
+    .credit-para {
+        font-size: 22px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .credit-para {
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width:767px) {
+    .type-img {
+        height: 140px;
+        width: 160px;
+    }
+}
+
+@media screen and (max-width:576px) {
+    .type-img {
+        height: 140px;
+        width: 160px;
+    }
+}
+
+@media screen and (max-width:400px) {
+    .type-img {
+        height: 120px;
+        width: 140px;
+    }
+}
+
+
+.credit-debit-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-radius: 20px;
+    width: 45%;
+    margin: 10px;
+    padding: 10px;
+}
+
+@media screen and (max-width:576px) {
+    .credit-debit-container {
+        width: 90%;
+    }
+}
+
+.debit-heading {
+    color: #FE5C73;
+    font-family: "Inter";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+@media screen and (max-width:576px) {
+    .debit-heading {
+        font-size: 25px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .debit-heading {
+        font-size: 18px;
+    }
+}
+
+.debit-para {
+    color: #718EBF;
+    font-family: "Inter";
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+@media screen and (max-width:576px) {
+    .debit-para {
+        font-size: 22px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .debit-para {
+        font-size: 18px;
+    }
+}
