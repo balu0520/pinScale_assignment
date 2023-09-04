@@ -1,55 +1,65 @@
 import { action, makeObservable, observable } from 'mobx';
-import {TransactionType } from '../../types/interfaces';
+import { TransactionItem, TransactionType } from '../../types/interfaces';
 
 
 class Transaction {
-    transactionName: string 
-    transactionType: TransactionType 
-    transactionCategory: string 
-    transactionAmount: number | string 
-    transactionDate: string
-    constructor(transationName:string,transactionType:TransactionType, transactionCategory: string, transactionAmount: number | string, transactionDate: string) {
-        makeObservable(this, {
-            transactionName: observable,
-            transactionType: observable,
-            transactionCategory: observable,
-            transactionAmount: observable,
-            transactionDate: observable,
-            addTransactionName:action.bound,
-            addTransactionType:action.bound,
-            addTransactionAmount:action.bound,
-            addTransactionCategory:action.bound,
-            addTransactionDate:action.bound
-        })
-        this.transactionName = transationName
-        this.transactionType = transactionType
-        this.transactionCategory = transactionCategory
-        this.transactionAmount = transactionAmount
-        this.transactionDate = transactionDate
-    }
-    addTransactionName(name:string){
-      this.transactionName = name
-    }
-    addTransactionType(Ttype:TransactionType){
-      this.transactionType = Ttype
-    }
-    addTransactionCategory(category: string){
-      this.transactionCategory = category
-    }
-    addTransactionAmount(amount: number | string){
-      this.transactionAmount = Number(amount)
-    }
-    addTransactionDate(date: string){
-      this.transactionDate = date
-    }
-    refreshValues(){
-        this.transactionName = ""
-        this.transactionType = "credit"
-        this.transactionAmount = ""
-        this.transactionCategory = ""
-        this.transactionDate = ""
-    }
-    
+  public transactionId: number
+  transactionName: string
+  transactionType: TransactionType
+  transactionCategory: string
+  transactionAmount: number | string
+  transactionDate: string 
+  constructor(transactionId:number,transationName: string, transactionType: TransactionType, transactionCategory: string, transactionAmount: number | string, transactionDate: string) {
+    this.transactionId = transactionId
+    this.transactionName = transationName
+    this.transactionType = transactionType
+    this.transactionCategory = transactionCategory
+    this.transactionAmount = transactionAmount
+    this.transactionDate = transactionDate
+    makeObservable(this, {
+      transactionName: observable,
+      transactionType: observable,
+      transactionCategory: observable,
+      transactionAmount: observable,
+      transactionDate: observable,
+      setTransactionName: action.bound,
+      setTransactionType: action.bound,
+      setTransactionAmount: action.bound,
+      setTransactionCategory: action.bound,
+      setTransactionDate: action.bound
+    })
+  }
+  setTransactionName(name: string) {
+    this.transactionName = name
+  }
+  setTransactionType(Ttype: TransactionType) {
+    this.transactionType = Ttype
+  }
+  setTransactionCategory(category: string) {
+    this.transactionCategory = category
+  }
+  setTransactionAmount(amount: number | string) {
+    this.transactionAmount = Number(amount)
+  }
+  setTransactionDate(date: string) {
+    this.transactionDate = date
+  }
+  refreshValues() {
+    this.transactionName = ""
+    this.transactionType = "credit"
+    this.transactionAmount = ""
+    this.transactionCategory = ""
+    this.transactionDate = ""
+  }
+  editTransaction(Item: TransactionItem){
+    this.transactionId = Item.id
+    this.transactionName = Item.transaction_name
+    this.transactionType = Item.type
+    this.transactionCategory = Item.category
+    this.transactionAmount = Item.amount
+    this.transactionDate = String(Item.date)
+  }
+
 }
 
 export default Transaction

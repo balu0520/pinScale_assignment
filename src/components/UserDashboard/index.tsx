@@ -10,6 +10,7 @@ import UpdatePopup from '../UpdatePopup'
 import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
+import Transaction from '../../store/models/TransactionModel'
 import { DateOptions, TransactionItem, TransactionsList } from '../../types/interfaces'
 import { TransactionContext } from './../../context/transactionContext'
 import { observer } from 'mobx-react'
@@ -58,8 +59,11 @@ const UserDashboard = () => {
                 const dateB = new Date(b.date).getTime()
                 return dateB - dateA
             })
-            const sortedNewTransactions: TransactionsList[] = newTransactions.slice(0, 3)
-            store?.addTransactions([...sortedNewTransactions])
+            let sortedNewTransactions  = newTransactions.slice(0, 3)
+            sortedNewTransactions.forEach((transaction:TransactionsList,ind:number,arr:any) => {
+                arr[ind] = new Transaction(transaction.id,transaction.transaction_name,transaction.type,transaction.category,transaction.amount,String(transaction.date))
+            }) 
+            store?.setTransactions(sortedNewTransactions)
         }
     }
 
@@ -100,16 +104,16 @@ const UserDashboard = () => {
                 <ul className='transactions-list'>
                     {transactions?.map((transaction, ind) => {
                         return (
-                            <li key={transaction.id}>
+                            <li key={transaction.transactionId}>
                                 <div className='transaction-item'>
                                     <div className='transaction-name-container'>
-                                        {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
-                                        {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
-                                        <h1 className='transaction-name'>{transaction.transaction_name}</h1>
+                                        {transaction.transactionType.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
+                                        {transaction.transactionType.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
+                                        <h1 className='transaction-name'>{transaction.transactionName}</h1>
                                     </div>
-                                    <p className='transaction-category'>{transaction.category}</p>
-                                    <p className='transaction-date'>{formatDate(transaction.date)}</p>
-                                    <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                                    <p className='transaction-category'>{transaction.transactionCategory}</p>
+                                    <p className='transaction-date'>{formatDate(new Date(transaction.transactionDate))}</p>
+                                    <p className={`transaction-amount ${transaction.transactionType.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.transactionType === "credit" ? '+' : '-'}$${transaction.transactionAmount}`}</p>
                                     <div className='update-delete-container'>
                                         <UpdatePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
                                         <DeletePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
@@ -123,28 +127,7 @@ const UserDashboard = () => {
             )
         }
         return (
-            <ul className='transactions-list'>
-                {transactions?.map((transaction, ind) => {
-                    return (
-                        <li key={transaction.id}>
-                            <div className='transaction-item'>
-                                <div className='transaction-name-container'>
-                                    {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
-                                    {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
-                                    <h1 className='transaction-name'>{transaction.transaction_name}</h1>
-                                </div>
-                                <p className='transaction-category'>{transaction.category}</p>
-                                <p className='transaction-date'>{formatDate(transaction.date)}</p>
-                                <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
-                                <div className='update-delete-container'>
-                                    <UpdatePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
-                                    <DeletePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
-                                </div>
-                            </div>
-                        </li>
-                    )
-                })}
-            </ul>
+            null
         )
     }
 

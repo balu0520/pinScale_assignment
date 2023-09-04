@@ -15,7 +15,7 @@ const AddPopup = (props: AddPopupProps) => {
     const store = useContext(TransactionContext)
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
-    const [transactionObj, __] = useState(new Transaction("", "credit", "", "", ""))
+    const [transactionObj, __] = useState(new Transaction(0,"", "credit", "", "", ""))
     const { fetchData, res_error, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/add-transaction", method: "POST", headers: {
             'content-type': 'application/json',
@@ -65,12 +65,14 @@ const AddPopup = (props: AddPopupProps) => {
         }
         await fetchData()
         if (res_error !== 400) {
-            if (res_data?.insert_transactions_one !== null) {
-                store?.addNewTransaction(res_data.insert_transactions_one)
-                alert("Added Successfully")
-                setErr(false)
-                setErrMsg("")
-                transactionObj.refreshValues()
+            if(res_data !== null) {
+                if (res_data?.insert_transactions_one !== null) {
+                    store?.addNewTransaction(res_data.insert_transactions_one)
+                    alert("Added Successfully")
+                    setErr(false)
+                    setErrMsg("")
+                    transactionObj.refreshValues()
+                }
             }
         } else {
             alert('Something went wrong, please try again later')
@@ -92,11 +94,11 @@ const AddPopup = (props: AddPopupProps) => {
                 </div>
                 <div className="input-container">
                     <label htmlFor="transactionName" className="transaction-label">Transaction name</label>
-                    <input type="text" id="transactionName" value={transactionObj.transactionName} className="input-label" placeholder="Enter Name" onChange={(event) => transactionObj.addTransactionName(event.target.value)} />
+                    <input type="text" id="transactionName" value={transactionObj.transactionName} className="input-label" placeholder="Enter Name" onChange={(event) => transactionObj.setTransactionName(event.target.value)} />
                 </div>
                 <div className="input-container">
                     <label htmlFor="transactionType" className="transaction-label">Transaction Type</label>
-                    <select value={transactionObj.transactionType} onChange={(event) => transactionObj.addTransactionType(event.target.value as TransactionType)} id="transactionType" className="input-label">
+                    <select value={transactionObj.transactionType} onChange={(event) => transactionObj.setTransactionType(event.target.value as TransactionType)} id="transactionType" className="input-label">
                         <option value="">Select type</option>
                         <option value="credit">Credit</option>
                         <option value="debit">Debit</option>
@@ -104,7 +106,7 @@ const AddPopup = (props: AddPopupProps) => {
                 </div>
                 <div className="input-container">
                     <label htmlFor="transactionCategory" className="transaction-label">Category</label>
-                    <select value={transactionObj.transactionCategory} onChange={(event) => transactionObj.addTransactionCategory(event.target.value)} id="transactionCategory" className="input-label">
+                    <select value={transactionObj.transactionCategory} onChange={(event) => transactionObj.setTransactionCategory(event.target.value)} id="transactionCategory" className="input-label">
                         <option value="">Select an Category</option>
                         <option value="Shopping">Shopping</option>
                         <option value="Entertainment">Entertainment</option>
@@ -117,11 +119,11 @@ const AddPopup = (props: AddPopupProps) => {
                 </div>
                 <div className="input-container">
                     <label htmlFor="transactionAmount" className="transaction-label">Amount</label>
-                    <input type="number" id="transactionAmount" value={transactionObj.transactionAmount} className="input-label" placeholder="Enter Your Amount" onChange={(event) => transactionObj.addTransactionAmount(event.target.value)} />
+                    <input type="number" id="transactionAmount" value={transactionObj.transactionAmount} className="input-label" placeholder="Enter Your Amount" onChange={(event) => transactionObj.setTransactionAmount(event.target.value)} />
                 </div>
                 <div className="input-container">
                     <label htmlFor="transactionDate" className="transaction-label">Date</label>
-                    <input type="date" id="transactionDate" value={transactionObj.transactionDate} className="input-label" placeholder="Select date" onChange={(event) => transactionObj.addTransactionDate(event.target.value)} />
+                    <input type="date" id="transactionDate" value={transactionObj.transactionDate} className="input-label" placeholder="Select date" onChange={(event) => transactionObj.setTransactionDate(event.target.value)} />
                 </div>
                 <button className="add-transaction-btn" type="submit">Add Transaction</button>
                 {err && (<p className="err-msg">{errMsg}</p>)}

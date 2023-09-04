@@ -9,8 +9,9 @@ import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
 import { observer } from 'mobx-react'
-import { DateOptions,TransactionItem } from '../../types/interfaces'
+import { DateOptions,TransactionItem,TransactionsList } from '../../types/interfaces'
 import { TransactionContext } from '../../context/transactionContext'
+import Transaction from '../../store/models/TransactionModel'
 
 const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
@@ -56,7 +57,10 @@ const AdminDashboard = () => {
                 return dateB-dateA
             })
             const sortedNewTransactions = newTransactions.slice(0, 3)
-            store?.addTransactions(sortedNewTransactions)
+            sortedNewTransactions.forEach((transaction: TransactionsList, ind: number, arr: any) => {
+                arr[ind] = new Transaction(transaction.id, transaction.transaction_name, transaction.type, transaction.category, transaction.amount, String(transaction.date))
+            })
+            store?.setTransactions(sortedNewTransactions)
         }
     }
 
@@ -98,20 +102,20 @@ const AdminDashboard = () => {
             return (
                 <ul className='admin-transactions-list'>
                     {transactions?.map((transaction, ind) => (
-                        <li key={transaction.id}>
+                        <li key={transaction.transactionId}>
                             <div className='admin-transaction-item'>
                                 <div className='admin-transaction-name-container'>
-                                    {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
-                                    {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
+                                    {transaction.transactionType.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
+                                    {transaction.transactionType.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
                                     <div className='admin-transaction-img-container'>
                                         <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690873427/admin-profiles_t49bxr.png' />
                                         <p className='admin-transaction-img-container-para'>Arlene McCoy</p>
                                     </div>
                                 </div>
-                                <p className='admin-transaction-name'>{transaction.transaction_name}</p>
-                                <p className='admin-transaction-category'>{transaction.category}</p>
-                                <p className='admin-transaction-date'>{formatDate(transaction.date)}</p>
-                                <p className={`admin-transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                                <p className='admin-transaction-name'>{transaction.transactionName}</p>
+                                <p className='admin-transaction-category'>{transaction.transactionCategory}</p>
+                                <p className='admin-transaction-date'>{formatDate(new Date(transaction.transactionDate))}</p>
+                                <p className={`admin-transaction-amount ${transaction.transactionType.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.transactionType === "credit" ? '+' : '-'}$${transaction.transactionAmount}`}</p>
                             </div>
                             {ind !== len - 1 && (<hr className='separator' />)}
                         </li>
@@ -120,26 +124,7 @@ const AdminDashboard = () => {
             )
         }
         return (
-            <ul className='admin-transactions-list'>
-                {transactions?.map((transaction, ind) => (
-                    <li key={transaction.id}>
-                        <div className='admin-transaction-item'>
-                            <div className='admin-transaction-name-container'>
-                                {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' />)}
-                                {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' />)}
-                                <div className='admin-transaction-img-container'>
-                                    <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690873427/admin-profiles_t49bxr.png' />
-                                    <p className='admin-transaction-img-container-para'>Arlene McCoy</p>
-                                </div>
-                            </div>
-                            <p className='admin-transaction-name'>{transaction.transaction_name}</p>
-                            <p className='admin-transaction-category'>{transaction.category}</p>
-                            <p className='admin-transaction-date'>{formatDate(transaction.date)}</p>
-                            <p className={`admin-transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            null
         )
     }
 

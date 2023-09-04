@@ -22,7 +22,7 @@ const DeletePopup = (props:DeletePopupProps) => {
             'x-hasura-role': 'user',
             'x-hasura-user-id': cookie.user_id
         }, params: {
-            "id": transaction.id
+            "id": transaction.transactionId
         }
     })
 
@@ -58,7 +58,7 @@ const DeletePopup = (props:DeletePopupProps) => {
                             <h1 className='delete-heading'>Are you sure you want to Delete?</h1>
                             <p className='delete-para'>This transaction will be deleted immediately. You can’t undo this action.</p>
                             <div className='delete-btn-container'>
-                                <button className='delete-btn' onClick={() => deleteTransaction(transaction.id)}>Yes, Delete</button>
+                                <button className='delete-btn' onClick={() => deleteTransaction(transaction.transactionId)}>Yes, Delete</button>
                                 <button className='no-delete-btn'>No, Leave it</button>
                             </div>
                         </div>

@@ -1,36 +1,38 @@
 import { action, makeObservable, observable } from 'mobx';
-import { TransactionsList, TransactionItem } from '../types/interfaces'
+import { TransactionsList, TransactionItem,TransactionType } from '../types/interfaces'
+import Transaction from './models/TransactionModel'
 
 
 class TransactionStore {
-  transactions: TransactionsList[]
-  constructor(transactions: TransactionsList[]) {
+  transactions: Transaction[]
+  constructor(transactions: Transaction[]) {
+    this.transactions = transactions
     makeObservable(this, {
       transactions: observable,
-      addTransactions: action.bound,
+      setTransactions: action.bound,
       updateTransaction: action.bound,
       deleteNewTransaction: action.bound,
       addNewTransaction: action.bound,
     })
-    this.transactions = transactions
   }
-  addTransactions(newTransactions: TransactionsList[]) {
-    this.transactions = newTransactions
+  setTransactions(transactions: Transaction[]) {
+    this.transactions = transactions
   }
 
   deleteNewTransaction(id: number) {
-    let index = this.transactions.findIndex(transaction => transaction.id === id)
+    let index = this.transactions.findIndex(transaction => transaction.transactionId === id)
     if (index !== -1) {
       this.transactions.splice(index, 1)
     }
   }
   addNewTransaction(Item: TransactionItem) {
-    this.transactions.push(Item)
+    const transactionObj = new Transaction(Item.id,Item.transaction_name,Item.type,Item.category,Item.amount,String(Item.date))
+    this.transactions.push(transactionObj)
   }
   updateTransaction(Item: TransactionItem) {
     this.transactions.forEach((transaction, ind, arr) => {
-      if (transaction.id == Item.id) {
-        arr[ind] = {...arr[ind],...Item}
+      if (transaction.transactionId == Item.id) {
+        transaction.editTransaction(Item)
       }
     })
   }

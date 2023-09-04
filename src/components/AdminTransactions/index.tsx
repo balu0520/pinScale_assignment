@@ -1,23 +1,14 @@
-import { useEffect, useState,useContext } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import './index.css'
 import { useCookies } from 'react-cookie';
 import SideBar from '../Sidebar';
 import { BallTriangle } from 'react-loader-spinner'
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-import { UserNames, DateOptions, TransactionsList } from '../../types/interfaces';
+import { DateOptions, TransactionsList } from '../../types/interfaces';
 import { TransactionContext } from '../../context/transactionContext';
 import { observer } from 'mobx-react';
-
-
-const usernames: UserNames[] = [
-    { user_id: 1, username: "janedoe" }, { user_id: 2, username: "samsmith" }, { user_id: 4, username: "rahul" },
-    { user_id: 5, username: "teja" }, { user_id: 6, username: "loki" }, { user_id: 7, username: "ramesh" },
-    { user_id: 8, username: "suresh" }, { user_id: 9, username: "prem" }, { user_id: 10, username: "piyush" },
-    { user_id: 12, username: "isha" }, { user_id: 14, username: "seema" }, { user_id: 15, username: "seema" },
-    { user_id: 16, username: "radha" }, { user_id: 17, username: "phani" }
-]
-
+import Transaction from '../../store/models/TransactionModel';
 
 const AdminTransactions = () => {
     const [activeId, setActiveId] = useState(0);
@@ -57,7 +48,7 @@ const AdminTransactions = () => {
     }, [res_data])
 
 
-    const filterTransactions = (transactions: TransactionsList[], id: number) => {
+    const filterTransactions = (transactions: TransactionsList[], id: number): any => {
         if (id === 0) {
             transactions.sort((a: TransactionsList, b: TransactionsList): number => {
                 const dateA = new Date(a.date).getTime()
@@ -87,7 +78,10 @@ const AdminTransactions = () => {
     const getData = () => {
         if (res_data !== null) {
             const newTransactions = filterTransactions(res_data.transactions, activeId)
-            store?.addTransactions(newTransactions)
+            newTransactions.forEach((transaction: TransactionsList, ind: number, arr: any) => {
+                arr[ind] = new Transaction(transaction.id, transaction.transaction_name, transaction.type, transaction.category, transaction.amount, String(transaction.date))
+            })
+            store?.setTransactions(newTransactions)
         }
     }
 
@@ -128,28 +122,18 @@ const AdminTransactions = () => {
         return date.toLocaleString('en-US', options);
     }
 
-    const getUsername = ((userId: number) => {
-        const User = usernames.find((user) => user.user_id === userId);
-        return User ? User.username : null;
-    })
 
-    const renderTransactionProfile = (userId?: number) => {
-        if (userId !== undefined) {
-            const user = getUsername(userId)
-            return (
-                <div className='admin-all-transactions-img-container'>
-                    <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690873427/admin-profiles_t49bxr.png' />
-                    <p className='admin-all-transaction-name'>{user}</p>
-                </div>
-            )
-        }
-
-    }
+    const renderTransactionProfile = () => (
+        <div className='admin-all-transactions-img-container'>
+            <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690873427/admin-profiles_t49bxr.png' />
+            <p className='admin-all-transaction-name'>user</p>
+        </div>
+    )
 
     const renderAllTransactionsSuccessView = () => {
         const transactions = store?.transactions
         const len = transactions?.length;
-        if(len !== undefined){
+        if (len !== undefined) {
             return (
                 <ul className='admin-all-transactions-list'>
                     <li>
@@ -165,17 +149,17 @@ const AdminTransactions = () => {
                         <hr className='separator' />
                     </li>
                     {transactions?.map((transaction, ind) => (
-                        <li key={transaction.id}>
+                        <li key={transaction.transactionId}>
                             <div className='admin-all-transaction-item'>
                                 <div className='admin-all-transaction-name-container'>
-                                    {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
-                                    {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
-                                    {renderTransactionProfile(transaction?.user_id)}
+                                    {transaction.transactionType.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
+                                    {transaction.transactionType.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
+                                    {renderTransactionProfile()}
                                 </div>
-                                <p className='admin-all-transaction-name'>{transaction.transaction_name}</p>
-                                <p className='admin-all-transaction-category'>{transaction.category}</p>
-                                <p className='admin-all-transaction-date'>{formatDate(transaction.date)}</p>
-                                <p className={`admin-transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type.toLowerCase() === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                                <p className='admin-all-transaction-name'>{transaction.transactionName}</p>
+                                <p className='admin-all-transaction-category'>{transaction.transactionCategory}</p>
+                                <p className='admin-all-transaction-date'>{formatDate(new Date(transaction.transactionDate))}</p>
+                                <p className={`admin-transaction-amount ${transaction.transactionType.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.transactionType.toLowerCase() === "credit" ? '+' : '-'}$${transaction.transactionAmount}`}</p>
                             </div>
                             {ind !== len - 1 && (<hr className='separator' />)}
                         </li>
@@ -184,35 +168,7 @@ const AdminTransactions = () => {
             )
         }
         return (
-            <ul className='admin-all-transactions-list'>
-                <li>
-                    <div className='admin-all-transaction-item'>
-                        <div className='admin-all-transaction-name-container'>
-                            <h1 className='admin-all-transaction-name' style={{ color: '#343C6A' }}>username</h1>
-                        </div>
-                        <p className='admin-all-transaction-name' style={{ color: '#343C6A' }}>Transaction Name</p>
-                        <p className='admin-all-transaction-category' style={{ color: '#343C6A' }}>Category</p>
-                        <p className='admin-all-transaction-date' style={{ color: '#343C6A' }}>Date</p>
-                        <p className="admin-all-transaction-amount" style={{ color: '#343C6A' }}>Amount </p>
-                    </div>
-                    <hr className='separator' />
-                </li>
-                {transactions?.map((transaction, ind) => (
-                    <li key={transaction.id}>
-                        <div className='admin-all-transaction-item'>
-                            <div className='admin-all-transaction-name-container'>
-                                {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
-                                {transaction.type.toLowerCase() === "debit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
-                                {renderTransactionProfile(transaction?.user_id)}
-                            </div>
-                            <p className='admin-all-transaction-name'>{transaction.transaction_name}</p>
-                            <p className='admin-all-transaction-category'>{transaction.category}</p>
-                            <p className='admin-all-transaction-date'>{formatDate(transaction.date)}</p>
-                            <p className={`admin-transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type.toLowerCase() === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            null
         )
     }
 

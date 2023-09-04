@@ -14,6 +14,7 @@ import { DateOptions, TransactionsList } from '../../types/interfaces';
 import { useContext } from 'react';
 import { observer } from 'mobx-react';
 import { TransactionContext } from '../../context/transactionContext';
+import Transaction from '../../store/models/TransactionModel';
 
 const UserTransactions = () => {
     const [activeId, setActiveId] = useState(0);
@@ -55,7 +56,7 @@ const UserTransactions = () => {
         getData()
     }, [res_data])
 
-    const filterTransactions = (transactions: TransactionsList[], id: number): TransactionsList[] => {
+    const filterTransactions = (transactions: TransactionsList[], id: number): any => {
         if (id === 0) {
             transactions.sort((a: TransactionsList, b: TransactionsList): number => {
                 const dateA = new Date(a.date).getTime()
@@ -84,8 +85,12 @@ const UserTransactions = () => {
 
     const getData = () => {
         if (res_data !== null) {
-            const newTransactions: TransactionsList[] = filterTransactions(res_data.transactions, activeId)
-            store?.addTransactions(newTransactions)
+            const newTransactions = filterTransactions(res_data.transactions, activeId)
+            const sortedNewTransactions:any = newTransactions.slice()
+            sortedNewTransactions.forEach((transaction:TransactionsList,ind:number,arr:any) => {
+                arr[ind] = new Transaction(transaction.id,transaction.transaction_name,transaction.type,transaction.category,transaction.amount,String(transaction.date))
+            })
+            store?.setTransactions(sortedNewTransactions)
         }
     }
 
@@ -156,17 +161,17 @@ const UserTransactions = () => {
                         <hr className='separator' />
                     </li>
                     {transactions?.map((transaction, ind) => (
-                        <li key={transaction.id}>
+                        <li key={transaction.transactionId}>
                             <div className='all-transaction-item'>
                                 <div className='all-transaction-name-container'>
-                                    {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
-                                    {transaction.type.toLowerCase() !== "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
-                                    <h1 className='all-transaction-name'>{transaction.transaction_name}</h1>
+                                    {transaction.transactionType.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
+                                    {transaction.transactionType.toLowerCase() !== "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
+                                    <h1 className='all-transaction-name'>{transaction.transactionName}</h1>
                                 </div>
-                                <p className='all-transaction-category'>{transaction.category}</p>
-                                <p className='all-transaction-date'>{formatDate(transaction.date)}</p>
+                                <p className='all-transaction-category'>{transaction.transactionCategory}</p>
+                                <p className='all-transaction-date'>{formatDate(new Date(transaction.transactionDate))}</p>
                                 <div className='all-transaction-update-delete-container'>
-                                    <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type.toLowerCase() === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
+                                    <p className={`transaction-amount ${transaction.transactionType.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.transactionType.toLowerCase() === "credit" ? '+' : '-'}$${transaction.transactionAmount}`}</p>
                                 </div>
                                 <div className='all-transaction-update-delete-sub-container'>
                                     <UpdatePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
@@ -180,47 +185,7 @@ const UserTransactions = () => {
             )
         }
         return (
-            <ul className='all-transactions-list'>
-                <li>
-                    <div className='all-transaction-item'>
-                        <div className='all-transaction-name-container'>
-                            <h1 className='all-transaction-name' style={{ color: '#343C6A' }}>Transaction name</h1>
-                            <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/creditted_jcivrd.png' alt='creditted' style={{ visibility: 'hidden' }} />
-                            <img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690724471/debitted_smwzwr.png' alt='debitted' style={{ visibility: 'hidden' }} />
-                        </div>
-                        <p className='all-transaction-category' style={{ color: '#343C6A' }}>Category</p>
-                        <p className='all-transaction-date' style={{ color: '#343C6A' }}>Date</p>
-                        <div className='all-transaction-update-delete-container'>
-                            <p className="all-transaction-amount" style={{ color: '#343C6A' }}>Amount </p>
-                        </div>
-                        <div className='all-transaction-update-delete-sub-container'>
-                            <button className='btn' style={{ color: "#2D60FF", visibility: 'hidden' }} ><VscEdit /></button>
-                            <button className='btn' style={{ color: "#FE5C73", visibility: 'hidden' }}><FaRegTrashAlt /></button>
-                        </div>
-                    </div>
-                    <hr className='separator' />
-                </li>
-                {transactions?.map((transaction, ind) => (
-                    <li key={transaction.id}>
-                        <div className='all-transaction-item'>
-                            <div className='all-transaction-name-container'>
-                                {transaction.type.toLowerCase() === "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690869118/credit-no-clr_fxhpyy.png' alt='creditted' />)}
-                                {transaction.type.toLowerCase() !== "credit" && (<img src='https://res.cloudinary.com/daz94wyq4/image/upload/v1690868931/debit-no-clr_yjqzmc.png' alt='debitted' />)}
-                                <h1 className='all-transaction-name'>{transaction.transaction_name}</h1>
-                            </div>
-                            <p className='all-transaction-category'>{transaction.category}</p>
-                            <p className='all-transaction-date'>{formatDate(transaction.date)}</p>
-                            <div className='all-transaction-update-delete-container'>
-                                <p className={`transaction-amount ${transaction.type.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.type.toLowerCase() === "credit" ? '+' : '-'}$${transaction.amount}`}</p>
-                            </div>
-                            <div className='all-transaction-update-delete-sub-container'>
-                                <UpdatePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
-                                <DeletePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
-                            </div>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            null
         )
     }
 

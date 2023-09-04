@@ -1,3 +1,5 @@
+import Transaction from "../store/models/TransactionModel"
+
 export interface AddPopupProps {
     reloadOperation: (id?: number) => Promise<void>,
     id: number
@@ -18,10 +20,6 @@ export interface TransactionItem {
     amount:number,
     category:string
     date: Date,
-}
-export interface UserNames{
-    user_id:number,
-    username:string
 }
 export interface TransactionsList {
     id:number
@@ -52,7 +50,7 @@ export interface BarGraphProps{
 }
 
 export interface DeletePopupProps {
-    transaction:TransactionItem
+    transaction:Transaction
     reloadOperation: (id?:number) => Promise<any>,
     id:number
 }
@@ -69,7 +67,7 @@ export interface TotalTransactionItem {
     sum:number
 }
 export interface UpdatePopupProps {
-    transaction: TransactionItem
+    transaction: Transaction
     reloadOperation: (id?: number) => Promise<any>,
     id: number
 }
