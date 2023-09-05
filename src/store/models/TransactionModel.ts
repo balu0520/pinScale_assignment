@@ -26,7 +26,8 @@ class Transaction {
       setTransactionType: action.bound,
       setTransactionAmount: action.bound,
       setTransactionCategory: action.bound,
-      setTransactionDate: action.bound
+      setTransactionDate: action.bound,
+      editTransaction:action.bound
     })
   }
   setTransactionName(name: string) {

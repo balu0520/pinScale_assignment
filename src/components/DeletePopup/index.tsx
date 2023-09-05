@@ -13,7 +13,7 @@ const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
 const DeletePopup = (props:DeletePopupProps) => {
     const [cookie, _] = useCookies(["user_id"])
-    const { transaction, reloadOperation, id } = props
+    const { transaction } = props
     const store = useContext(TransactionContext)
     const { fetchData, res_error } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/delete-transaction", method: "DELETE", headers: {
@@ -26,13 +26,13 @@ const DeletePopup = (props:DeletePopupProps) => {
         }
     })
 
-    const reload = () => {
-        if (id === -1) {
-            reloadOperation()
-        } else {
-            reloadOperation(id)
-        }
-    }
+    // const reload = () => {
+    //     if (id === -1) {
+    //         reloadOperation()
+    //     } else {
+    //         reloadOperation(id)
+    //     }
+    // }
 
     const deleteTransaction = async (id:number) => {
         await fetchData()
@@ -42,7 +42,7 @@ const DeletePopup = (props:DeletePopupProps) => {
         } else {
             alert('Something went wrong, please try again later')
         }
-        reload()
+        // reload()
     }
 
     return (

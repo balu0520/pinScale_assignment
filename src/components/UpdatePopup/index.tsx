@@ -61,7 +61,6 @@ const UpdatePopup = (props: UpdatePopupProps) => {
         }
         await fetchData()
         if (res_error !== 400) {
-            console.log(res_data)
             if(res_data !== null) {
                 if (res_data?.update_transactions_by_pk !== null) {
                     const updatedItem: TransactionItem = res_data.update_transactions_by_pk

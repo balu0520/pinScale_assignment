@@ -31,6 +31,8 @@ const LoginForm = () => {
         }
     }, [cookie.user_id])
 
+
+
     useEffect(() => {
         getLogin()
     }, [res_data])

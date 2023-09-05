@@ -100,7 +100,7 @@ const UserTransactions = () => {
         } else {
             setActiveId(id)
         }
-        await fetchData();
+        await fetchData(getData);
     }
 
     const renderAllTransactionsLoadingView = () => (
@@ -175,7 +175,7 @@ const UserTransactions = () => {
                                 </div>
                                 <div className='all-transaction-update-delete-sub-container'>
                                     <UpdatePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
-                                    <DeletePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
+                                    <DeletePopup transaction={transaction} />
                                 </div>
                             </div>
                             {ind !== len - 1 && (<hr className='separator' />)}

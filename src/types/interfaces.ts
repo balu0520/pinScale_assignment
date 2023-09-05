@@ -51,8 +51,6 @@ export interface BarGraphProps{
 
 export interface DeletePopupProps {
     transaction:Transaction
-    reloadOperation: (id?:number) => Promise<any>,
-    id:number
 }
 export interface SideBarProps{
     activeId:number

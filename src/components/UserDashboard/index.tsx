@@ -17,7 +17,7 @@ import { observer } from 'mobx-react'
 
 
 const UserDashboard = () => {
-    const [cookie, _] = useCookies(["user_id"])
+    const [cookie] = useCookies(["user_id"])
     const store = useContext(TransactionContext)
     const { fetchData, res_data, apiStatus } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
@@ -43,15 +43,17 @@ const UserDashboard = () => {
         }
     }, [cookie.user_id])
 
+
+
     useEffect(() => {
-        fetchData();
+        fetchData(getData);
     }, [])
 
     useEffect(() => {
         getData()
     }, [res_data])
 
-    const getData = () => {
+    const getData = (data?:any) => {
         if (res_data !== null) {
             const newTransactions = res_data.transactions;
             newTransactions.sort((a: TransactionItem, b: TransactionItem) => {
@@ -96,7 +98,7 @@ const UserDashboard = () => {
     }
 
 
-    const renderTransactionSuccessView = () => {
+    const renderTransactionSuccessView = (data?:any) => {
         const transactions = store?.transactions
         const len = transactions?.length;
         if (len !== undefined) {
@@ -115,8 +117,8 @@ const UserDashboard = () => {
                                     <p className='transaction-date'>{formatDate(new Date(transaction.transactionDate))}</p>
                                     <p className={`transaction-amount ${transaction.transactionType.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.transactionType === "credit" ? '+' : '-'}$${transaction.transactionAmount}`}</p>
                                     <div className='update-delete-container'>
-                                        <UpdatePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
-                                        <DeletePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
+                                        <UpdatePopup transaction={transaction} reloadOperation={() => fetchData()} id={-1} />
+                                        <DeletePopup transaction={transaction} />
                                     </div>
                                 </div>
                                 {ind !== len - 1 && (<hr className='separator' />)}
@@ -126,9 +128,6 @@ const UserDashboard = () => {
                 </ul>
             )
         }
-        return (
-            null
-        )
     }
 
     const renderTransactionsFailureView = () => (
@@ -158,7 +157,7 @@ const UserDashboard = () => {
                     <div className='dashboard-container'>
                         <div className='header-container'>
                             <h1 className='heading'>Account</h1>
-                            <AddPopup reloadOperation={fetchData} id={-1} />
+                            <AddPopup reloadOperation={() => fetchData()} id={-1} />
                         </div>
                         <div className='dashboard-sub-container'>
                             <TotalCreditDebitItem url="https://bursting-gelding-24.hasura.app/api/rest/credit-debit-totals" method="GET" headers={{
