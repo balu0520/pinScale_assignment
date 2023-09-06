@@ -6,6 +6,7 @@ import UserProfile from './components/UserProfile';
 import AdminDashboard from './components/AdminDashboard';
 import AdminTransactions from './components/AdminTransactions';
 import HandleRedirect from './components/HandleRedirect';
+import GraphqlComponent from './components/GraphqlComponent'
 import {TransactionContextProvider } from './context/transactionContext';
 import './App.css';
 
@@ -22,6 +23,7 @@ const App = () => {
         <Route path='/user-profile' element={<UserProfile />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-transactions" element={<AdminTransactions />} />
+        <Route path='/sample-gql' element={<GraphqlComponent />} />
         <Route path="*" element={<HandleRedirect />} />
       </Routes>
     </BrowserRouter>
