@@ -9,7 +9,7 @@ import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
 import { observer } from 'mobx-react'
-import { DateOptions,TransactionItem,TransactionsList } from '../../types/interfaces'
+import { DateOptions,TransactionItem } from '../../types/interfaces'
 import { TransactionContext } from '../../context/transactionContext'
 import Transaction from '../../store/models/TransactionModel'
 import {useMachine} from '@xstate/react'
@@ -18,7 +18,7 @@ import { transactionMachine } from '../../machines/transactionMachine'
 const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
     const store = useContext(TransactionContext)
-    const { fetchData, apiStatus, res_data } = useFetch({
+    const { fetchData } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -67,17 +67,19 @@ const AdminDashboard = () => {
 
     const assignDataToStore = () => {
         if (state.matches("success")) {
-            const newTransactions = res_data.transactions;
+            const newTransactions = state.context.transactionList;
             newTransactions.sort((a:TransactionItem,b:TransactionItem) => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
                 return dateB-dateA
             })
-            const sortedNewTransactions = newTransactions.slice(0, 3)
-            sortedNewTransactions.forEach((transaction: TransactionsList, ind: number, arr: any) => {
-                arr[ind] = new Transaction(transaction.id, transaction.transaction_name, transaction.type, transaction.category, transaction.amount, String(transaction.date))
-            })
-            store?.setTransactions(sortedNewTransactions)
+            let sortedNewTransactions  = newTransactions.slice(0, 3)
+            let transactionObjArr:Transaction[] = []
+            for(let sortedItem of sortedNewTransactions){
+                let item = new Transaction(sortedItem.id,sortedItem.transaction_name,sortedItem.type,sortedItem.category,sortedItem.amount,String(sortedItem.date))
+                transactionObjArr.push(item)
+            }
+            store?.setTransactions(transactionObjArr)
         }
     }
 
