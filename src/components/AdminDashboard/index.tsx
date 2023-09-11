@@ -12,6 +12,8 @@ import { observer } from 'mobx-react'
 import { DateOptions,TransactionItem,TransactionsList } from '../../types/interfaces'
 import { TransactionContext } from '../../context/transactionContext'
 import Transaction from '../../store/models/TransactionModel'
+import {useMachine} from '@xstate/react'
+import { transactionMachine } from '../../machines/transactionMachine'
 
 const AdminDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
@@ -29,6 +31,21 @@ const AdminDashboard = () => {
     })
     const [load, setLoad] = useState(false)
     const navigate = useNavigate()
+    const [state,send] = useMachine(transactionMachine,{
+        services:{
+            loadTransactions:async (context,event) => {
+                const data = await fetchData()
+                return new Promise((res,rej) => {
+                    if(data !== null){
+                        res(data.transactions) 
+                    } 
+                    if(data === null){
+                        rej("Failed To fetch")
+                    }    
+                })
+            }
+        }
+    })
 
     useEffect(() => {
         if (!cookie.user_id) {
@@ -41,15 +58,15 @@ const AdminDashboard = () => {
     }, [cookie.user_id])
 
     useEffect(() => {
-        fetchTransactions();
+        send({type:"fetch"})
     }, [])
 
     useEffect(() => {
-        getData();
-    }, [res_data])
+        assignDataToStore()
+    }, [state])
 
-    const getData = () => {
-        if (res_data !== null) {
+    const assignDataToStore = () => {
+        if (state.matches("success")) {
             const newTransactions = res_data.transactions;
             newTransactions.sort((a:TransactionItem,b:TransactionItem) => {
                 const dateA = new Date(a.date).getTime()
@@ -131,16 +148,17 @@ const AdminDashboard = () => {
     const renderTransactionsFailureView = () => (
         <div>
             <h1>Something Went Wrong</h1>
+            <button onClick={() => send({type:"retry"})}>Retry</button>
         </div>
     )
 
     const renderTransactions = () => {
-        switch (apiStatus) {
-            case "SUCCESS":
+        switch (state.value) {
+            case "success":
                 return renderTransactionSuccessView();
-            case "FAILURE":
+            case "failed":
                 return renderTransactionsFailureView();
-            case "IN_PROGRESS":
+            case "loading":
                 return renderTransactionsLoadingView();
             default:
                 return null

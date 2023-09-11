@@ -14,12 +14,14 @@ import Transaction from '../../store/models/TransactionModel'
 import { DateOptions, TransactionItem, TransactionsList } from '../../types/interfaces'
 import { TransactionContext } from './../../context/transactionContext'
 import { observer } from 'mobx-react'
+import {useMachine} from '@xstate/react'
+import { transactionMachine } from '../../machines/transactionMachine'
 
 
 const UserDashboard = () => {
     const [cookie, _] = useCookies(["user_id"])
     const store = useContext(TransactionContext)
-    const { fetchData, res_data, apiStatus } = useFetch({
+    const { fetchData} = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -32,6 +34,21 @@ const UserDashboard = () => {
     })
     const [load, setLoad] = useState(false)
     const navigate = useNavigate()
+    const [state,send] = useMachine(transactionMachine,{
+        services:{
+            loadTransactions:async (context,event) => {
+                const data = await fetchData()
+                return new Promise((res,rej) => {
+                    if(data !== null){
+                        res(data.transactions) 
+                    } 
+                    if(data === null){
+                        rej("Failed To fetch")
+                    }    
+                })
+            }
+        }
+    })
 
     useEffect(() => {
         if (!cookie.user_id) {
@@ -44,26 +61,28 @@ const UserDashboard = () => {
     }, [cookie.user_id])
 
     useEffect(() => {
-        fetchData();
+        send({type:"fetch"})
     }, [])
 
     useEffect(() => {
-        getData()
-    }, [res_data])
+        assignDataToStore()
+    }, [state])
 
-    const getData = () => {
-        if (res_data !== null) {
-            const newTransactions = res_data.transactions;
+    const assignDataToStore = () => {
+        if (state.matches("success")) {
+            const newTransactions = state.context.transactionList
             newTransactions.sort((a: TransactionItem, b: TransactionItem) => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
                 return dateB - dateA
             })
             let sortedNewTransactions  = newTransactions.slice(0, 3)
-            sortedNewTransactions.forEach((transaction:TransactionsList,ind:number,arr:any) => {
-                arr[ind] = new Transaction(transaction.id,transaction.transaction_name,transaction.type,transaction.category,transaction.amount,String(transaction.date))
-            }) 
-            store?.setTransactions(sortedNewTransactions)
+            let transactionObjArr:Transaction[] = []
+            for(let sortedItem of sortedNewTransactions){
+                let item = new Transaction(sortedItem.id,sortedItem.transaction_name,sortedItem.type,sortedItem.category,sortedItem.amount,String(sortedItem.date))
+                transactionObjArr.push(item)
+            }
+            store?.setTransactions(transactionObjArr)
         }
     }
 
@@ -134,16 +153,17 @@ const UserDashboard = () => {
     const renderTransactionsFailureView = () => (
         <div>
             <h1>Something Went Wrong</h1>
+            <button onClick={() => send({type:"retry"})}>Retry</button>
         </div>
     )
 
     const renderTransactions = () => {
-        switch (apiStatus) {
-            case "SUCCESS":
+        switch (state.value) {
+            case "success":
                 return renderTransactionSuccessView();
-            case "FAILURE":
+            case "failed":
                 return renderTransactionsFailureView();
-            case "IN_PROGRESS":
+            case "loading":
                 return renderTransactionsLoadingView();
             default:
                 return null

@@ -24,21 +24,23 @@ function useFetch(props: FetchProps):FetchResult {
             modifiedUrl = `${url}?id=${id}`
         }
     }
-    const fetchData = async (): Promise<void> => {
+    const fetchData = async () => {
         setApiStatus("IN_PROGRESS")
         try {
-            const response:Response = await fetch(modifiedUrl, options)
+            const response = await fetch(modifiedUrl, options)
             setRes(response)
             if (response.ok === true) {
                 const data = await response.json()
                 setResData(data)
                 setResError(null)
                 setApiStatus("SUCCESS")
+                return data
             } else {
                 const err = response.status
                 setResError(err)
                 setResData(null)
                 setApiStatus("FAILURE")
+                return null
             }
         } catch (err) {
             setResError(err)

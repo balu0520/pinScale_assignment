@@ -102,7 +102,7 @@ export interface WeekCreditDebitResult {
     weekDebit: number
 }
 export interface FetchResult {
-    fetchData: () => Promise<void>;
+    fetchData: () => any;
     apiStatus: string;
     res: Response | null;
     res_data: any;
