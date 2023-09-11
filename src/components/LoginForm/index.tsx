@@ -70,26 +70,26 @@ const LoginForm = () => {
     return (
         <>
             {load && (
-                <div className="container">
-                    <div className="desktopViewBoard">
-                        <h1 className="desktopViewBoardHeading">Login</h1>
+                <div className="flex w-screen">
+                    <div className="h-screen lg:w-2/5 bg-cyan-500 md:hidden lg:flex flex-col justify-center items-center sm:hidden hidden">
+                        <h1 className="text-white md:hidden lg:block text-5xl">Money Matters</h1>
                     </div>
-                    <div className="loginContainerMain">
-                        <div className="signInContainer">
-                            <h1 className="signInHeading">Sign In</h1>
-                            <p className="signInPara">Sign in to your account</p>
-                            <form className="loginFormContainer" onSubmit={(e) => handleLogin(e)}>
-                                <div style={{ margin: 'auto', width: '85%' }}>
-                                    <div className="inputFormContainer">
-                                        <label className="loginFormName" htmlFor='email'>email</label>
-                                        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} id='email' className="loginFormInput" />
+                    <div className="h-screen flex flex-col justify-center items-center lg:w-3/5 md:w-full bg-teal-300 sm:w-full w-full">
+                        <div className="shadow rounded-lg bg-teal-100">
+                            <h1 className="text-3xl font-bold pl-2">Sign In</h1>
+                            <p className="text-xl font-medium pl-2">Sign in to your account</p>
+                            <form className="sm:w-[385px] h-[317px] flex flex-col bg-white rounded-3xl mt-6 w-[300px]" onSubmit={(e) => handleLogin(e)}>
+                                <div className='m-auto w-5/6'>
+                                    <div className="w-full flex flex-col">
+                                        <label className="text-xl font-semibold" htmlFor='email'>Email</label>
+                                        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} id='email' className="w-full h-10 rounded-md outline-0 mb-4 text-black border-black pl-2 text-lg" />
                                     </div>
-                                    <div className="inputFormContainer">
-                                        <label className="loginFormName" htmlFor='password'>Password</label>
-                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="password" className="loginFormInput" />
-                                        {err && (<p className="errorMsg">{errMsg}</p>)}
+                                    <div className="w-full flex flex-col">
+                                        <label className="text-xl font-semibold" htmlFor='password'>Password</label>
+                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="password" className="w-full h-10 rounded-md outline-0 mb-4 text-black border-black pl-2" />
+                                        {err && (<p className="pt-0 text-red-600 text-sm">{errMsg}</p>)}
                                     </div>
-                                    <button type="submit" className="sign-in-btn">Sign In</button>
+                                    <button type="submit" className="w-full bg-white border-x-cyan-500 border-y-cyan-500 h-10 text-cyan-900 text-lg outline-0 rounded-lg hover:border-0 hover:text-white hover:bg-cyan-600 cursor-pointer">Login</button>
                                 </div>
                             </form>
                         </div>

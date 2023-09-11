@@ -173,7 +173,7 @@ const UserDashboard = () => {
     return (
         <>
             {load && (
-                <div className='container'>
+                <div className='user-container'>
                     <Sidebar activeId={0} />
                     <div className='dashboard-container'>
                         <div className='header-container'>
