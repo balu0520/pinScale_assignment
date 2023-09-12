@@ -11,7 +11,7 @@ import useFetch from '../../hooks/useFetch'
 import WeekCreditDebit from '../WeekCreditDebit'
 import TotalCreditDebitItem from '../TotalCreditDebitItem'
 import Transaction from '../../store/models/TransactionModel'
-import { DateOptions, TransactionItem, TransactionsList } from '../../types/interfaces'
+import { DateOptions, TransactionItem } from '../../types/interfaces'
 import { TransactionContext } from './../../context/transactionContext'
 import { observer } from 'mobx-react'
 import {useMachine} from '@xstate/react'
@@ -76,9 +76,8 @@ const UserDashboard = () => {
                 const dateB = new Date(b.date).getTime()
                 return dateB - dateA
             })
-            let sortedNewTransactions  = newTransactions.slice(0, 3)
             let transactionObjArr:Transaction[] = []
-            for(let sortedItem of sortedNewTransactions){
+            for(let sortedItem of newTransactions){
                 let item = new Transaction(sortedItem.id,sortedItem.transaction_name,sortedItem.type,sortedItem.category,sortedItem.amount,String(sortedItem.date))
                 transactionObjArr.push(item)
             }
@@ -116,7 +115,7 @@ const UserDashboard = () => {
 
 
     const renderTransactionSuccessView = () => {
-        const transactions = store?.transactions
+        const transactions = store?.transactions.slice(0,3)
         const len = transactions?.length;
         if (len !== undefined) {
             return (
@@ -134,8 +133,8 @@ const UserDashboard = () => {
                                     <p className='transaction-date'>{formatDate(new Date(transaction.transactionDate))}</p>
                                     <p className={`transaction-amount ${transaction.transactionType.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.transactionType === "credit" ? '+' : '-'}$${transaction.transactionAmount}`}</p>
                                     <div className='update-delete-container'>
-                                        <UpdatePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
-                                        <DeletePopup transaction={transaction} reloadOperation={fetchData} id={-1} />
+                                        <UpdatePopup transaction={transaction} id={-1} />
+                                        <DeletePopup transaction={transaction} id={-1} />
                                     </div>
                                 </div>
                                 {ind !== len - 1 && (<hr className='separator' />)}
@@ -178,7 +177,7 @@ const UserDashboard = () => {
                     <div className='dashboard-container'>
                         <div className='header-container'>
                             <h1 className='heading'>Account</h1>
-                            <AddPopup reloadOperation={fetchData} id={-1} />
+                            <AddPopup id={-1} />
                         </div>
                         <div className='dashboard-sub-container'>
                             <TotalCreditDebitItem url="https://bursting-gelding-24.hasura.app/api/rest/credit-debit-totals" method="GET" headers={{

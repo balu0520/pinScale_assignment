@@ -3,11 +3,12 @@ import { FetchResult,FetchProps,Params,Body } from "../types/interfaces";
 
 type apiStatusConstants = "INITIAL" | "SUCCESS" | "FAILURE" | "IN_PROGRESS"
 
+
 function useFetch(props: FetchProps):FetchResult {
     const { url, method, headers, body, params } = props
     const [apiStatus, setApiStatus] = useState<apiStatusConstants>("INITIAL")
     const [res, setRes] = useState<Response | any>(null)
-    const [resData, setResData] = useState<any>(null)
+    const [resData, setResData] = useState(null)
     const [resError, setResError] = useState<any>(null)
     let options: RequestInit = {method,headers};
     if (body !== undefined) {

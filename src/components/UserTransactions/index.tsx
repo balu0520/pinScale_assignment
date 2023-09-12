@@ -199,8 +199,8 @@ const UserTransactions = () => {
                                     <p className={`transaction-amount ${transaction.transactionType.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.transactionType.toLowerCase() === "credit" ? '+' : '-'}$${transaction.transactionAmount}`}</p>
                                 </div>
                                 <div className='all-transaction-update-delete-sub-container'>
-                                    <UpdatePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
-                                    <DeletePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
+                                    <UpdatePopup transaction={transaction}  id={activeId} />
+                                    <DeletePopup transaction={transaction}  id={activeId} />
                                 </div>
                             </div>
                             {ind !== len - 1 && (<hr className='separator' />)}
@@ -235,7 +235,7 @@ const UserTransactions = () => {
                     <div className='user-transactions-sub-container'>
                         <div className='all-transaction-header-container'>
                             <h1 className='all-transaction-heading'>Transactions</h1>
-                            <AddPopup reloadOperation={fetchAllTransactions} id={activeId} />
+                            <AddPopup id={activeId} />
                         </div>
                         <div className='transaction-btn-container'>
                             <button className={`transaction-btn ${activeId === 0 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(0)}>All Transactions</button>

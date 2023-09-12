@@ -3,7 +3,7 @@ import { TransactionsList } from '../types/interfaces'
 import Transaction from '../store/models/TransactionModel'
 
 export const transactionMachine = createMachine({
-    /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDAdrdBjZAlgPaYCyeAFgZmAHQEQA2YAxAGZjK4UDaADAF1EoAA5FYBQiWEgAHogCMANgW0ATHz4KFmtQA4AnBr56ANCACei5bT0AWBQHYNjgwoOO7BgL7fzaLBx8YjJKajpGInQIaigWCBI6agA3IgBrOgDsPClQ7nDaSOjYhBSiXHRc-gFqmTEJXJl5BABWNSVaHRM+JSMlOyVHAGZzKwQ9VSHNPjs7IbsWg0GZ338MbOCScnyaQqiYzDiwVFQiVFoRRkq2M4BbWiyg3O2qXaKDqFLMVIqqwVqkCB6pIQk1EC1ZrRnC1XHwWko9BC9CNLIg1ANaC02nCYXp2nihr4-CBMEQIHAZI8ciEXuE6uIQdJAc0ALQLWhDJZtAz2FT9dGjRAslq0AxigxeJRYvQTMWI1YgKmbPKvJJMMD0hqg5lo2hKPjzRxaFpDZEwlpmVEIbQdCXKAwQk1DNSOFoKpXPMJvfaxTWMzBghDtVTadpqIbwhb4wUIAxDTEORw6Hl2LSOGXu9ZPGleuiwACuuFwcHggOBjR1420tAWSn1Chd3JaMZ0anUahaBoUFvsJo7mcC1K2udobHQBGYED9FdAzQmqlr9cbagdahj7UcNccRrmfA7ynlRKAA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDAdrdBjZAlgPaYCyeAFgZmAHQEQA2YAxAGZjK4UDaADAF1EoAA5FYBQiWEgAHogCMANgW0ATHz4KFmtQA4AnBr56ANCACei5bT0AWBQHYNjgwoOO7BgL7fzaLBx8YjJKajpGInQIaigWCBI6agA3IgBrOgDsPClQ7nDaSOjYhBSiXHRc-gFqmTEJXJl5BABWNSVaHRM+JSMlOyVHAGZzKwQ9VSHNPjs7IbsWg0GZ338MbOCScnyaQqiYzDiwVFQiVFoRRkq2M4BbWiyg3O2qXaKDqFLMVIqqwVqkCB6pIQk1EC1ZrRnC1XHwWko9BC9CNLIg1ANaC02nCYXp2nihqsQI8ciEXgU2OgCMwICxUJxUBYAaJxCDpIDmkNtLQ5sY7HxXAo7I4FKNEPNVHpHHolGo5f0WpoFL4-CBMEQIHAZCTNnlXmA6qzGhzEABaBa0IZLNoGewqfrosUIU0tWgGd0GeFKPi2vQCuFEnXPMK7BjMQ0NUEmhBqWje+aOLQtIbImEtMyohDaDoGBy9CHJoZqRwtQPrJ5kkMRfaxCNszBgmMqToKdpqIbwhb4p0GIaYhwin32LTSvRlwKkrZV2iwACuuFwcHggOBxtAzQmqgWSm9rZLak9Tp0sbliq56fsybUpdVQcrOzolOpkDra7kiE3PK9WmLNraTvaRweUcRM5j4a9lERFVvCAA */
     id: "transactionMachine",
     schema: {
         services: {} as {
@@ -40,7 +40,7 @@ export const transactionMachine = createMachine({
             }
 
         },
-        "success": {},
+        "success": { type:"final"},
         "failed": {
             on:{
                 "retry":{

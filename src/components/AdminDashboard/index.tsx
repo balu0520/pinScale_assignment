@@ -73,19 +73,13 @@ const AdminDashboard = () => {
                 const dateB = new Date(b.date).getTime()
                 return dateB-dateA
             })
-            let sortedNewTransactions  = newTransactions.slice(0, 3)
             let transactionObjArr:Transaction[] = []
-            for(let sortedItem of sortedNewTransactions){
+            for(let sortedItem of newTransactions){
                 let item = new Transaction(sortedItem.id,sortedItem.transaction_name,sortedItem.type,sortedItem.category,sortedItem.amount,String(sortedItem.date))
                 transactionObjArr.push(item)
             }
             store?.setTransactions(transactionObjArr)
         }
-    }
-
-
-    const fetchTransactions = async (id?:number) => {
-        await fetchData()
     }
 
     const formatDate = (dateString:Date) => {
@@ -115,7 +109,7 @@ const AdminDashboard = () => {
     )
 
     const renderTransactionSuccessView = () => {
-        const transactions = store?.transactions
+        const transactions = store?.transactions.slice(0,3)
         const len = transactions?.length;
         if(len !== undefined){
             return (
@@ -175,7 +169,7 @@ const AdminDashboard = () => {
                     <div className='admin-dashboard-container'>
                         <div className='admin-header-container'>
                             <h1 className='admin-heading'>Account</h1>
-                            <AddPopup reloadOperation={fetchTransactions} id={-1} />
+                            <AddPopup id={-1} />
                         </div>
                         <div className='admin-dashboard-sub-container'>
                             <TotalCreditDebitItem url="https://bursting-gelding-24.hasura.app/api/rest/transaction-totals-admin" method="GET" headers={{

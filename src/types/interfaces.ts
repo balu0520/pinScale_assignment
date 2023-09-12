@@ -1,7 +1,6 @@
 import Transaction from "../store/models/TransactionModel"
 
 export interface AddPopupProps {
-    reloadOperation: (id?: number) => Promise<void>,
     id: number
 }
 export type TransactionType = "credit" | "debit"
@@ -51,7 +50,6 @@ export interface BarGraphProps{
 
 export interface DeletePopupProps {
     transaction:Transaction
-    reloadOperation: (id?:number) => Promise<any>,
     id:number
 }
 export interface SideBarProps{
@@ -68,7 +66,6 @@ export interface TotalTransactionItem {
 }
 export interface UpdatePopupProps {
     transaction: Transaction
-    reloadOperation: (id?: number) => Promise<any>,
     id: number
 }
 
@@ -102,9 +99,9 @@ export interface WeekCreditDebitResult {
     weekDebit: number
 }
 export interface FetchResult {
-    fetchData: () => any;
+    fetchData: () => Promise<any>;
     apiStatus: string;
-    res: Response | null;
+    res: any ;
     res_data: any;
     res_error: any;
   }

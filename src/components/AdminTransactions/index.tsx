@@ -17,7 +17,7 @@ const AdminTransactions = () => {
     const [load, setLoad] = useState(false)
     const store = useContext(TransactionContext)
     const [cookie, _] = useCookies(["user_id"])
-    const { fetchData, apiStatus, res_data } = useFetch({
+    const { fetchData, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
