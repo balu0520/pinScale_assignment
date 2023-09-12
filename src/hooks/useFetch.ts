@@ -3,11 +3,12 @@ import { FetchResult,FetchProps,Params,Body } from "../types/interfaces";
 
 type apiStatusConstants = "INITIAL" | "SUCCESS" | "FAILURE" | "IN_PROGRESS"
 
+
 function useFetch(props: FetchProps):FetchResult {
     const { url, method, headers, body, params } = props
     const [apiStatus, setApiStatus] = useState<apiStatusConstants>("INITIAL")
     const [res, setRes] = useState<Response | any>(null)
-    const [resData, setResData] = useState<any>(null)
+    const [resData, setResData] = useState(null)
     const [resError, setResError] = useState<any>(null)
     let options: RequestInit = {method,headers};
     if (body !== undefined) {
@@ -24,21 +25,23 @@ function useFetch(props: FetchProps):FetchResult {
             modifiedUrl = `${url}?id=${id}`
         }
     }
-    const fetchData = async (): Promise<void> => {
+    const fetchData = async () => {
         setApiStatus("IN_PROGRESS")
         try {
-            const response:Response = await fetch(modifiedUrl, options)
+            const response = await fetch(modifiedUrl, options)
             setRes(response)
             if (response.ok === true) {
                 const data = await response.json()
                 setResData(data)
                 setResError(null)
                 setApiStatus("SUCCESS")
+                return data
             } else {
                 const err = response.status
                 setResError(err)
                 setResData(null)
                 setApiStatus("FAILURE")
+                return null
             }
         } catch (err) {
             setResError(err)

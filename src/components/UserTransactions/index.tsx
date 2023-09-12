@@ -15,13 +15,15 @@ import { useContext } from 'react';
 import { observer } from 'mobx-react';
 import { TransactionContext } from '../../context/transactionContext';
 import Transaction from '../../store/models/TransactionModel';
+import {useMachine} from '@xstate/react'
+import { transactionMachine } from '../../machines/transactionMachine'
 
 const UserTransactions = () => {
     const [activeId, setActiveId] = useState(0);
     const [load, setLoad] = useState(false)
     const [cookie, _] = useCookies(["user_id"])
     const store = useContext(TransactionContext)
-    const { fetchData, apiStatus, res_data } = useFetch({
+    const { fetchData } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/all-transactions", method: 'GET', headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -33,6 +35,21 @@ const UserTransactions = () => {
         }
     })
     const navigate = useNavigate()
+    const [state,send] = useMachine(transactionMachine,{
+        services:{
+            loadTransactions:async (context,event) => {
+                const data = await fetchData()
+                return new Promise((res,rej) => {
+                    if(data !== null){
+                        res(data.transactions) 
+                    } 
+                    if(data === null){
+                        rej("Failed To fetch")
+                    }    
+                })
+            }
+        }
+    })
 
     useEffect(() => {
         if (!cookie.user_id) {
@@ -50,11 +67,12 @@ const UserTransactions = () => {
 
     useEffect(() => {
         fetchAllTransactions(activeId)
+        send({type:"fetch"})
     }, [])
 
     useEffect(() => {
-        getData()
-    }, [res_data])
+        assignDataToStore()
+    }, [state])
 
     const filterTransactions = (transactions: TransactionsList[], id: number): any => {
         if (id === 0) {
@@ -83,9 +101,9 @@ const UserTransactions = () => {
         }
     }
 
-    const getData = () => {
-        if (res_data !== null) {
-            const newTransactions = filterTransactions(res_data.transactions, activeId)
+    const assignDataToStore = () => {
+        if (state.matches("success")) {
+            const newTransactions = filterTransactions(state.context.transactionList, activeId)
             const sortedNewTransactions:any = newTransactions.slice()
             sortedNewTransactions.forEach((transaction:TransactionsList,ind:number,arr:any) => {
                 arr[ind] = new Transaction(transaction.id,transaction.transaction_name,transaction.type,transaction.category,transaction.amount,String(transaction.date))
@@ -100,7 +118,6 @@ const UserTransactions = () => {
         } else {
             setActiveId(id)
         }
-        await fetchData();
     }
 
     const renderAllTransactionsLoadingView = () => (
@@ -119,6 +136,7 @@ const UserTransactions = () => {
     const renderAllTransactionsFailureView = () => (
         <div>
             <h1>Something Went Wrong</h1>
+            <button onClick={() => send({type:"retry"})}>Retry</button>
         </div>
     )
 
@@ -136,7 +154,14 @@ const UserTransactions = () => {
     }
 
     const renderAllTransactionsSuccessView = () => {
-        const transactions = store?.transactions
+        let transactions:Transaction[] | undefined = [] 
+        if(activeId === 1){
+            transactions = store?.transactionDebitList
+        }else if(activeId === 2){
+            transactions = store?.transactionCreditList
+        } else {
+            transactions = store?.transactionList
+        }
         const len = transactions?.length;
         if (len !== undefined) {
             return (
@@ -174,8 +199,8 @@ const UserTransactions = () => {
                                     <p className={`transaction-amount ${transaction.transactionType.toLowerCase() === "credit" ? 'credit' : 'debit'}`}>{`${transaction.transactionType.toLowerCase() === "credit" ? '+' : '-'}$${transaction.transactionAmount}`}</p>
                                 </div>
                                 <div className='all-transaction-update-delete-sub-container'>
-                                    <UpdatePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
-                                    <DeletePopup transaction={transaction} reloadOperation={fetchAllTransactions} id={activeId} />
+                                    <UpdatePopup transaction={transaction}  id={activeId} />
+                                    <DeletePopup transaction={transaction}  id={activeId} />
                                 </div>
                             </div>
                             {ind !== len - 1 && (<hr className='separator' />)}
@@ -190,12 +215,12 @@ const UserTransactions = () => {
     }
 
     const renderAllTransactions = () => {
-        switch (apiStatus) {
-            case "SUCCESS":
+        switch (state.value) {
+            case "success":
                 return renderAllTransactionsSuccessView()
-            case "FAILURE":
+            case "failed":
                 return renderAllTransactionsFailureView()
-            case "IN_PROGRESS":
+            case "loading":
                 return renderAllTransactionsLoadingView()
             default:
                 return null
@@ -210,7 +235,7 @@ const UserTransactions = () => {
                     <div className='user-transactions-sub-container'>
                         <div className='all-transaction-header-container'>
                             <h1 className='all-transaction-heading'>Transactions</h1>
-                            <AddPopup reloadOperation={fetchAllTransactions} id={activeId} />
+                            <AddPopup id={activeId} />
                         </div>
                         <div className='transaction-btn-container'>
                             <button className={`transaction-btn ${activeId === 0 ? 'active-btn' : ''}`} onClick={() => fetchAllTransactions(0)}>All Transactions</button>

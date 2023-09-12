@@ -1,6 +1,6 @@
 import Popup from "reactjs-popup";
 import './index.css'
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import useFetch from "../../hooks/useFetch";
 import { AddPopupProps, TransactionType } from "../../types/interfaces";
@@ -10,13 +10,13 @@ import Transaction from "../../store/models/TransactionModel";
 const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
 const AddPopup = (props: AddPopupProps) => {
-    const { reloadOperation, id } = props
+    const { id } = props
     const [cookie, _] = useCookies(["user_id"])
     const store = useContext(TransactionContext)
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
-    const [transactionObj, __] = useState(new Transaction(0,"", "credit", "", "", ""))
-    const { fetchData, res_error, res_data } = useFetch({
+    const [transactionObj, __] = useState(new Transaction(0, "", "credit", "", "", ""))
+    const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/add-transaction", method: "POST", headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -32,13 +32,19 @@ const AddPopup = (props: AddPopupProps) => {
         }
     })
 
-    const reload = () => {
-        if (id === -1) {
-            reloadOperation()
-        } else {
-            reloadOperation(id)
+    useEffect(() => {
+        if (res_data !== null && apiStatus === "SUCCESS") {
+            store?.addNewTransaction(res_data.insert_transactions_one)
+            alert("Added Successfully")
+            setErr(false)
+            setErrMsg("")
+            transactionObj.refreshValues()
+        } else if (res_data !== null && apiStatus === "FAILURE") {
+            alert('Something went wrong, please try again later')
+            setErr(false)
+            setErrMsg("")
         }
-    }
+    }, [res_data])
 
     const submitTransaction = async (event: any) => {
         event.preventDefault();
@@ -64,22 +70,6 @@ const AddPopup = (props: AddPopupProps) => {
             return
         }
         await fetchData()
-        if (res_error !== 400) {
-            if(res_data !== null) {
-                if (res_data?.insert_transactions_one !== null) {
-                    store?.addNewTransaction(res_data.insert_transactions_one)
-                    alert("Added Successfully")
-                    setErr(false)
-                    setErrMsg("")
-                    transactionObj.refreshValues()
-                }
-            }
-        } else {
-            alert('Something went wrong, please try again later')
-            setErr(false)
-            setErrMsg("")
-        }
-        reload()
     }
 
     return (

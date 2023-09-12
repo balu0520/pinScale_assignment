@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext,useEffect } from 'react'
 import './index.css'
 import Popup from 'reactjs-popup'
 import { VscEdit } from 'react-icons/vsc'
@@ -12,7 +12,7 @@ const overlayStyle = { background: 'rgba(0,0,0,0.5)' };
 
 const UpdatePopup = (props: UpdatePopupProps) => {
     const [cookie, _] = useCookies(["user_id"])
-    const { transaction, reloadOperation, id } = props
+    const { transaction, id } = props
     const store = useContext(TransactionContext)
     const dateString = transaction.transactionDate;
     const dateObject = new Date(dateString);
@@ -23,7 +23,7 @@ const UpdatePopup = (props: UpdatePopupProps) => {
     const [transactionObj] = useState(new Transaction(transaction.transactionId,transaction.transactionName, transaction.transactionType, transaction.transactionCategory as TransactionType, transaction.transactionAmount, formattedDate))
     const [err, setErr] = useState(false)
     const [errMsg, setErrMsg] = useState("")
-    const { fetchData, res_error, res_data } = useFetch({
+    const { fetchData, apiStatus, res_data } = useFetch({
         url: "https://bursting-gelding-24.hasura.app/api/rest/update-transaction", method: "POST", headers: {
             'content-type': 'application/json',
             'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
@@ -39,13 +39,20 @@ const UpdatePopup = (props: UpdatePopupProps) => {
         }
     })
 
-    const reload = () => {
-        if (id === -1) {
-            reloadOperation()
-        } else {
-            reloadOperation(id)
+    useEffect(() => {
+            if(res_data !== null && apiStatus === "SUCCESS") {
+                if (res_data?.update_transactions_by_pk !== null) {
+                    const updatedItem: TransactionItem = res_data.update_transactions_by_pk
+                    store?.updateTransaction(updatedItem)
+                    alert("updated Successfully")
+                    setErr(false)
+                }
+            }else if(res_data !== null && apiStatus === "FAILURE"){
+            alert('Something went wrong, please try again later')
+            setErr(false)
         }
-    }
+        setErrMsg("")
+    },[res_data])
 
 
     const updateTransaction = async (event: any) => {
@@ -60,23 +67,6 @@ const UpdatePopup = (props: UpdatePopupProps) => {
             return
         }
         await fetchData()
-        if (res_error !== 400) {
-            console.log(res_data)
-            if(res_data !== null) {
-                if (res_data?.update_transactions_by_pk !== null) {
-                    const updatedItem: TransactionItem = res_data.update_transactions_by_pk
-                    store?.updateTransaction(updatedItem)
-                    alert("updated Successfully")
-                    setErr(false)
-                }
-            }
-
-        } else {
-            alert('Something went wrong, please try again later')
-            setErr(false)
-        }
-        setErrMsg("")
-        reload()
     }
 
     return (

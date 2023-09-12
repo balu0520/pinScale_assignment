@@ -148,7 +148,7 @@ const UserProfile = () => {
                     <div style={{ width: "100%" }}>
                         <div className='profile-container'>
                             <h1 className='profile-heading'>Profile</h1>
-                            <AddPopup reloadOperation={fetchProfileData} id={-1} />
+                            <AddPopup id={-1} />
                         </div>
                         <div className='profile-sub-container'>
                             {renderProfile()}
