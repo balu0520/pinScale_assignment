@@ -1,5 +1,5 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { TransactionsList, TransactionItem,TransactionType } from '../types/interfaces'
+import { TransactionItem } from '../types/interfaces'
 import Transaction from './models/TransactionModel'
 
 
@@ -30,7 +30,7 @@ class TransactionStore {
   }
   addNewTransaction(Item: TransactionItem) {
     const transactionObj = new Transaction(Item.id,Item.transaction_name,Item.type,Item.category,Item.amount,String(Item.date))
-    this.transactions.push(transactionObj)
+    this.transactions = [transactionObj,...this.transactions]
   }
   updateTransaction(Item: TransactionItem) {
     this.transactions.forEach((transaction, ind, arr) => {

@@ -40,7 +40,7 @@ export const transactionMachine = createMachine({
             }
 
         },
-        "success": {},
+        "success": { type:"final"},
         "failed": {
             on:{
                 "retry":{

@@ -48,7 +48,7 @@ function useFetch(props: FetchProps):FetchResult {
         }
     }
 
-    return { fetchData, apiStatus, res, res_data: resData, res_error: resError }
+    return { fetchData, apiStatus, res, resData, resError }
 }
 
 

@@ -8,21 +8,20 @@ import AdminTransactions from './components/AdminTransactions';
 import HandleRedirect from './components/HandleRedirect';
 import {TransactionContextProvider } from './context/transactionContext';
 import './App.css';
-
-
+import {LOGIN_PATH,USER_DASHBOARD_PATH,USER_TRANSACTIONS_PATH,USER_PROFILE_PATH,ADMIN_DASHBOARD_PATH,ADMIN_TRANSACTIONS_PATH,REDIRECT_PATH} from './constants/NavigationConstants'
 
 const App = () => {
   return (
     <TransactionContextProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/user-dashboard" element={<UserDashboard />} />
-        <Route path="/user-transactions" element={<UserTransactions />} />
-        <Route path='/user-profile' element={<UserProfile />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/admin-transactions" element={<AdminTransactions />} />
-        <Route path="*" element={<HandleRedirect />} />
+        <Route path={LOGIN_PATH} element={<LoginForm />} />
+        <Route path={USER_DASHBOARD_PATH} element={<UserDashboard />} />
+        <Route path={USER_TRANSACTIONS_PATH} element={<UserTransactions />} />
+        <Route path={USER_PROFILE_PATH} element={<UserProfile />} />
+        <Route path={ADMIN_DASHBOARD_PATH} element={<AdminDashboard />} />
+        <Route path={ADMIN_TRANSACTIONS_PATH} element={<AdminTransactions />} />
+        <Route path={REDIRECT_PATH} element={<HandleRedirect />} />
       </Routes>
     </BrowserRouter>
     </TransactionContextProvider>
