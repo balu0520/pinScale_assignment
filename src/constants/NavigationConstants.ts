@@ -1,0 +1,7 @@
+export const LOGIN_PATH = "/login"
+export const USER_DASHBOARD_PATH = "/user-dashboard"
+export const USER_TRANSACTIONS_PATH = "/user-transactions"
+export const USER_PROFILE_PATH = "/user-profile"
+export const ADMIN_DASHBOARD_PATH = "/admin-dashboard"
+export const ADMIN_TRANSACTIONS_PATH = "/admin-transactions"
+export const REDIRECT_PATH = "*"

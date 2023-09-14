@@ -1,5 +1,5 @@
-import { action, makeObservable, observable } from 'mobx';
-import { TransactionsList, TransactionItem,TransactionType } from '../types/interfaces'
+import { action, computed, makeObservable, observable } from 'mobx';
+import { TransactionItem } from '../types/interfaces'
 import Transaction from './models/TransactionModel'
 
 
@@ -13,6 +13,9 @@ class TransactionStore {
       updateTransaction: action.bound,
       deleteNewTransaction: action.bound,
       addNewTransaction: action.bound,
+      transactionList: computed,
+      transactionCreditList:computed,
+      transactionDebitList:computed,
     })
   }
   setTransactions(transactions: Transaction[]) {
@@ -27,7 +30,7 @@ class TransactionStore {
   }
   addNewTransaction(Item: TransactionItem) {
     const transactionObj = new Transaction(Item.id,Item.transaction_name,Item.type,Item.category,Item.amount,String(Item.date))
-    this.transactions.push(transactionObj)
+    this.transactions = [transactionObj,...this.transactions]
   }
   updateTransaction(Item: TransactionItem) {
     this.transactions.forEach((transaction, ind, arr) => {
@@ -35,6 +38,15 @@ class TransactionStore {
         transaction.editTransaction(Item)
       }
     })
+  }
+  get transactionList(){
+    return this.transactions
+  }
+  get transactionCreditList(){
+    return this.transactions.filter(eachTransaction => eachTransaction.transactionType.toLowerCase() === "credit")
+  }
+  get transactionDebitList(){
+    return this.transactions.filter(eachTransaction => eachTransaction.transactionType.toLowerCase() === "debit")
   }
 }
 
