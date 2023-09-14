@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import useFetch from '../../hooks/useFetch'
+import { useTranslation } from "react-i18next";
 
 const LoginForm = () => {
+    const {t,i18n} = useTranslation()
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState("")
     const [err, setErr] = useState(false)
@@ -73,21 +75,21 @@ const LoginForm = () => {
                     <div className="shadow rounded-lg flex flex-col bg-base-white">
                         <div className='flex flex-row items-center p-4 text-center self-center'>
                             <img src="https://res.cloudinary.com/daz94wyq4/image/upload/v1690731094/dollar_icon_o1ss4i.png" className='dollar-icon' alt='dollar icon' />
-                            <h1 className='text-money-clr'>Money </h1>
-                            <h1 className='text-matter-clr'>Matters</h1>
+                            <h1 className='text-money-clr'>{t("Money")} </h1>
+                            <h1 className='text-matter-clr'>{t("Matters")}</h1>
                         </div>
                         <form className="sm:w-[385px] h-[317px] flex flex-col rounded-t-3xl mt-6 w-[300px] bg-teal-500" onSubmit={(e) => handleLogin(e)}>
                             <div className='m-auto w-5/6'>
                                 <div className="w-full flex flex-col">
-                                    <label className="text-xl font-semibold" htmlFor='email'>Email</label>
-                                    <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} id='email' className="w-full h-10 rounded-md outline-0 mb-4 text-black border-black pl-2 text-lg hover:border-cyan-500" />
+                                    <label className="text-xl font-semibold" htmlFor='email'>{t("Email")}</label>
+                                    <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} id='email' className="w-full h-10 rounded-md outline-0 mb-4 text-black border-black pl-2 text-lg hover:border-cyan-500" placeholder={t("Email")} />
                                 </div>
                                 <div className="w-full flex flex-col">
-                                    <label className="text-xl font-semibold" htmlFor='password'>Password</label>
-                                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="password" className="w-full h-10 rounded-md outline-0 mb-4 text-black border-black pl-2 text-lg hover:border-cyan-500" />
+                                    <label className="text-xl font-semibold" htmlFor='password'>{t("Password")}</label>
+                                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} id="password" className="w-full h-10 rounded-md outline-0 mb-4 text-black border-black pl-2 text-lg hover:border-cyan-500" placeholder={t("Password")} />
                                     {err && (<p className="pt-0 text-red-600 text-sm">{errMsg}</p>)}
                                 </div>
-                                <button type="submit" className="w-full bg-white border-cyan-500 h-10 text-cyan-900 text-lg outline-0 rounded-lg hover:border-0 hover:text-base-white bg-base-white hover:bg-cyan-600 cursor-pointer shadow-none">Login</button>
+                                <button type="submit" className="w-full bg-white border-cyan-500 h-10 text-cyan-900 text-lg outline-0 rounded-lg hover:border-0 hover:text-base-white bg-base-white hover:bg-cyan-600 cursor-pointer shadow-none">{t("Login")}</button>
                             </div>
                         </form>
                     </div>
